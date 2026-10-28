@@ -1,0 +1,28 @@
+{% extends "admin/layout.html" %}
+{% block title %}My profile{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div class="profile-top" style="margin:0"><div class="avatar big">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</div>
+    <div><h1>{{ me.full_name }}</h1><p class="muted small">{{ me.staff_id }} &middot; {{ me.designation }} &middot; {{ me.role|capitalize }} &middot; since {{ me.created_at|nicedate(false) }}</p></div></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <h2>My details</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="details">
+        <label>Full name</label><input name="full_name" value="{{ me.full_name }}" required>
+        <label>Email (used to sign in)</label><input type="email" name="email" value="{{ me.email }}" required>
+        <div class="form-grid">
+            <div><label>Phone</label><input name="phone" value="{{ me.phone }}"></div>
+            <div><label>Designation</label><input name="designation" value="{{ me.designation }}"></div>
+        </div>
+        <button class="btn btn-primary btn-block">Save my details</button>
+    </form>
+    <form method="post" class="panel">
+        <h2>Change my password</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="password">
+        <label>Current password</label><input type="password" name="old" required>
+        <label>New password</label><input type="password" name="new" required>
+        <label>Repeat new password</label><input type="password" name="new2" required>
+        <button class="btn btn-primary btn-block">Change password</button>
+        <p class="small muted">At least 8 characters with letters and numbers. Your role can only be changed by another admin.</p>
+    </form>
+</div>
+{% endblock %}

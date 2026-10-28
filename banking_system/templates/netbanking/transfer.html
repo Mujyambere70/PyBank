@@ -1,0 +1,43 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Fund Transfer{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><h1>Fund transfer <small class="muted">(IMPS &middot; within PyBank)</small></h1></div>
+<div class="steps"><span class="active">1. Details</span><span>2. Confirm</span><span>3. Receipt</span></div>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="step" value="details">
+        <div class="balance-line">From: <strong>{{ account.type }} A/c {{ account.number }}</strong> &middot; Balance {{ account.balance|money }}</div>
+        {% if payees %}
+        <label for="payee">Send to a saved beneficiary</label>
+        <select id="payee" onchange="if(this.value){to_account.value=to_account2.value=this.value}">
+            <option value="">— choose or type a new account below —</option>
+            {% for p in payees %}<option value="{{ p.account_number }}" {% if form.get('to_account') == p.account_number %}selected{% endif %}>{{ p.nickname }} · XX{{ p.account_number[-4:] }}</option>{% endfor %}
+        </select>
+        {% endif %}
+
+        <label for="to_account">Beneficiary account number</label>
+        <input type="text" id="to_account" name="to_account" value="{{ form.get('to_account', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="12-digit account number" required>
+
+        <label for="to_account2">Re-enter account number</label>
+        <input type="password" id="to_account2" name="to_account2" value="{{ form.get('to_account2', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="Re-enter to confirm" required>
+
+        <label for="amount">Amount (₹)</label>
+        <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="1" step="0.01" required>
+
+        <label for="remarks">Remarks (optional)</label>
+        <input type="text" id="remarks" name="remarks" value="{{ form.get('remarks', '') }}" maxlength="40" placeholder="e.g. Rent, Gift, Fees">
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Continue</button>
+    </form>
+    <aside class="panel info">
+        <h2>Transfer limits</h2>
+        <ul class="check-list">
+            <li>Up to <strong>{{ DAILY_TRANSFER_LIMIT|money }}</strong> per day.</li>
+            <li>Transfers are instant and free of charge.</li>
+            <li>You will see the beneficiary's name before you confirm.</li>
+        </ul>
+        <p class="small">Send money often to the same person? <a href="{{ url_for('payees') }}">Save them as a beneficiary &rarr;</a></p>
+    </aside>
+</div>
+{% endblock %}

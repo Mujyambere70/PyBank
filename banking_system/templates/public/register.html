@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Open an Account Online{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>Open an Account Online</h1><p>Takes about 5 minutes. Fields marked * are required.</p></div></section>
+<section class="section">
+    <form method="post" class="wrap narrow form-card" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <h2><span class="step">1</span> Personal details</h2>
+        <div class="form-grid">
+            <div class="full"><label for="full_name">Full name (as on ID proof) *</label>
+                <input type="text" id="full_name" name="full_name" value="{{ form.get('full_name', '') }}" placeholder="First and last name" maxlength="80" required></div>
+            <div><label for="dob">Date of birth *</label>
+                <input type="date" id="dob" name="dob" value="{{ form.get('dob', '') }}" max="{{ max_dob }}" required></div>
+            <div><label for="gender">Gender *</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select</option>
+                    {% for g in ['Male', 'Female', 'Other'] %}<option {% if form.get('gender') == g %}selected{% endif %}>{{ g }}</option>{% endfor %}
+                </select></div>
+            <div><label for="occupation">Occupation *</label>
+                <select id="occupation" name="occupation" required>
+                    <option value="">Select</option>
+                    {% for o in occupations %}<option {% if form.get('occupation') == o %}selected{% endif %}>{{ o }}</option>{% endfor %}
+                </select></div>
+        </div>
+
+        <h2><span class="step">2</span> Contact details</h2>
+        <div class="form-grid">
+            <div><label for="email">Email *</label>
+                <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" placeholder="you@example.com" required></div>
+            <div><label for="mobile">Mobile number *</label>
+                <div class="input-prefix"><span>+91</span><input type="tel" id="mobile" name="mobile" value="{{ form.get('mobile', '') }}" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit mobile" required></div></div>
+            <div class="full"><label for="address">Address *</label>
+                <input type="text" id="address" name="address" value="{{ form.get('address', '') }}" placeholder="House no., street, area" required></div>
+            <div><label for="city">City *</label>
+                <input type="text" id="city" name="city" value="{{ form.get('city', '') }}" required></div>
+            <div><label for="state">State *</label>
+                <select id="state" name="state" required>
+                    <option value="">Select</option>
+                    {% for s in states %}<option {% if form.get('state', 'Haryana') == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+                </select></div>
+            <div><label for="pincode">PIN code *</label>
+                <input type="text" id="pincode" name="pincode" value="{{ form.get('pincode', '') }}" pattern="[1-9][0-9]{5}" maxlength="6" inputmode="numeric" required></div>
+        </div>
+
+        <h2><span class="step">3</span> Account</h2>
+        <div class="choice-grid">
+            {% for t, info in ACCOUNT_TYPES.items() %}
+            <label class="choice">
+                <input type="radio" name="account_type" value="{{ t }}" {% if form.get('account_type', 'Savings') == t %}checked{% endif %}>
+                <span><strong>{{ t }} Account</strong>
+                    <small>Min. opening deposit {{ info.min_balance|money }}{% if info.interest %} &middot; {{ info.interest }}% interest{% else %} &middot; for business{% endif %}</small></span>
+            </label>
+            {% endfor %}
+        </div>
+        <div class="form-grid">
+            <div><label for="initial_deposit">Opening deposit (₹) *</label>
+                <input type="number" id="initial_deposit" name="initial_deposit" value="{{ form.get('initial_deposit', '500') }}" min="500" step="0.01" required></div>
+        </div>
+
+        <h2><span class="step">4</span> Security</h2>
+        <div class="form-grid">
+            <div><label for="password">Login password *</label>
+                <input type="password" id="password" name="password" minlength="8" placeholder="Min. 8 characters, letters + numbers" required></div>
+            <div><label for="password2">Confirm password *</label>
+                <input type="password" id="password2" name="password2" minlength="8" required></div>
+            <div><label for="pin">4-digit transaction PIN *</label>
+                <input type="password" id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required></div>
+            <div><label for="pin2">Confirm PIN *</label>
+                <input type="password" id="pin2" name="pin2" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required></div>
+        </div>
+
+        <label class="checkbox"><input type="checkbox" name="terms" value="yes" required>
+            I confirm the details are correct and accept the PyBank terms &amp; conditions.</label>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Open My Account</button>
+    </form>
+</section>
+{% endblock %}

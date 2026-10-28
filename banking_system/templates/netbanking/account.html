@@ -1,0 +1,35 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Account Details{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><h1>Account details</h1></div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Account</h2>
+        <table class="details">
+            <tr><th>Account holder</th><td>{{ customer.full_name }}</td></tr>
+            <tr><th>Account number</th><td><strong>{{ account.number }}</strong></td></tr>
+            <tr><th>Account type</th><td>{{ account.type }} Account</td></tr>
+            <tr><th>Status</th><td><span class="badge ok">{{ account.status }}</span></td></tr>
+            <tr><th>IFSC code</th><td>{{ account.ifsc }}</td></tr>
+            <tr><th>Branch</th><td>{{ account.branch }}<br><small class="muted">{{ BRANCH.address }}</small></td></tr>
+            <tr><th>Opened on</th><td>{{ account.opened_at|nicedate(false) }}</td></tr>
+            <tr><th>Interest rate</th><td>{{ account.interest_rate }}% p.a.{% if not account.interest_rate %} (current account){% endif %}</td></tr>
+            <tr><th>Debit card</th><td>XXXX XXXX XXXX {{ account.card_last4 }}</td></tr>
+            <tr><th>Available balance</th><td><strong>{{ account.balance|money }}</strong></td></tr>
+        </table>
+    </section>
+    <section class="panel">
+        <h2>Recent login activity</h2>
+        <table class="data compact">
+            <thead><tr><th>Date &amp; time</th><th>IP address</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for l in logins %}
+                <tr><td>{{ l.at|nicedate }}</td><td>{{ l.ip }}</td>
+                    <td>{% if l.success %}<span class="badge ok">Success</span>{% else %}<span class="badge bad">Failed</span>{% endif %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p class="small muted">If you see a login you don't recognise, change your password immediately.</p>
+    </section>
+</div>
+{% endblock %}

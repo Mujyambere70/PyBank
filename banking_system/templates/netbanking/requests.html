@@ -1,0 +1,57 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Service Requests{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Service requests</h1><p class="muted small">Ask the branch for a cheque book, a new card, a letter or anything else. The branch replies here.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <h2>New request</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="type">Request type</label>
+        <select id="type" name="type" required>
+            <option value="">Choose…</option>
+            {% for t in REQUEST_TYPES %}<option {% if form.get('type') == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+        </select>
+        <label for="details">Details</label>
+        <textarea id="details" name="details" rows="4" maxlength="500" required placeholder="Describe what you need">{{ form.get('details', '') }}</textarea>
+        <button class="btn btn-primary btn-block">Send request</button>
+    </form>
+    <aside class="panel info">
+        <h2>How it works</h2>
+        <ul class="check-list">
+            <li>You can edit or cancel a request while it is <strong>Open</strong>.</li>
+            <li>When the branch starts working on it, the status changes to <strong>In progress</strong>.</li>
+            <li>The branch's reply is shown under your request.</li>
+        </ul>
+    </aside>
+</div>
+
+<section class="panel">
+    <h2>My requests ({{ requests|length }})</h2>
+    {% for r in requests %}
+    <div class="req">
+        <div class="req-head">
+            <strong>#{{ r.id }} &middot; {{ r.type }}</strong>
+            <span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span>
+            <small class="muted">{{ r.created_at|nicedate }}</small>
+        </div>
+        <p>{{ r.details }}</p>
+        {% if r.reply %}<div class="reply"><strong>{{ r.replied_by }} (PyBank):</strong> {{ r.reply }}</div>{% endif %}
+        {% if r.status == 'Open' %}
+        <details class="own-tools">
+            <summary class="btn btn-outline btn-sm">Edit / cancel</summary>
+            <form method="post" action="{{ url_for('request_action', rid=r.id, action='edit') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="type">{% for t in REQUEST_TYPES %}<option {% if r.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+                <textarea name="details" rows="3" maxlength="500" required>{{ r.details }}</textarea>
+                <div class="btn-row"><button class="btn btn-primary btn-sm">Save changes</button></div>
+            </form>
+            <form method="post" action="{{ url_for('request_action', rid=r.id, action='delete') }}" onsubmit="return confirm('Cancel and delete this request?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-danger btn-sm">Cancel request</button>
+            </form>
+        </details>
+        {% endif %}
+    </div>
+    {% else %}<p class="muted">You have not sent any requests yet.</p>{% endfor %}
+</section>
+{% endblock %}

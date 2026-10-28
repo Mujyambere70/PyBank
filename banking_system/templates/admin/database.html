@@ -1,0 +1,14 @@
+{% extends "admin/layout.html" %}
+{% block title %}Database{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Database</h1><p class="muted small">Read-only view of every table. Passwords and PINs are hashed and hidden.</p></div>
+    <a href="{{ url_for('office_database_csv', name=table) }}" class="btn btn-outline">&#11015; Download {{ table }}.csv</a></div>
+<div class="chips db-chips">{% for t, n in tables.items() %}<a href="{{ url_for('office_database', table=t) }}" class="chip {{ 'active' if t == table }}">{{ t }} <em>{{ n }}</em></a>{% endfor %}</div>
+<div class="table-card db-view">
+<table class="data compact">
+    <thead><tr>{% for c in cols %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for r in rows %}<tr>{% for v in r %}<td title="{{ v }}">{{ v }}</td>{% endfor %}</tr>{% else %}<tr><td class="center muted" colspan="{{ cols|length }}">Empty table.</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+<p class="small muted">Showing {{ rows|length }} of {{ total }} rows (newest first). To change data use the normal pages - they check the rules and write to the audit log.</p>
+{% endblock %}

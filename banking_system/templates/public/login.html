@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Net Banking Login{% endblock %}
+{% block content %}
+<section class="auth">
+    <div class="wrap auth-grid">
+        <form method="post" class="auth-card" autocomplete="off">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="auth-logo">
+            <h1>Net Banking Login</h1>
+            <p class="muted">Welcome back! Please log in to your account.</p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="login">Customer ID or registered email</label>
+            <input type="text" id="login" name="login" value="{{ login }}" placeholder="e.g. PB10000001" required autofocus>
+
+            <label for="password">Password</label>
+            <div class="password-field">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <button type="button" class="show-pass" onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password';this.textContent=p.type==='password'?'Show':'Hide'">Show</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">&#128274; Login securely</button>
+            <p class="small center">New to PyBank? <a href="{{ url_for('register') }}">Open an account</a></p>
+
+            <div class="demo-box">
+                <strong>Demo accounts</strong> (password <code>Demo@1234</code>, PIN <code>2580</code>)<br>
+                <code>PB10000001</code> Rahul Verma &middot; <code>PB10000002</code> Priya Nair &middot; <code>PB10000003</code> Arjun Malhotra (Current)
+            </div>
+        </form>
+        <aside class="auth-side">
+            <img src="{{ url_for('static', filename='images/secure.jpg') }}" alt="" class="rounded">
+            <h2>Stay safe online</h2>
+            <ul class="check-list light">
+                <li>PyBank never asks for your password, PIN or OTP.</li>
+                <li>Always check the website address before you log in.</li>
+                <li>Log out after you finish, especially on shared computers.</li>
+                <li>Your session ends automatically after 10 minutes.</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+{% endblock %}

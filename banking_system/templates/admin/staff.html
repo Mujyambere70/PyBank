@@ -1,0 +1,52 @@
+{% extends "admin/layout.html" %}
+{% block title %}Staff{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Staff</h1><p class="muted small">Admins can do everything. Staff can serve customers but cannot change staff, settings or the database.</p></div></div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Team ({{ rows|length }})</h2>
+        {% for s in rows %}
+        <div class="staff-card {{ '' if s.active else 'off' }}">
+            <div class="mini-row"><div><strong>{{ s.full_name }}{% if s.staff_id == me.staff_id %} (you){% endif %}</strong>
+                <small>{{ s.staff_id }} &middot; {{ s.designation or '—' }} &middot; {{ s.email }}{% if s.phone %} &middot; {{ s.phone }}{% endif %}</small>
+                <small>Last sign-in: {{ s.last_login|nicedate if s.last_login else 'never' }}</small></div>
+                <span class="role-badge {{ s.role }}">{{ s.role|upper }}</span>{% if not s.active %}<span class="badge bad">Disabled</span>{% endif %}</div>
+            {% if s.staff_id != me.staff_id %}
+            <details class="own-tools"><summary class="btn btn-outline btn-sm">Manage</summary>
+                <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='edit') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-grid">
+                        <div><label>Full name</label><input name="full_name" value="{{ s.full_name }}" required></div>
+                        <div><label>Email</label><input type="email" name="email" value="{{ s.email }}" required></div>
+                        <div><label>Phone</label><input name="phone" value="{{ s.phone }}"></div>
+                        <div><label>Designation</label><input name="designation" value="{{ s.designation }}"></div>
+                        <div><label>Role</label><select name="role">{% for r in ['staff', 'admin'] %}<option value="{{ r }}" {{ 'selected' if s.role == r }}>{{ r|capitalize }}</option>{% endfor %}</select></div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" style="margin-top:10px">Save</button>
+                </form>
+                <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='password') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="password" placeholder="New password" required><button class="btn btn-outline btn-sm">Reset password</button></form>
+                <div class="btn-row">
+                    <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='toggle') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">{{ 'Disable' if s.active else 'Enable' }}</button></form>
+                    <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='delete') }}" onsubmit="return confirm('Delete {{ s.full_name }}?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-sm">Delete</button></form>
+                </div>
+            </details>
+            {% else %}<a href="{{ url_for('office_profile') }}" class="small">Edit my own details &rarr;</a>{% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Add staff member</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Full name</label><input name="full_name" required>
+        <label>Email</label><input type="email" name="email" required>
+        <div class="form-grid">
+            <div><label>Phone</label><input name="phone"></div>
+            <div><label>Designation</label><input name="designation" placeholder="e.g. Cashier"></div>
+            <div><label>Role</label><select name="role"><option value="staff">Staff</option><option value="admin">Admin</option></select></div>
+            <div><label>First password</label><input name="password" required></div>
+        </div>
+        <button class="btn btn-primary btn-block">Add staff member</button>
+    </form>
+</div>
+{% endblock %}

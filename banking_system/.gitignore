@@ -1,0 +1,7 @@
+bank.db
+__pycache__/
+*.pyc
+.venv/
+*.db
+*.db.old-backup
+.DS_Store

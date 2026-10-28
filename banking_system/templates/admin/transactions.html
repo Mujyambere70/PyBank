@@ -1,0 +1,14 @@
+{% extends "admin/layout.html" %}
+{% block title %}Transactions{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>All transactions</h1><p class="muted small">{{ rows|length }} shown (max 300). Wrong entries are reversed, never deleted.</p></div></div>
+<form class="panel filters filters-5" method="get">
+    <div><label>Search</label><input name="q" value="{{ args.get('q', '') }}" placeholder="Name, account, ref or text"></div>
+    <div><label>Type</label><select name="type"><option value="">All</option><option value="CR" {{ 'selected' if args.get('type') == 'CR' }}>Credits</option><option value="DR" {{ 'selected' if args.get('type') == 'DR' }}>Debits</option></select></div>
+    <div><label>Category</label><select name="category"><option value="">All</option>{% for c in categories %}<option {{ 'selected' if args.get('category') == c }}>{{ c }}</option>{% endfor %}</select></div>
+    <div><label>From</label><input type="date" name="from" value="{{ args.get('from', '') }}"></div>
+    <div><label>To</label><input type="date" name="to" value="{{ args.get('to', '') }}"></div>
+    <div><button class="btn btn-primary">Filter</button></div>
+</form>
+<section class="panel">{% set tx = rows %}{% set show_customer = true %}{% include "admin/_tx_table.html" %}</section>
+{% endblock %}

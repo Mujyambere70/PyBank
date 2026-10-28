@@ -1,0 +1,2 @@
+Flask>=3.0
+gunicorn>=22.0     # web server for online hosting (Render); not needed on Windows

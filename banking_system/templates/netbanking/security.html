@@ -1,0 +1,33 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Security Settings{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><h1>Security settings</h1></div>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Change login password</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="password">
+        <label for="old_password">Current password</label><input type="password" id="old_password" name="old_password" required>
+        <label for="new_password">New password</label><input type="password" id="new_password" name="new_password" minlength="8" placeholder="Min. 8 characters, letters + numbers" required>
+        <label for="new_password2">Confirm new password</label><input type="password" id="new_password2" name="new_password2" minlength="8" required>
+        <button type="submit" class="btn btn-primary btn-block">Change password</button>
+    </form>
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Change transaction PIN</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="pin">
+        <label for="password">Login password</label><input type="password" id="password" name="password" required>
+        <label for="new_pin">New 4-digit PIN</label><input type="password" id="new_pin" name="new_pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <label for="new_pin2">Confirm new PIN</label><input type="password" id="new_pin2" name="new_pin2" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <button type="submit" class="btn btn-primary btn-block">Change PIN</button>
+    </form>
+</div>
+<section class="panel">
+    <h2>Security tips</h2>
+    <ul class="check-list">
+        <li>Use a password you don't use on any other website.</li>
+        <li>Don't choose a PIN like your birth year or 1111.</li>
+        <li>PyBank staff will never ask for your password, PIN or OTP.</li>
+    </ul>
+</section>
+{% endblock %}

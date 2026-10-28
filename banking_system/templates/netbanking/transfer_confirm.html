@@ -1,0 +1,27 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Confirm Transfer{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><h1>Confirm transfer</h1></div>
+<div class="steps"><span class="done">1. Details</span><span class="active">2. Confirm</span><span>3. Receipt</span></div>
+<form method="post" class="panel narrow-panel" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="step" value="confirm">
+    {% for f in ['to_account', 'to_account2', 'amount', 'remarks'] %}
+        <input type="hidden" name="{{ f }}" value="{{ form.get(f, '') }}">
+    {% endfor %}
+    <p>Please check the details carefully. Money sent to a wrong account may not be recoverable.</p>
+    <table class="details">
+        <tr><th>From</th><td>{{ customer.full_name }}<br><small class="muted">A/c {{ account.number }}</small></td></tr>
+        <tr><th>To (beneficiary)</th><td><strong id="beneficiary">{{ beneficiary }}</strong><br><small class="muted">A/c {{ form.get('to_account') }} &middot; PyBank</small></td></tr>
+        <tr><th>Amount</th><td><strong class="big">{{ amount|money }}</strong></td></tr>
+        <tr><th>Remarks</th><td>{{ form.get('remarks') or '-' }}</td></tr>
+        <tr><th>Charges</th><td>₹0.00</td></tr>
+    </table>
+    <label for="pin">Enter your transaction PIN to confirm</label>
+    <input type="password" id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required autofocus>
+    <div class="btn-row">
+        <a href="{{ url_for('transfer') }}" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-primary">Confirm &amp; Pay {{ amount|money }}</button>
+    </div>
+</form>
+{% endblock %}

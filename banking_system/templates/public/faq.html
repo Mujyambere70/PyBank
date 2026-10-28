@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Help &amp; FAQ{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>Help &amp; FAQ</h1><p>Quick answers to common questions.</p></div></section>
+<section class="section">
+    <div class="wrap narrow faq">
+        {% for q, a in [
+            ('How do I open an account?', 'Click "Open Account", fill in your personal and contact details, choose Savings or Current, make the opening deposit and set your password and 4-digit transaction PIN. You get your Customer ID and account number immediately.'),
+            ('What is my Customer ID?', 'It is your login ID, for example PB10000001. It is shown after opening the account and on the "Account details" page. You can also log in with your registered email.'),
+            ('What is the difference between password and transaction PIN?', 'The password is used to log in. The 4-digit transaction PIN is needed for every deposit, withdrawal and transfer, so even if someone sees your password they cannot move your money.'),
+            ('How do I transfer money?', 'Go to Net Banking > Fund Transfer, enter the 12-digit PyBank account number twice and the amount. On the next screen check the beneficiary name, then enter your PIN to confirm.'),
+            ('Is there a transaction limit?', 'Yes. Cash withdrawal up to ' ~ (DAILY_WITHDRAW_LIMIT|money) ~ ' per day and fund transfer up to ' ~ (DAILY_TRANSFER_LIMIT|money) ~ ' per day.'),
+            ('My login is locked. What should I do?', 'After 5 wrong passwords your login is locked for 15 minutes for your safety. Wait and try again, or call customer care.'),
+            ('How do I download my statement?', 'Go to Net Banking > Statement, choose the dates and click "Download CSV" (opens in Excel) or "Print / Save PDF".'),
+            ('Why was I logged out?', 'For your security, PyBank logs you out automatically after 10 minutes without activity.')] %}
+        <details {% if loop.first %}open{% endif %}>
+            <summary>{{ q }}</summary>
+            <p>{{ a }}</p>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

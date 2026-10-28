@@ -1,0 +1,63 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Account Statement{% endblock %}
+{% block nb_content %}
+<div class="nb-title">
+    <h1>Account statement</h1>
+    <div class="btn-row no-print">
+        <a href="{{ url_for('statement_csv', **{'from': start, 'to': end, 'type': kind}) }}" class="btn btn-outline btn-sm">&#11015; Download CSV</a>
+        <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print / Save PDF</button>
+    </div>
+</div>
+
+<form method="get" class="panel filters no-print">
+    <div><label for="from">From</label><input type="date" id="from" name="from" value="{{ start }}" max="{{ today }}"></div>
+    <div><label for="to">To</label><input type="date" id="to" name="to" value="{{ end }}" max="{{ today }}"></div>
+    <div><label for="type">Type</label>
+        <select id="type" name="type">
+            <option value="" {% if not kind %}selected{% endif %}>All</option>
+            <option value="CR" {% if kind == 'CR' %}selected{% endif %}>Credits (money in)</option>
+            <option value="DR" {% if kind == 'DR' %}selected{% endif %}>Debits (money out)</option>
+        </select></div>
+    <div><button type="submit" class="btn btn-primary">Show</button></div>
+</form>
+
+<section class="panel">
+    <div class="statement-head">
+        <div><strong>{{ customer.full_name }}</strong><br><span class="small muted">{{ customer.address }}, {{ customer.city }}, {{ customer.state }} {{ customer.pincode }}</span></div>
+        <div class="small">A/c {{ account.number }} ({{ account.type }})<br>IFSC {{ account.ifsc }}<br>Period: {{ start }} to {{ end }}</div>
+    </div>
+    <div class="tiles tiles-3">
+        <div class="tile"><small>Total credits</small><strong class="in">+{{ total_cr|money }}</strong></div>
+        <div class="tile"><small>Total debits</small><strong class="out">-{{ total_dr|money }}</strong></div>
+        <div class="tile"><small>Transactions</small><strong>{{ rows|length }}</strong></div>
+    </div>
+    <div class="table-wrap">
+        <table class="data statement">
+            <thead><tr><th>Date</th><th>Description</th><th>Ref. no.</th><th class="num">Debit</th><th class="num">Credit</th><th class="num">Balance</th></tr></thead>
+            <tbody>
+            {% for t in rows %}
+                <tr>
+                    <td class="nowrap">{{ t.created_at|nicedate(false) }}</td>
+                    <td>{{ t.description }}
+                        <details class="note no-print"><summary>{% if notes.get(t.ref) %}&#128221; {{ notes[t.ref] }}{% else %}+ add note{% endif %}</summary>
+                            <form method="post" action="{{ url_for('tx_note', ref=t.ref) }}" class="inline-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="next" value="{{ request.full_path }}">
+                                <input type="text" name="note" value="{{ notes.get(t.ref, '') }}" maxlength="80" placeholder="My note (empty = delete)">
+                                <button class="btn btn-primary btn-sm">Save</button>
+                            </form>
+                        </details>
+                        {% if notes.get(t.ref) %}<span class="print-only small">Note: {{ notes[t.ref] }}</span>{% endif %}</td>
+                    <td class="small"><a href="{{ url_for('receipt', ref=t.ref) }}">{{ t.ref }}</a></td>
+                    <td class="num out">{% if not t.is_credit %}{{ t.amount|money }}{% endif %}</td>
+                    <td class="num in">{% if t.is_credit %}{{ t.amount|money }}{% endif %}</td>
+                    <td class="num">{{ t.balance_after|money }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6" class="center muted">No transactions in this period.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

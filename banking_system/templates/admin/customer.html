@@ -1,0 +1,90 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ c.full_name }}{% endblock %}
+{% block office_content %}
+<p class="small"><a href="{{ url_for('office_customers') }}">&larr; All customers</a></p>
+<div class="nb-title">
+    <div class="profile-top" style="margin:0"><div class="avatar big">{{ c.initials }}</div>
+        <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; customer since {{ c.created_at|nicedate(false) }} &middot; last login {{ c.last_login|nicedate if c.last_login else 'never' }}</p></div></div>
+    <div>{% if account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
+        {% if locked %}<span class="badge bad">Login locked</span>{% endif %}</div>
+</div>
+
+<div class="kpi-grid">
+    <div class="tile"><small>Balance</small><strong>{{ account.balance|money }}</strong></div>
+    <div class="tile"><small>Account</small><strong>{{ account.number }}</strong><span class="small muted">{{ account.type }} &middot; card XX{{ account.card_last4 }}</span></div>
+    <div class="tile"><small>Fixed deposits</small><strong>{{ fds|selectattr('status', 'equalto', 'Active')|map(attribute='principal')|sum|money }}</strong><span class="small muted">{{ fds|selectattr('status', 'equalto', 'Active')|list|length }} active</span></div>
+    <div class="tile"><small>Beneficiaries &middot; requests</small><strong>{{ payees|length }} &middot; {{ reqs|length }}</strong></div>
+</div>
+
+<div class="dash-grid">
+    <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='edit') }}" class="panel">
+        <h2>Customer details (KYC)</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% set f = {'full_name': c.full_name, 'dob': c.dob, 'gender': c.gender, 'email': c.email, 'mobile': c.mobile, 'address': c.address, 'city': c.city, 'state': c.state, 'pincode': c.pincode, 'occupation': c.occupation} %}
+        {% include "admin/_customer_fields.html" %}
+        <button class="btn btn-primary btn-block">Save details</button>
+    </form>
+
+    <section class="panel">
+        <h2>Account actions</h2>
+        <div class="action-list">
+            {% if locked %}
+            <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='unlock') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <b>Login is locked</b> after wrong passwords. <button class="btn btn-primary btn-sm">Unlock now</button></form>
+            {% endif %}
+            <details><summary>Reset login password</summary>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='password') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="password" placeholder="New password (8+, letters and numbers)" required><button class="btn btn-outline btn-sm">Set</button></form></details>
+            <details><summary>Reset transaction PIN</summary>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='pin') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="pin" placeholder="New 4-digit PIN" pattern="[0-9]{4}" maxlength="4" required><button class="btn btn-outline btn-sm">Set</button></form></details>
+            <details><summary>Change account type</summary>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='type') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <select name="type">{% for t in ACCOUNT_TYPES %}<option {% if account.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select><button class="btn btn-outline btn-sm">Save</button></form></details>
+            <details open><summary>Manual entry (cash at counter, charge, correction)</summary>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='entry') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-grid">
+                        <div><label>Type</label><select name="kind"><option value="CR">Credit (money in)</option><option value="DR">Debit (money out)</option></select></div>
+                        <div><label>Amount (₹)</label><input type="number" name="amount" min="0.01" step="0.01" required></div>
+                        <div class="full"><label>Reason</label><input name="description" placeholder="e.g. Cash deposit at counter" required></div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" style="margin-top:10px">Post entry</button></form></details>
+            {% if account.status == 'Active' %}
+            <details><summary class="out">Freeze account</summary>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='freeze') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="reason" placeholder="Reason (e.g. lost card, court order)" required><button class="btn btn-danger btn-sm">Freeze</button></form></details>
+            {% else %}
+            <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='activate') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <b>Account is frozen.</b> No money can move. <button class="btn btn-primary btn-sm">Activate</button></form>
+            {% endif %}
+            {% if me.role == 'admin' %}
+            <details><summary class="out">Close &amp; delete customer</summary>
+                <p class="small muted">Allowed only when the balance is ₹0.00 and no FD is active. All records of this customer are deleted.</p>
+                <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='delete') }}" onsubmit="return confirm('Delete {{ c.full_name }} and ALL records? This cannot be undone.')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-sm">Delete customer</button></form></details>
+            {% endif %}
+        </div>
+        <h2 style="margin-top:18px">Recent logins</h2>
+        {% for l in logins %}<div class="mini-row"><div><strong>{{ l.at|nicedate }}</strong><small>IP {{ l.ip }}</small></div>{% if l.success %}<span class="badge ok">OK</span>{% else %}<span class="badge bad">Failed</span>{% endif %}</div>{% else %}<p class="muted small">No logins yet.</p>{% endfor %}
+    </section>
+</div>
+
+<section class="panel">
+    <div class="panel-head"><h2>Transactions (last 40)</h2><a class="link-arrow" href="{{ url_for('office_transactions', q=account.number) }}">Search all &rarr;</a></div>
+    {% include "admin/_tx_table.html" %}
+</section>
+
+<div class="dash-grid">
+    <section class="panel"><h2>Fixed deposits</h2>
+        {% for f in fds %}<div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} m @ {{ '%.2f'|format(f.rate) }}% &middot; opened {{ f.opened_at[:10] }} &middot; {{ f.status }}</small></div><strong>{{ f.principal|money }}</strong></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+        <h2 style="margin-top:16px">Saved beneficiaries</h2>
+        {% for p in payees %}<div class="mini-row"><div><strong>{{ p.nickname }}</strong><small>{{ p.account_number }} &middot; {{ p.full_name or 'closed' }}</small></div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+    </section>
+    <section class="panel"><h2>Service requests</h2>
+        {% for r in reqs %}<div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.details|truncate(70) }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+        <a href="{{ url_for('office_requests') }}" class="link-arrow">Answer requests &rarr;</a>
+    </section>
+</div>
+{% endblock %}

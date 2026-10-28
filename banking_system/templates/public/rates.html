@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Interest Rates &amp; Charges{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>Interest Rates &amp; Charges</h1><p>Effective from 01 October {{ today.year }}</p></div></section>
+<section class="section">
+    <div class="wrap narrow">
+        <h2>Savings account</h2>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Daily balance</th><th class="num">Interest rate (p.a.)</th></tr></thead>
+            <tbody>
+                <tr><td>Up to ₹1 lakh</td><td class="num">3.00%</td></tr>
+                <tr><td>Above ₹1 lakh up to ₹10 lakh</td><td class="num">3.50%</td></tr>
+                <tr><td>Above ₹10 lakh</td><td class="num">4.00%</td></tr>
+            </tbody>
+        </table></div>
+        <p class="muted small">Interest is calculated on the daily balance and paid every quarter (March, June, September, December).</p>
+
+        <h2>Fixed deposits (below ₹2 crore) <small class="muted">&middot; open online in Net Banking</small></h2>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Tenure</th><th class="num">General</th><th class="num">Senior citizen</th></tr></thead>
+            <tbody>
+                {% for m, r in FD_RATES.items() %}
+                <tr><td>{{ m }} months{% if m >= 12 %} ({{ m // 12 }} year{{ 's' if m > 12 }}){% endif %}</td><td class="num">{{ '%.2f'|format(r) }}%</td><td class="num">{{ '%.2f'|format(r + 0.5) }}%</td></tr>
+                {% endfor %}
+            </tbody>
+        </table></div>
+
+        <h2>Loans</h2>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Loan</th><th class="num">Interest from (p.a.)</th><th class="num">Processing fee</th></tr></thead>
+            <tbody>
+                <tr><td>Home loan</td><td class="num">8.40%</td><td class="num">0.35%</td></tr>
+                <tr><td>Car loan</td><td class="num">8.90%</td><td class="num">₹2,500</td></tr>
+                <tr><td>Personal loan</td><td class="num">10.75%</td><td class="num">1.00%</td></tr>
+                <tr><td>Education loan</td><td class="num">9.15%</td><td class="num">Nil</td></tr>
+            </tbody>
+        </table></div>
+
+        <h2>Service charges</h2>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Service</th><th class="num">Savings</th><th class="num">Current</th></tr></thead>
+            <tbody>
+                <tr><td>Minimum opening deposit</td><td class="num">₹500</td><td class="num">₹5,000</td></tr>
+                <tr><td>IMPS / net banking transfer</td><td class="num">Free</td><td class="num">Free</td></tr>
+                <tr><td>Daily cash withdrawal limit</td><td class="num">{{ DAILY_WITHDRAW_LIMIT|money }}</td><td class="num">{{ DAILY_WITHDRAW_LIMIT|money }}</td></tr>
+                <tr><td>Daily transfer limit</td><td class="num">{{ DAILY_TRANSFER_LIMIT|money }}</td><td class="num">{{ DAILY_TRANSFER_LIMIT|money }}</td></tr>
+                <tr><td>Debit card annual fee</td><td class="num">Free (1st year)</td><td class="num">₹250</td></tr>
+                <tr><td>Account statement (online)</td><td class="num">Free</td><td class="num">Free</td></tr>
+            </tbody>
+        </table></div>
+    </div>
+</section>
+{% endblock %}

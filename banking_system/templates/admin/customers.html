@@ -1,0 +1,32 @@
+{% extends "admin/layout.html" %}
+{% block title %}Customers{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Customers</h1><p class="muted small">{{ rows|length }} found</p></div>
+    <a href="{{ url_for('office_customer_new') }}" class="btn btn-primary">&#10133; Open new account</a></div>
+<form class="panel filters filters-2" method="get">
+    <div><label for="q">Search</label><input id="q" name="q" value="{{ args.get('q', '') }}" placeholder="Name, customer ID, email, mobile or account number"></div>
+    <div><label for="status">Show</label><select id="status" name="status">
+        <option value="">All customers</option><option value="frozen" {{ 'selected' if args.get('status') == 'frozen' }}>Frozen accounts</option>
+        <option value="locked" {{ 'selected' if args.get('status') == 'locked' }}>Locked logins</option></select></div>
+    <div><button class="btn btn-primary">Search</button></div>
+</form>
+<div class="table-card">
+<table class="data compact">
+    <thead><tr><th>Customer</th><th>Customer ID</th><th>Account</th><th>Contact</th><th class="num">Balance</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for c in rows %}
+    <tr>
+        <td><strong>{{ c.full_name }}</strong><br><small class="muted">{{ c.occupation }} &middot; {{ c.city }}</small></td>
+        <td>{{ c.customer_id }}</td>
+        <td>{{ c.number }}<br><small class="muted">{{ c.account_type }}</small></td>
+        <td class="small">{{ c.email }}<br>{{ c.mobile }}</td>
+        <td class="num"><strong>{{ c.balance|money }}</strong></td>
+        <td>{% if c.account_status == 'Active' %}<span class="badge ok">Active</span>{% else %}<span class="badge bad">{{ c.account_status }}</span>{% endif %}
+            {% if c.open_requests %}<br><span class="badge st-open">{{ c.open_requests }} request(s)</span>{% endif %}</td>
+        <td><a href="{{ url_for('office_customer', cid=c.customer_id) }}" class="btn btn-outline btn-sm">Manage</a></td>
+    </tr>
+    {% else %}<tr><td colspan="7" class="center muted">No customers found.</td></tr>{% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

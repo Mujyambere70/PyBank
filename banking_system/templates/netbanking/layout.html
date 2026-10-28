@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block body_class %}nb{% endblock %}
+{% block header %}
+<header class="nb-header">
+    <div class="nb-header-row">
+        <a href="{{ url_for('dashboard') }}" class="brand brand-light">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
+            <span>PyBank<small>Net Banking</small></span>
+        </a>
+        <div class="nb-user">
+            <div class="avatar">{{ customer.initials }}</div>
+            <div class="hide-sm">
+                <strong>{{ customer.full_name }}</strong>
+                <small>Customer ID: {{ customer.customer_id }}</small>
+            </div>
+            <a href="{{ url_for('logout') }}" class="btn btn-ghost btn-sm">Logout</a>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="nb-layout">
+    <aside class="nb-side">
+        {% for ep, icon, label in [
+            ('dashboard', '&#127968;', 'Dashboard'), ('account_details', '&#128179;', 'Account Details'),
+            ('transfer', '&#8644;', 'Fund Transfer'), ('deposit', '&#11015;', 'Deposit'),
+            ('withdraw', '&#11014;', 'Withdraw'), ('statement', '&#128196;', 'Statement'),
+            ('payees', '&#128101;', 'Beneficiaries'), ('fixed_deposits', '&#128176;', 'Fixed Deposits'),
+            ('service_requests', '&#128172;', 'Service Requests'),
+            ('profile', '&#128100;', 'My Profile'), ('security', '&#128274;', 'Security')] %}
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'transfer' and request.endpoint == 'receipt') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
+        {% endfor %}
+        <a href="{{ url_for('logout') }}" class="logout"><span>&#9211;</span>Logout</a>
+    </aside>
+    <main class="nb-main">
+        {% if request.endpoint == 'dashboard' %}{% for n in NOTICES %}
+        <div class="notice notice-{{ n.level }}"><strong>{{ n.title }}</strong> {{ n.body }}</div>
+        {% endfor %}{% endif %}
+        {% block nb_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer class="nb-footer">
+    &copy; {{ today.year }} PyBank &middot; Never share your password, PIN or OTP with anyone &middot;
+    <span class="disclaimer">Fictional bank for a BCA academic project &mdash; not a real bank.</span>
+    <span class="credit">Designed &amp; developed by <a href="{{ url_for('about') }}#developer">Jean Michel Mujyambere</a></span>
+</footer>
+{% endblock %}

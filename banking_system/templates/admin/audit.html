@@ -1,0 +1,13 @@
+{% extends "admin/layout.html" %}
+{% block title %}Audit log{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Audit log</h1><p class="muted small">Every back-office action, who did it and when. The log cannot be edited.</p></div></div>
+<div class="table-card">
+<table class="data compact">
+    <thead><tr><th>Time</th><th>Staff</th><th>Action</th><th>Target</th><th>Details</th></tr></thead>
+    <tbody>{% for a in rows %}<tr><td class="nowrap small">{{ a.at|nicedate }}</td><td class="small">{{ a.full_name or '—' }}<br><span class="muted">{{ a.staff_id }}</span></td>
+        <td><strong>{{ a.action }}</strong></td><td class="small">{% if a.target.startswith('PB1') %}<a href="{{ url_for('office_customer', cid=a.target) }}">{{ a.target }}</a>{% else %}{{ a.target }}{% endif %}</td><td class="small">{{ a.details }}</td></tr>
+    {% else %}<tr><td colspan="5" class="center muted">No actions yet.</td></tr>{% endfor %}</tbody>
+</table>
+</div>
+{% endblock %}

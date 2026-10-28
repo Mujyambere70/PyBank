@@ -1,0 +1,41 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Beneficiaries{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>My beneficiaries</h1><p class="muted small">Save people you pay often, then send money with one click.</p></div></div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Saved beneficiaries ({{ payees|length }})</h2>
+        {% for p in payees %}
+        <div class="own-item">
+            <div class="own-main">
+                <strong>{{ p.nickname }}</strong>
+                <small>A/c {{ p.account_number }}{% if p.full_name %} &middot; {{ p.full_name.split()[0] }} {{ p.full_name.split()[-1][0] }}.{% else %} &middot; <span class="out">account closed</span>{% endif %}</small>
+            </div>
+            <a href="{{ url_for('transfer', to=p.account_number) }}" class="btn btn-primary btn-sm">Pay</a>
+            <details class="own-tools">
+                <summary title="Edit or delete">&#9998;</summary>
+                <form method="post" action="{{ url_for('payee_action', bid=p.id, action='rename') }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="text" name="nickname" value="{{ p.nickname }}" maxlength="30" required>
+                    <button class="btn btn-outline btn-sm">Rename</button>
+                </form>
+                <form method="post" action="{{ url_for('payee_action', bid=p.id, action='delete') }}" onsubmit="return confirm('Delete {{ p.nickname }}?')">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </details>
+        </div>
+        {% else %}<p class="muted">No beneficiaries yet. Add the first one on the right.</p>{% endfor %}
+    </section>
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Add a beneficiary</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="account_number">PyBank account number</label>
+        <input type="text" id="account_number" name="account_number" value="{{ form.get('account_number', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="12-digit account number" required>
+        <label for="nickname">Nickname</label>
+        <input type="text" id="nickname" name="nickname" value="{{ form.get('nickname', '') }}" maxlength="30" placeholder="e.g. Mom, Landlord, Shop" required>
+        <button class="btn btn-primary btn-block">Save beneficiary</button>
+        <p class="small muted">We check that the account exists. You can rename or delete a beneficiary at any time.</p>
+    </form>
+</div>
+{% endblock %}

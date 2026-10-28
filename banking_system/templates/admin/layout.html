@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block body_class %}nb office{% endblock %}
+{% block header %}
+<header class="nb-header office-header">
+    <div class="nb-header-row">
+        <a href="{{ url_for('office_dashboard') }}" class="brand brand-light">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
+            <span>PyBank<small>Back Office &middot; {{ BRANCH.name }}</small></span>
+        </a>
+        <div class="nb-user">
+            <a href="{{ url_for('office_profile') }}" class="avatar" title="My profile">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</a>
+            <div class="hide-sm">
+                <strong>{{ me.full_name }}</strong>
+                <small>{{ me.staff_id }} &middot; {{ me.designation or me.role|capitalize }}</small>
+            </div>
+            <span class="role-badge {{ me.role }}">{{ me.role|upper }}</span>
+            <a href="{{ url_for('staff_logout') }}" class="btn btn-ghost btn-sm">Sign out</a>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block content %}
+<div class="nb-layout">
+    <aside class="nb-side">
+        <div class="side-label">Operations</div>
+        {% set items = [('office_dashboard', '&#128200;', 'Dashboard', None), ('office_customers', '&#128101;', 'Customers', None),
+            ('office_customer_new', '&#10133;', 'Open account', None), ('office_transactions', '&#128179;', 'Transactions', None),
+            ('office_requests', '&#128172;', 'Service requests', counts.open_requests)] %}
+        {% for ep, icon, label, badge in items %}
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
+        {% endfor %}
+        {% if me.role == 'admin' %}
+        <div class="side-label">Administration</div>
+        {% for ep, icon, label in [('office_staff', '&#129489;', 'Staff'), ('office_notices', '&#128227;', 'Notices'),
+            ('office_settings', '&#9881;', 'Bank settings'), ('office_database', '&#128451;', 'Database'), ('office_audit', '&#128220;', 'Audit log')] %}
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
+        {% endfor %}
+        {% endif %}
+        <div class="side-label">Me</div>
+        <a href="{{ url_for('office_profile') }}" {% if request.endpoint == 'office_profile' %}class="active"{% endif %}><span>&#128100;</span>My profile</a>
+        <a href="{{ url_for('staff_logout') }}" class="logout"><span>&#9211;</span>Sign out</a>
+    </aside>
+    <main class="nb-main">
+        {% block office_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}
+{% block footer %}
+<footer class="nb-footer">
+    PyBank Back Office &middot; every action is recorded in the audit log &middot;
+    <span class="credit">Designed &amp; developed by <a href="{{ url_for('about') }}#developer">Jean Michel Mujyambere</a></span>
+</footer>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Contact Us &amp; Branch Locator{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>Contact Us</h1><p>We are here to help, 24 hours a day.</p></div></section>
+<section class="section">
+    <div class="wrap contact-grid">
+        <div class="contact-card"><span>&#9742;</span><h3>Phone banking</h3><p><strong>1800-000-7926</strong><br>Toll free, 24x7</p></div>
+        <div class="contact-card"><span>&#9993;</span><h3>Email</h3><p><strong>care@pybank.example</strong><br>Reply within 24 hours</p></div>
+        <div class="contact-card"><span>&#128274;</span><h3>Report fraud</h3><p><strong>1800-000-1930</strong><br>Block your card instantly</p></div>
+    </div>
+    <div class="wrap split" style="margin-top:40px">
+        <img src="{{ url_for('static', filename='images/branch.jpg') }}" alt="PyBank branch building" class="rounded shadow">
+        <div>
+            <h2>Branches &amp; ATMs</h2>
+            {% for name, addr, ifsc, atm in [
+                (BRANCH.name, BRANCH.address, BRANCH.ifsc, '24x7 ATM + Cash deposit machine'),
+                ('Ambala City Branch', 'SCO 45, Jagadhri Road, Ambala City, Haryana 134003', 'PYBK0001031', '24x7 ATM'),
+                ('Mullana Branch', 'Near MMDU Gate 1, Mullana, Ambala, Haryana 133203', 'PYBK0001057', 'ATM 8 AM - 10 PM')] %}
+            <div class="branch">
+                <h3>{{ name }}</h3>
+                <p>{{ addr }}</p>
+                <p class="small"><strong>IFSC:</strong> {{ ifsc }} &middot; {{ atm }}</p>
+            </div>
+            {% endfor %}
+            <p class="muted small">Branch hours: Monday to Saturday 9:30 AM &ndash; 4:30 PM (closed on 2nd &amp; 4th Saturday and public holidays).</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

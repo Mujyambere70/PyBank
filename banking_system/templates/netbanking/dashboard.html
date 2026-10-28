@@ -1,0 +1,103 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Dashboard<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>My fixed deposits</h2><a href="{{ url_for('fixed_deposits') }}" class="link-arrow">Manage &rarr;</a></div>
+        {% for f in fds %}
+        <div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} months @ {{ '%.2f'|format(f.rate) }}% &middot; matures {{ f.matures_on }}</small></div><strong>{{ f.principal|money }}</strong></div>
+        {% else %}<p class="muted">No active fixed deposit. <a href="{{ url_for('fixed_deposits') }}">Earn up to {{ '%.2f'|format(FD_RATES.values()|max) }}% &rarr;</a></p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>My open requests</h2><a href="{{ url_for('service_requests') }}" class="link-arrow">All requests &rarr;</a></div>
+        {% for r in requests_open %}
+        <div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.details|truncate(60) }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>
+        {% else %}<p class="muted">No open requests. Need a cheque book or a new card? <a href="{{ url_for('service_requests') }}">Ask the branch &rarr;</a></p>{% endfor %}
+    </section>
+</div>
+{% endblock %}
+{% block nb_content %}
+<div class="nb-title">
+    <div>
+        <h1>{{ 'Good morning' if now_hour < 12 else 'Good afternoon' if now_hour < 17 else 'Good evening' }}, {{ customer.first_name }}</h1>
+        <p class="muted small">{% if previous_login %}Last login: {{ previous_login|nicedate }}{% else %}Welcome to PyBank Net Banking!{% endif %}</p>
+    </div>
+    <a href="{{ url_for('transfer') }}" class="btn btn-primary">&#8644; Transfer money</a>
+</div>
+
+<div class="dash-top">
+    <div class="bank-card" style="background-image:url('{{ url_for('static', filename='images/card.png') }}')">
+        <div class="bc-row"><span class="bc-bank">PyBank</span><span class="bc-type">{{ account.type|upper }}</span></div>
+        <div class="bc-chip" aria-hidden="true"></div>
+        <div class="bc-label">Available balance</div>
+        <div class="bc-balance" id="balance">{{ account.balance|money }}</div>
+        <div class="bc-number">XXXX XXXX XXXX {{ account.card_last4 }}</div>
+        <div class="bc-row bc-bottom">
+            <span>{{ customer.full_name|upper }}</span>
+            <span>A/c {{ account.masked_number }}</span>
+        </div>
+    </div>
+    <div class="tiles">
+        <div class="tile"><small>Money in ({{ today.strftime('%B') }})</small><strong class="in">+{{ summary.credit|money }}</strong></div>
+        <div class="tile"><small>Money out ({{ today.strftime('%B') }})</small><strong class="out">-{{ summary.debit|money }}</strong></div>
+        <div class="tile"><small>Account number</small><strong>{{ account.number }}</strong></div>
+        <div class="tile"><small>IFSC &middot; Branch</small><strong>{{ account.ifsc }}</strong><span class="small muted">{{ account.branch }}</span></div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <a href="{{ url_for('transfer') }}"><span class="qa qa-gold">&#8644;</span>Fund Transfer</a>
+    <a href="{{ url_for('deposit') }}"><span class="qa qa-green">&#11015;</span>Deposit</a>
+    <a href="{{ url_for('withdraw') }}"><span class="qa qa-red">&#11014;</span>Withdraw</a>
+    <a href="{{ url_for('statement') }}"><span class="qa qa-blue">&#128196;</span>Statement</a>
+    <a href="{{ url_for('payees') }}"><span class="qa qa-navy">&#128101;</span>Beneficiaries</a>
+    <a href="{{ url_for('fixed_deposits') }}"><span class="qa qa-gold">&#128176;</span>Fixed Deposits</a>
+    <a href="{{ url_for('service_requests') }}"><span class="qa qa-blue">&#128172;</span>Requests</a>
+</div>
+
+<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>Recent transactions</h2><a href="{{ url_for('statement') }}" class="link-arrow">View all &rarr;</a></div>
+        {% if recent %}
+        <ul class="tx-list">
+            {% for t in recent %}
+            <li>
+                <span class="tx-icon {{ 'in' if t.is_credit else 'out' }}">{{ '&#8601;'|safe if t.is_credit else '&#8599;'|safe }}</span>
+                <div class="tx-main"><strong>{{ t.description }}</strong><small>{{ t.created_at|nicedate }} &middot; {{ t.category }}</small></div>
+                <div class="tx-amt {{ 'in' if t.is_credit else 'out' }}">{{ '+' if t.is_credit else '-' }}{{ t.amount|money }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}<p class="muted">No transactions yet.</p>{% endif %}
+    </section>
+
+    <section class="panel">
+        <div class="panel-head"><h2>Last 6 months</h2><span class="legend"><i class="in"></i>In <i class="out"></i>Out</span></div>
+        {% set mx = [chart|map(attribute='credit')|max, chart|map(attribute='debit')|max, 1]|max %}
+        <div class="chart" role="img" aria-label="Money in and out for the last 6 months">
+            {% for m in chart %}
+            <div class="chart-col">
+                <div class="bars">
+                    <div class="bar in" style="height:{{ (m.credit / mx * 100)|round(1) }}%" title="In: {{ m.credit|money }}"></div>
+                    <div class="bar out" style="height:{{ (m.debit / mx * 100)|round(1) }}%" title="Out: {{ m.debit|money }}"></div>
+                </div>
+                <span>{{ m.month }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="small muted">Hover over a bar to see the exact amount.</p>
+    </section>
+</div>
+<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>My fixed deposits</h2><a href="{{ url_for('fixed_deposits') }}" class="link-arrow">Manage &rarr;</a></div>
+        {% for f in fds %}
+        <div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} months @ {{ '%.2f'|format(f.rate) }}% &middot; matures {{ f.matures_on }}</small></div><strong>{{ f.principal|money }}</strong></div>
+        {% else %}<p class="muted">No active fixed deposit. <a href="{{ url_for('fixed_deposits') }}">Earn up to {{ '%.2f'|format(FD_RATES.values()|max) }}% &rarr;</a></p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>My open requests</h2><a href="{{ url_for('service_requests') }}" class="link-arrow">All requests &rarr;</a></div>
+        {% for r in requests_open %}
+        <div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.details|truncate(60) }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>
+        {% else %}<p class="muted">No open requests. Need a cheque book or a new card? <a href="{{ url_for('service_requests') }}">Ask the branch &rarr;</a></p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

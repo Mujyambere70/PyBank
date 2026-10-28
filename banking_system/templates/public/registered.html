@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Account Opened{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="wrap narrow form-card center">
+        <div class="success-icon">&#10003;</div>
+        <h1>Congratulations, {{ customer.first_name }}!</h1>
+        <p>Your PyBank {{ account.type }} Account is now active. Please save these details.</p>
+        <table class="details">
+            <tr><th>Customer ID (login)</th><td><strong id="customerId">{{ cid }}</strong></td></tr>
+            <tr><th>Account number</th><td><strong id="accountNumber">{{ account.number }}</strong></td></tr>
+            <tr><th>Account type</th><td>{{ account.type }}</td></tr>
+            <tr><th>IFSC</th><td>{{ account.ifsc }}</td></tr>
+            <tr><th>Branch</th><td>{{ account.branch }}</td></tr>
+            <tr><th>Debit card</th><td>XXXX XXXX XXXX {{ account.card_last4 }} (dispatched to your address)</td></tr>
+            <tr><th>Opening balance</th><td>{{ account.balance|money }}</td></tr>
+        </table>
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login to Net Banking</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "admin/layout.html" %}
+{% block title %}Back Office{% endblock %}
+{% block office_content %}
+<div class="nb-title">
+    <div><h1>{{ 'Good morning' if now_hour < 12 else 'Good afternoon' if now_hour < 17 else 'Good evening' }}, {{ me.full_name.split()[0] }}</h1>
+        <p class="muted small">{{ BRANCH.name }} &middot; IFSC {{ BRANCH.ifsc }} &middot; {{ today.strftime('%A, %d %B %Y') }}</p></div>
+    <div class="btn-row" style="margin:0">
+        <a href="{{ url_for('office_customer_new') }}" class="btn btn-primary">&#10133; Open account</a>
+        <a href="{{ url_for('office_requests') }}" class="btn btn-outline">Requests ({{ counts.open_requests }})</a>
+    </div>
+</div>
+<div class="kpi-grid">
+    <a class="tile" href="{{ url_for('office_customers') }}"><small>Customers</small><strong>{{ counts.customers }}</strong></a>
+    <div class="tile"><small>Total deposits (balances)</small><strong>{{ counts.deposits|money }}</strong></div>
+    <div class="tile"><small>Active fixed deposits</small><strong>{{ counts.fd_total|money }}</strong><span class="small muted">{{ counts.fd_count }} FDs</span></div>
+    <a class="tile" href="{{ url_for('office_transactions', **{'from': today.isoformat()}) }}"><small>Transactions today</small><strong>{{ counts.tx_today }}</strong>
+        <span class="small"><span class="in">+{{ counts.in_today|money }}</span> &middot; <span class="out">-{{ counts.out_today|money }}</span></span></a>
+    <a class="tile" href="{{ url_for('office_customers', status='frozen') }}"><small>Frozen accounts</small><strong class="{{ 'out' if counts.frozen }}">{{ counts.frozen }}</strong></a>
+    <a class="tile" href="{{ url_for('office_customers', status='locked') }}"><small>Locked logins &middot; failed today</small><strong class="{{ 'out' if counts.locked }}">{{ counts.locked }} &middot; {{ counts.failed_logins }}</strong></a>
+</div>
+<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>Latest transactions</h2><a href="{{ url_for('office_transactions') }}" class="link-arrow">All &rarr;</a></div>
+        <ul class="tx-list">
+        {% for t in recent %}
+            <li><span class="tx-icon {{ 'in' if t.type == 'CR' else 'out' }}">{{ '&#8601;'|safe if t.type == 'CR' else '&#8599;'|safe }}</span>
+                <div class="tx-main"><strong><a href="{{ url_for('office_customer', cid=t.customer_id) }}">{{ t.full_name }}</a> &middot; {{ t.category }}</strong><small>{{ t.created_at|nicedate }} &middot; {{ t.description|truncate(48) }}</small></div>
+                <div class="tx-amt {{ 'in' if t.type == 'CR' else 'out' }}">{{ '+' if t.type == 'CR' else '-' }}{{ t.amount|money }}</div></li>
+        {% endfor %}
+        </ul>
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Service requests</h2><a href="{{ url_for('office_requests') }}" class="link-arrow">All &rarr;</a></div>
+        {% for r in requests %}
+        <div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.full_name }} &middot; {{ r.created_at|nicedate }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>
+        {% else %}<p class="muted">No requests.</p>{% endfor %}
+        {% if me.role == 'admin' %}
+        <div class="panel-head" style="margin-top:18px"><h2>Recent staff actions</h2><a href="{{ url_for('office_audit') }}" class="link-arrow">Audit log &rarr;</a></div>
+        {% for a in audit %}<div class="mini-row"><div><strong>{{ a.action }}</strong><small>{{ a.full_name or a.staff_id }} &middot; {{ a.at|nicedate }}{% if a.target %} &middot; {{ a.target }}{% endif %}</small></div></div>{% endfor %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

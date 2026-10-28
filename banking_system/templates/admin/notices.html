@@ -1,0 +1,38 @@
+{% extends "admin/layout.html" %}
+{% block title %}Notices{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Notices</h1><p class="muted small">Active notices appear on the website home page and on every customer's dashboard.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel" id="noticeForm">
+        <h2>Publish a notice</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="">
+        <label>Title</label><input name="title" maxlength="80" required>
+        <label>Text</label><textarea name="body" rows="3" maxlength="400" required></textarea>
+        <div class="form-grid">
+            <div><label>Style</label><select name="level">{% for l in LEVELS %}<option>{{ l }}</option>{% endfor %}</select></div>
+            <div><label>&nbsp;</label><label class="checkbox"><input type="checkbox" name="active" value="1" checked> Show to customers</label></div>
+        </div>
+        <button class="btn btn-primary btn-block">Save notice</button>
+    </form>
+    <section class="panel">
+        <h2>All notices ({{ rows|length }})</h2>
+        {% for n in rows %}
+        <div class="notice notice-{{ n.level }} {{ '' if n.active else 'off' }}">
+            <strong>{{ n.title }}</strong> {{ n.body }}
+            <div class="small muted">{{ 'Visible' if n.active else 'Hidden' }} &middot; {{ n.created_by }} &middot; {{ n.created_at|nicedate(false) }}</div>
+            <div class="btn-row" style="margin-top:6px">
+                <button type="button" class="btn btn-outline btn-sm" onclick='editNotice({{ n|tojson }})'>Edit</button>
+                <form method="post" action="{{ url_for('office_notice_delete', nid=n.id) }}" onsubmit="return confirm('Delete this notice?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-sm">Delete</button></form>
+            </div>
+        </div>
+        {% else %}<p class="muted">No notices yet.</p>{% endfor %}
+    </section>
+</div>
+<script>
+function editNotice(n) {
+    const f = document.getElementById('noticeForm');
+    f.id.value = n.id; f.title.value = n.title; f.body.value = n.body; f.level.value = n.level; f.active.checked = !!n.active;
+    f.querySelector('h2').textContent = 'Edit notice #' + n.id; f.scrollIntoView({behavior: 'smooth'});
+}
+</script>
+{% endblock %}

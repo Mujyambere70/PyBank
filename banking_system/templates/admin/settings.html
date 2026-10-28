@@ -1,0 +1,21 @@
+{% extends "admin/layout.html" %}
+{% block title %}Bank settings{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Bank settings</h1><p class="muted small">Changes apply at once to Net Banking and the website.</p></div></div>
+<form method="post" class="panel narrow-panel">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <h2>Daily limits per customer</h2>
+    <div class="form-grid">
+        <div><label>Cash withdrawal (₹)</label><input type="number" name="daily_withdraw_limit" value="{{ s.daily_withdraw_limit|int // 100 }}" min="1000" required></div>
+        <div><label>Fund transfer (₹)</label><input type="number" name="daily_transfer_limit" value="{{ s.daily_transfer_limit|int // 100 }}" min="1000" required></div>
+    </div>
+    <h2 style="margin-top:22px">Fixed deposit interest rates (% a year)</h2>
+    <div class="form-grid">
+        {% for m in FD_TENURES %}<div><label>{{ m }} months</label><input type="number" name="fd_rate_{{ m }}" value="{{ s['fd_rate_%d'|format(m)] }}" step="0.05" min="0.05" max="15" required></div>{% endfor %}
+    </div>
+    <p class="small muted">New rates are used for new FDs only. Existing FDs keep their rate.</p>
+    <h2 style="margin-top:22px">Website</h2>
+    <label class="checkbox"><input type="checkbox" name="online_account_opening" value="1" {{ 'checked' if s.online_account_opening == '1' }}> Allow customers to open accounts online</label>
+    <button class="btn btn-primary btn-block">Save settings</button>
+</form>
+{% endblock %}

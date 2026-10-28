@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personal Banking{% endblock %} | PyBank</title>
+    <meta name="description" content="PyBank - savings accounts, current accounts, deposits, loans and net banking.">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<div class="topbar">
+    <div class="wrap">
+        <span>&#9742; Customer care: <strong>1800-000-7926</strong> (24x7)</span>
+        <span class="hide-sm">IFSC {{ BRANCH.ifsc }} &middot; {{ BRANCH.name }}</span>
+        <a href="{{ url_for('contact') }}">Branch &amp; ATM locator</a>
+    </div>
+</div>
+
+{% block header %}
+<header class="site-header">
+    <div class="wrap header-row">
+        <a href="{{ url_for('index') }}" class="brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
+            <span>PyBank<small>Banking made simple</small></span>
+        </a>
+        <nav class="main-nav">
+            {% for ep, label in [('index', 'Home'), ('rates', 'Interest Rates'), ('about', 'About Us'), ('faq', 'Help & FAQ'), ('contact', 'Contact')] %}
+                <a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}class="active"{% endif %}>{{ label }}</a>
+            {% endfor %}
+        </nav>
+        <div class="header-actions">
+            {% if session.cid %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">My Account</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-outline">Open Account</a>
+                <a href="{{ url_for('login') }}" class="btn btn-primary">&#128274; Login</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="wrap flash-area">
+        {% for category, message in messages %}
+            <div class="flash {{ category }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+{% block footer %}
+<footer class="site-footer">
+    <div class="wrap footer-grid">
+        <div>
+            <a href="{{ url_for('index') }}" class="brand brand-light">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt=""> <span>PyBank</span>
+            </a>
+            <p>Simple, secure banking for everyone. Savings, current accounts, deposits and loans with easy net banking.</p>
+        </div>
+        <div>
+            <h4>Products</h4>
+            <a href="{{ url_for('index') }}#products">Savings Account</a>
+            <a href="{{ url_for('index') }}#products">Current Account</a>
+            <a href="{{ url_for('rates') }}">Fixed Deposits</a>
+            <a href="{{ url_for('index') }}#products">Loans &amp; Cards</a>
+        </div>
+        <div>
+            <h4>Help</h4>
+            <a href="{{ url_for('faq') }}">FAQ</a>
+            <a href="{{ url_for('rates') }}">Interest rates &amp; charges</a>
+            <a href="{{ url_for('contact') }}">Contact us</a>
+            <a href="{{ url_for('login') }}">Net banking login</a>
+        </div>
+        <div>
+            <h4>Head Office</h4>
+            <p>{{ BRANCH.address }}<br>care@pybank.example<br>Mon-Sat, 9:30 AM - 4:30 PM</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="wrap">
+            <span>&copy; {{ today.year }} PyBank. All rights reserved.</span>
+            <span class="credit-line">Designed &amp; developed by <a href="{{ url_for('about') }}#developer">Jean Michel Mujyambere</a> &middot; <a href="{{ url_for('staff_login') }}">Staff login</a></span>
+            <span class="disclaimer">PyBank is a fictional bank made for a BCA academic project (MMDU, Mullana). It is not a real bank and no real money is used &mdash; do not enter real personal or card details.</span>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

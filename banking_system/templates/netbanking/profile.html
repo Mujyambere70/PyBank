@@ -1,0 +1,34 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}My Profile{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><h1>My profile</h1></div>
+<div class="dash-grid">
+    <section class="panel">
+        <div class="profile-top"><div class="avatar big">{{ customer.initials }}</div>
+            <div><h2>{{ customer.full_name }}</h2><span class="muted small">Customer since {{ customer.created_at|nicedate(false) }}</span></div></div>
+        <table class="details">
+            <tr><th>Customer ID</th><td>{{ customer.customer_id }}</td></tr>
+            <tr><th>Date of birth</th><td>{{ customer.dob }}</td></tr>
+            <tr><th>Gender</th><td>{{ customer.gender }}</td></tr>
+            <tr><th>Occupation</th><td>{{ customer.occupation }}</td></tr>
+            <tr><th>KYC status</th><td><span class="badge ok">Verified</span></td></tr>
+        </table>
+        <p class="small muted">To change your name or date of birth, please visit your home branch with an ID proof.</p>
+    </section>
+    {% set f = form %}
+    <form method="post" class="panel">
+        <h2>Contact details</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="email">Email</label><input type="email" id="email" name="email" value="{{ f.get('email', '') }}" required>
+        <label for="mobile">Mobile</label><input type="tel" id="mobile" name="mobile" value="{{ f.get('mobile', '') }}" pattern="[6-9][0-9]{9}" maxlength="10" required>
+        <label for="address">Address</label><input type="text" id="address" name="address" value="{{ f.get('address', '') }}" required>
+        <div class="form-grid">
+            <div><label for="city">City</label><input type="text" id="city" name="city" value="{{ f.get('city', '') }}" required></div>
+            <div><label for="pincode">PIN code</label><input type="text" id="pincode" name="pincode" value="{{ f.get('pincode', '') }}" pattern="[1-9][0-9]{5}" maxlength="6" required></div>
+        </div>
+        <label for="state">State</label>
+        <select id="state" name="state">{% for s in states %}<option {% if f.get('state') == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+        <button type="submit" class="btn btn-primary btn-block">Save changes</button>
+    </form>
+</div>
+{% endblock %}

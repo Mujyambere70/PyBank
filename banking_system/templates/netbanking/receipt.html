@@ -1,0 +1,29 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Transaction Receipt{% endblock %}
+{% block nb_content %}
+{% if t.category == 'Transfer' %}<div class="steps no-print"><span class="done">1. Details</span><span class="done">2. Confirm</span><span class="active">3. Receipt</span></div>{% endif %}
+<div class="receipt panel narrow-panel">
+    <div class="receipt-head">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+        <div><strong>PyBank</strong><small>{{ account.branch }} &middot; IFSC {{ account.ifsc }}</small></div>
+    </div>
+    <div class="receipt-status">
+        <div class="success-icon small">&#10003;</div>
+        <h1>Transaction successful</h1>
+        <div class="receipt-amount {{ 'in' if t.is_credit else 'out' }}">{{ '+' if t.is_credit else '-' }}{{ t.amount|money }}</div>
+    </div>
+    <table class="details">
+        <tr><th>Reference no.</th><td><strong id="ref">{{ t.ref }}</strong></td></tr>
+        <tr><th>Date &amp; time</th><td>{{ t.created_at|nicedate }}</td></tr>
+        <tr><th>Type</th><td>{{ t.category }} ({{ 'Credit' if t.is_credit else 'Debit' }})</td></tr>
+        <tr><th>Description</th><td>{{ t.description }}</td></tr>
+        <tr><th>Account</th><td>{{ customer.full_name }} &middot; {{ account.number }}</td></tr>
+        <tr><th>Balance after</th><td>{{ t.balance_after|money }}</td></tr>
+    </table>
+    <div class="btn-row no-print">
+        <button type="button" class="btn btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to dashboard</a>
+    </div>
+    <p class="small muted center">This is a computer-generated receipt and does not need a signature.</p>
+</div>
+{% endblock %}

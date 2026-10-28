@@ -1,0 +1,23 @@
+<div class="table-wrap">
+<table class="data compact">
+    <thead><tr><th>Date</th>{% if show_customer %}<th>Customer</th>{% endif %}<th>Description</th><th>Ref.</th><th class="num">Debit</th><th class="num">Credit</th><th class="num">Balance</th><th></th></tr></thead>
+    <tbody>
+    {% for t in tx %}
+    <tr class="{{ 'reversed' if t.reversed }}">
+        <td class="nowrap small">{{ t.created_at|nicedate }}</td>
+        {% if show_customer %}<td class="small"><a href="{{ url_for('office_customer', cid=t.customer_id) }}">{{ t.full_name }}</a><br><span class="muted">{{ t.account_number }}</span></td>{% endif %}
+        <td class="small">{{ t.description }} <span class="tag">{{ t.category }}</span>{% if t.reversed %} <span class="badge bad">reversed</span>{% endif %}</td>
+        <td class="small">{{ t.ref }}</td>
+        <td class="num out">{% if t.type == 'DR' %}{{ t.amount|money }}{% endif %}</td>
+        <td class="num in">{% if t.type == 'CR' %}{{ t.amount|money }}{% endif %}</td>
+        <td class="num">{{ t.balance_after|money }}</td>
+        <td>{% if not t.reversed and t.category not in ('Reversal', 'Transfer', 'Fixed deposit') %}
+            <details class="own-tools right"><summary title="Reverse this entry">&#8634;</summary>
+                <form method="post" action="{{ url_for('office_reverse', tx_id=t.id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input name="reason" placeholder="Reason for reversal" required><button class="btn btn-danger btn-sm">Reverse</button></form></details>{% endif %}</td>
+    </tr>
+    {% else %}<tr><td colspan="8" class="center muted">No transactions.</td></tr>{% endfor %}
+    </tbody>
+</table>
+</div>

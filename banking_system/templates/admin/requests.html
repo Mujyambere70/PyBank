@@ -1,0 +1,24 @@
+{% extends "admin/layout.html" %}
+{% block title %}Service requests{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Service requests</h1><p class="muted small">Customers send these from Net Banking. Your reply is shown to them.</p></div>
+    <div class="chips">{% for s in [''] + STATUSES %}<a href="{{ url_for('office_requests', status=s) }}" class="chip {{ 'active' if args.get('status', '') == s }}">{{ s or 'All' }}</a>{% endfor %}</div></div>
+{% for r in rows %}
+<section class="panel req">
+    <div class="req-head"><strong>#{{ r.id }} &middot; {{ r.type }}</strong>
+        <span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span>
+        <small class="muted"><a href="{{ url_for('office_customer', cid=r.customer_id) }}">{{ r.full_name }} ({{ r.customer_id }})</a> &middot; {{ r.created_at|nicedate }}</small></div>
+    <p>{{ r.details }}</p>
+    <form method="post" action="{{ url_for('office_request_action', rid=r.id, action='answer', status=args.get('status', '')) }}" class="reply-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <select name="status">{% for s in STATUSES %}<option {% if r.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+        <input name="reply" value="{{ r.reply }}" placeholder="Reply to the customer">
+        <button class="btn btn-primary btn-sm">Save</button>
+    </form>
+    {% if r.replied_by %}<small class="muted">Last reply by {{ r.replied_by }} &middot; {{ r.updated_at|nicedate }}</small>{% endif %}
+    {% if me.role == 'admin' %}
+    <form method="post" action="{{ url_for('office_request_action', rid=r.id, action='delete') }}" onsubmit="return confirm('Delete request #{{ r.id }}?')" class="right-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="linkbtn out">Delete</button></form>{% endif %}
+</section>
+{% else %}<section class="panel"><p class="muted">No requests here.</p></section>{% endfor %}
+{% endblock %}

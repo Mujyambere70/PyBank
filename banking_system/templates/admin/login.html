@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Back Office Sign in{% endblock %}
+{% block content %}
+<section class="auth">
+    <div class="wrap auth-grid">
+        <form method="post" class="auth-card" autocomplete="off">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="auth-logo">
+            <h1>Back Office</h1>
+            <p class="muted">For PyBank staff only. Customers please use <a href="{{ url_for('login') }}">Net Banking</a>.</p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="login">Staff ID or email</label>
+            <input type="text" id="login" name="login" value="{{ login }}" placeholder="e.g. EMP001" required autofocus>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">&#128274; Sign in</button>
+            <div class="demo-box">
+                <strong>Demo staff</strong><br>
+                Admin: <code>admin@pybank.demo</code> / <code>Admin@1234</code> (Jean Michel Mujyambere)<br>
+                Staff: <code>neha.sharma@pybank.demo</code> / <code>Staff@1234</code>
+            </div>
+        </form>
+        <aside class="auth-side">
+            <img src="{{ url_for('static', filename='images/branch.jpg') }}" alt="" class="rounded">
+            <h2>Branch operations</h2>
+            <ul class="check-list light">
+                <li>Open accounts, update KYC details and reset passwords or PINs.</li>
+                <li>Freeze accounts, post corrections and reverse wrong entries.</li>
+                <li>Answer customer service requests.</li>
+                <li>Admins also manage staff, notices, limits and FD rates.</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+{% endblock %}
