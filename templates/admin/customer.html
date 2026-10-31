@@ -4,23 +4,23 @@
 <p class="small"><a href="{{ url_for('office_customers') }}">&larr; All customers</a></p>
 <div class="nb-title">
     <div class="profile-top" style="margin:0"><div class="avatar big">{{ c.initials }}</div>
-        <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; customer since {{ c.created_at|nicedate(false) }} &middot; last login {{ c.last_login|nicedate if c.last_login else 'never' }}</p></div></div>
-    <div>{% if account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
+        <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; {{ country_name(c.country) }} &middot; {{ LANGUAGES.get(c.lang, c.lang) }} &middot; customer since {{ c.created_at|nicedate(false) }} &middot; last login {{ c.last_login|nicedate if c.last_login else 'never' }}</p></div></div>
+    <div>{% if c.status == 'Pending' %}<a class="badge st-pending" href="{{ url_for('office_applications') }}">Application waiting</a>{% elif c.status == 'Rejected' %}<span class="badge bad">Application rejected</span>{% elif account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
         {% if locked %}<span class="badge bad">Login locked</span>{% endif %}</div>
 </div>
 
 <div class="kpi-grid">
     <div class="tile"><small>Balance</small><strong>{{ account.balance|money }}</strong></div>
-    <div class="tile"><small>Account</small><strong>{{ account.number }}</strong><span class="small muted">{{ account.type }} &middot; card XX{{ account.card_last4 }}</span></div>
+    <div class="tile"><small>Account</small><strong>{{ account.number }}</strong><span class="small muted">{{ account.type }} &middot; {{ account.currency }} &middot; card XX{{ account.card_last4 }}</span></div>
     <div class="tile"><small>Fixed deposits</small><strong>{{ fds|selectattr('status', 'equalto', 'Active')|map(attribute='principal')|sum|money }}</strong><span class="small muted">{{ fds|selectattr('status', 'equalto', 'Active')|list|length }} active</span></div>
-    <div class="tile"><small>Beneficiaries &middot; requests</small><strong>{{ payees|length }} &middot; {{ reqs|length }}</strong></div>
+    <div class="tile"><small>Credit score</small><strong>{{ score.score if score else '-' }}</strong><span class="small muted">{{ score.band if score else '' }}</span></div>
 </div>
 
 <div class="dash-grid">
     <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='edit') }}" class="panel">
         <h2>Customer details (KYC)</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% set f = {'full_name': c.full_name, 'dob': c.dob, 'gender': c.gender, 'email': c.email, 'mobile': c.mobile, 'address': c.address, 'city': c.city, 'state': c.state, 'pincode': c.pincode, 'occupation': c.occupation} %}
+        {% set f = {'full_name': c.full_name, 'dob': c.dob, 'gender': c.gender, 'email': c.email, 'mobile': c.mobile, 'address': c.address, 'city': c.city, 'state': c.state, 'pincode': c.pincode, 'occupation': c.occupation, 'country': c.country} %}
         {% include "admin/_customer_fields.html" %}
         <button class="btn btn-primary btn-block">Save details</button>
     </form>
@@ -31,6 +31,10 @@
             {% if locked %}
             <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='unlock') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <b>Login is locked</b> after wrong passwords. <button class="btn btn-primary btn-sm">Unlock now</button></form>
+            {% endif %}
+            {% if c.totp_enabled %}
+            <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='reset2fa') }}" onsubmit="return confirm('Turn off two-factor login for {{ c.full_name }}? Do this only after checking their identity.')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <b>Two-factor login is on.</b> Lost phone? <button class="btn btn-outline btn-sm">Turn off 2FA</button></form>
             {% endif %}
             <details><summary>Reset login password</summary>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='password') }}" class="inline-form">
@@ -47,7 +51,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-grid">
                         <div><label>Type</label><select name="kind"><option value="CR">Credit (money in)</option><option value="DR">Debit (money out)</option></select></div>
-                        <div><label>Amount (₹)</label><input type="number" name="amount" min="0.01" step="0.01" required></div>
+                        <div><label>Amount ({{ account.currency }})</label><input type="number" name="amount" min="0.01" step="0.01" required></div>
                         <div class="full"><label>Reason</label><input name="description" placeholder="e.g. Cash deposit at counter" required></div>
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-top:10px">Post entry</button></form></details>
@@ -61,7 +65,7 @@
             {% endif %}
             {% if me.role == 'admin' %}
             <details><summary class="out">Close &amp; delete customer</summary>
-                <p class="small muted">Allowed only when the balance is ₹0.00 and no FD is active. All records of this customer are deleted.</p>
+                <p class="small muted">Allowed only when the balance is 0 and no FD or loan is active. All records of this customer are deleted.</p>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='delete') }}" onsubmit="return confirm('Delete {{ c.full_name }} and ALL records? This cannot be undone.')">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-sm">Delete customer</button></form></details>
             {% endif %}
@@ -76,6 +80,24 @@
     {% include "admin/_tx_table.html" %}
 </section>
 
+<div class="dash-grid">
+    <section class="panel"><div class="panel-head"><h2>Deposit / withdrawal requests</h2><a class="link-arrow" href="{{ url_for('office_approvals') }}">Approvals &rarr;</a></div>
+        {% for r in cash %}<div class="mini-row"><div><strong>{{ r.kind }} {{ r.ref }}</strong><small>{{ r.created_at|nicedate }}{% if r.decided_by %} &middot; {{ r.decided_by }}{% endif %}{% if r.reason %} &middot; {{ r.reason }}{% endif %}</small></div><div class="right"><strong>{{ r.amount|money }}</strong><br><span class="badge st-{{ r.status|lower }}">{{ r.status }}</span></div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+    </section>
+    <section class="panel"><div class="panel-head"><h2>Loans</h2><a class="link-arrow" href="{{ url_for('office_loans') }}">All loans &rarr;</a></div>
+        {% for ln in loans %}<div class="mini-row"><div><strong>{{ ln.product }} {{ ln.loan_number }}</strong><small>{{ ln.principal|money }} &middot; {{ ln.months }} m @ {{ '%.2f'|format(ln.rate) }}% &middot; EMI {{ ln.emi|money }}{% if ln.status == 'Active' %} &middot; {{ ln.emis_paid }} paid, next {{ ln.next_due }}{% endif %}</small></div><div class="right">{% if ln.status == 'Active' %}<strong>{{ ln.outstanding|money }}</strong><br>{% endif %}<span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span>{% if ln.overdue %} <span class="badge bad">Overdue</span>{% endif %}</div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+    </section>
+</div>
+<div class="dash-grid">
+    <section class="panel"><h2>Documents</h2>
+        {% for d in docs %}<div class="mini-row"><div><strong>{{ d.kind }}</strong><small>{{ d.filename }} &middot; {{ d.purpose }} &middot; {{ d.uploaded_at|nicedate(false) }}</small></div><a class="link-arrow" href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">Open &rarr;</a></div>{% else %}<p class="muted small">None uploaded.</p>{% endfor %}
+        <h2 style="margin-top:16px">Changes of personal data</h2>
+        {% for p in changes %}<div class="mini-row"><div><strong>{% for k in p.changes %}{{ labels[k] }}{{ ', ' if not loop.last }}{% endfor %}</strong><small>{{ p.created_at|nicedate }}{% if p.decided_by %} &middot; {{ p.decided_by }}{% endif %}{% if p.reason %} &middot; {{ p.reason }}{% endif %}</small></div><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+    </section>
+    <section class="panel"><div class="panel-head"><h2>Payments to other banks</h2><a class="link-arrow" href="{{ url_for('office_payments') }}">All &rarr;</a></div>
+        {% for p in payments %}<div class="mini-row"><div><strong>{{ p.rail }} {{ p.ref }}</strong><small>{{ p.beneficiary_name }} &middot; {{ p.bank_name }} &middot; {{ p.created_at|nicedate }}</small></div><div class="right"><strong>{{ p.amount|money(p.currency) }}</strong><br><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
+    </section>
+</div>
 <div class="dash-grid">
     <section class="panel"><h2>Fixed deposits</h2>
         {% for f in fds %}<div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} m @ {{ '%.2f'|format(f.rate) }}% &middot; opened {{ f.opened_at[:10] }} &middot; {{ f.status }}</small></div><strong>{{ f.principal|money }}</strong></div>{% else %}<p class="muted small">None.</p>{% endfor %}

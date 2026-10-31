@@ -1,0 +1,94 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Loans{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Loans</h1><p class="muted small">Apply online, see your EMI schedule and pay EMIs from your account.</p></div></div>
+{% if loans %}
+<section class="panel">
+    <h2>My loans</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Loan no.</th><th>Type</th><th class="num">Amount</th><th>Rate</th><th>Tenure</th><th class="num">EMI</th><th class="num">Outstanding</th><th>Next EMI</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for ln in loans %}
+        <tr><td><a href="{{ url_for('loan_detail', loan_id=ln.id) }}"><code>{{ ln.loan_number }}</code></a></td><td>{{ ln.product }}</td>
+            <td class="num">{{ ln.principal|money }}</td><td>{{ '%.2f'|format(ln.rate) }}%</td><td>{{ ln.months }} months</td>
+            <td class="num">{{ ln.emi|money }}</td><td class="num">{{ ln.outstanding|money if ln.status == 'Active' else '-' }}</td>
+            <td>{% if ln.status == 'Active' %}{{ ln.next_due }}{% if ln.overdue %} <span class="badge bad">Overdue</span>{% endif %}{% else %}-{% endif %}</td>
+            <td><span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span></td></tr>
+        {% endfor %}
+        </tbody></table></div>
+</section>
+{% endif %}
+<section class="panel score-panel">
+    <div class="score-dial band-{{ score.band|lower }}"><strong>{{ score.score }}</strong><small>{{ score.band }}</small></div>
+    <div>
+        <h2>My PyBank credit score</h2>
+        <p class="small muted">From 300 to 900. Made only from your history with PyBank (a sandbox score, not a credit bureau report). The bank sees it with every loan application.</p>
+        <div class="score-parts">
+            {% for name, pts, top, why in score.parts %}
+            <div class="score-part"><span>{{ name }}</span><div class="bar"><i style="width:{{ ((pts if pts > 0 else 0) / (top or 1) * 100)|round|int }}%"></i></div><b>{{ pts }}{% if top %}/{{ top }}{% endif %}</b><small>{{ why }}</small></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off" id="loan-form" enctype="multipart/form-data">
+        <h2>Apply for a loan</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Loan type</label>
+        <div class="choice-grid">
+            {% for p in PRODUCTS %}
+            <label class="choice"><input type="radio" name="product" value="{{ p }}" data-rate="{{ RATES[p] }}" {% if form.get('product', PRODUCTS[0]) == p %}checked{% endif %}>
+                <span><strong>{{ p }}</strong><small>{{ '%.2f'|format(RATES[p]) }}% a year</small></span></label>
+            {% endfor %}
+        </div>
+        <div class="form-grid">
+            <div><label for="amount">Amount ({{ CURRENCY }})</label>
+                <input type="number" id="amount" name="amount" min="{{ LOAN_MIN // 100 }}" max="{{ LOAN_MAX // 100 }}" step="1" value="{{ form.get('amount', '') }}" placeholder="{{ LOAN_MIN|money }} - {{ LOAN_MAX|money }}" required></div>
+            <div><label for="months">Tenure</label>
+                <select id="months" name="months">{% for m in TENURES %}<option value="{{ m }}" {% if form.get('months', '24')|string == m|string %}selected{% endif %}>{{ m }} months</option>{% endfor %}</select></div>
+        </div>
+        <label for="purpose">Purpose</label>
+        <input id="purpose" name="purpose" maxlength="120" value="{{ form.get('purpose', '') }}" placeholder="e.g. Second-hand car for work" required>
+        <div class="form-grid">
+            <div><label for="id_doc">ID proof (passport / ID card)</label>
+                <input type="file" id="id_doc" name="id_doc" accept=".pdf,.jpg,.jpeg,.png" required></div>
+            <div><label for="income_doc">Income proof (salary slip, tax return)</label>
+                <input type="file" id="income_doc" name="income_doc" accept=".pdf,.jpg,.jpeg,.png" required></div>
+        </div>
+        <p class="small muted">PDF, JPG or PNG, up to 2 MB each.</p>
+        <div class="balance-line" id="emi-box">Monthly EMI: <strong id="emi">-</strong> <small class="muted" id="emi-total"></small></div>
+        <label for="pin">Transaction PIN</label>
+        <input type="password" id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required>
+        <button class="btn btn-primary btn-block btn-lg">Send application</button>
+    </form>
+    <aside class="panel info">
+        <h2>How a loan works here</h2>
+        <ul class="check-list">
+            <li>A bank officer checks your application. If it is approved, the money is paid into your account.</li>
+            <li>You pay the same EMI every month. Each EMI pays the interest for that month, the rest reduces the loan.</li>
+            <li>The first EMI is due one month after the payout.</li>
+            <li>Each EMI is taken from your account automatically on its due date (auto-debit). You can also pay it earlier yourself.</li>
+            <li>If there is not enough money on the due date, a late fee of {{ late_fee }}% of the EMI is added and we try again every day.</li>
+            <li>You can close the loan early: you pay what is left plus interest up to that day, no extra charge.</li>
+            <li>Amount: {{ LOAN_MIN|money }} to {{ LOAN_MAX|money }}. At most 2 loans at a time (active or waiting).</li>
+        </ul>
+        <p class="small muted">EMI = P &times; r &times; (1+r)<sup>n</sup> / ((1+r)<sup>n</sup> - 1), r = yearly rate / 12, n = months.</p>
+    </aside>
+</div>
+<script>
+(function () {
+    var f = document.getElementById('loan-form');
+    var fmt = new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency: '{{ CURRENCY }}', maximumFractionDigits: 0 });
+    function inr(x) { return fmt.format(Math.round(x)); }
+    function calc() {
+        var p = parseFloat(f.amount.value), n = parseInt(f.months.value, 10);
+        var sel = f.querySelector('input[name=product]:checked');
+        if (!p || !sel) { document.getElementById('emi').textContent = '-'; document.getElementById('emi-total').textContent = ''; return; }
+        var r = parseFloat(sel.dataset.rate) / 1200, e = r ? p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1) : p / n;
+        document.getElementById('emi').textContent = inr(e);
+        document.getElementById('emi-total').textContent = '({{ 'total interest about'|t }} ' + inr(e * n - p) + ')';
+    }
+    f.addEventListener('input', calc); calc();
+})();
+</script>
+{% endblock %}

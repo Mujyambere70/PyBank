@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANG }}" dir="{{ 'rtl' if RTL else 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,9 @@
     <meta name="description" content="PyBank - savings accounts, current accounts, deposits, loans and net banking.">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="manifest" href="{{ url_for('manifest') }}">
+    <meta name="theme-color" content="#0f2a4a">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/app-icon-192.png') }}">
 </head>
 <body class="{% block body_class %}{% endblock %}">
 
@@ -14,7 +17,17 @@
     <div class="wrap">
         <span>&#9742; Customer care: <strong>1800-000-7926</strong> (24x7)</span>
         <span class="hide-sm">IFSC {{ BRANCH.ifsc }} &middot; {{ BRANCH.name }}</span>
-        <a href="{{ url_for('contact') }}">Branch &amp; ATM locator</a>
+        <a href="{{ url_for('contact') }}" class="hide-sm">Branch &amp; ATM locator</a>
+        {% if not request.path.startswith('/admin') %}
+        <details class="lang-menu" translate="no">
+            <summary title="Language">&#127760; {{ LANGUAGES[LANG] }}</summary>
+            <div class="lang-list">
+                {% for code, name in LANGUAGES.items() %}
+                <a href="{{ url_for('set_language', code=code, next=request.full_path) }}" lang="{{ code }}" {% if code == LANG %}class="active"{% endif %}>{{ name }}</a>
+                {% endfor %}
+            </div>
+        </details>
+        {% endif %}
     </div>
 </div>
 
@@ -93,5 +106,8 @@
 {% endblock %}
 
 {% block scripts %}{% endblock %}
+<script>
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }
+</script>
 </body>
 </html>

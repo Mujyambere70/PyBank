@@ -1,0 +1,14 @@
+{
+  "name": "PyBank Net Banking",
+  "short_name": "PyBank",
+  "description": "PyBank: accounts, transfers, loans and alerts on your phone (fictional demo bank).",
+  "start_url": "/netbanking",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f2a4a",
+  "theme_color": "#0f2a4a",
+  "icons": [
+    {"src": "/static/images/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/static/images/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

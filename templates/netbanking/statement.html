@@ -5,6 +5,7 @@
     <h1>Account statement</h1>
     <div class="btn-row no-print">
         <a href="{{ url_for('statement_csv', **{'from': start, 'to': end, 'type': kind}) }}" class="btn btn-outline btn-sm">&#11015; Download CSV</a>
+        <a href="{{ url_for('estatements') }}" class="btn btn-outline btn-sm">&#128462; Monthly PDF e-statements</a>
         <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print / Save PDF</button>
     </div>
 </div>

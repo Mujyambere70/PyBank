@@ -1,20 +1,22 @@
 {% extends "netbanking/layout.html" %}
 {% block title %}{{ 'Deposit' if is_dep else 'Withdraw' }}{% endblock %}
 {% block nb_content %}
-<div class="nb-title"><h1>{{ 'Cash deposit' if is_dep else 'Cash withdrawal' }}</h1></div>
+<div class="nb-title"><div><h1>{{ 'Cash deposit request' if is_dep else 'Cash withdrawal request' }}</h1>
+    <p class="muted small">You send the request here. A bank officer checks it and approves it - then the money moves.</p></div></div>
 <div class="dash-grid">
     <form method="post" class="panel" autocomplete="off">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="balance-line">Available balance: <strong>{{ account.balance|money }}</strong></div>
+        <div class="balance-line">Balance: <strong>{{ account.balance|money }}</strong>
+            {% if available != account.balance %}<br><small class="muted">Available after waiting withdrawals: {{ available|money }}</small>{% endif %}</div>
 
         <label>Account</label>
         <input type="text" value="{{ account.type }} A/c {{ account.number }}" disabled>
 
-        <label for="amount">Amount (₹)</label>
+        <label for="amount">Amount ({{ CURRENCY }})</label>
         <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="1" step="0.01" placeholder="Enter amount" required>
         <div class="chips">
-            {% for v in [500, 1000, 2000, 5000, 10000] %}
-                <button type="button" class="chip" onclick="document.getElementById('amount').value={{ v }}">₹{{ '{:,}'.format(v) }}</button>
+            {% for k in [1, 2, 4, 10, 20] %}{% set v = policy(CURRENCY, 'savings') * k %}
+                <button type="button" class="chip" onclick="document.getElementById('amount').value={{ v // 100 }}">{{ v|money }}</button>
             {% endfor %}
         </div>
 
@@ -24,21 +26,40 @@
         <label for="pin">Transaction PIN</label>
         <input type="password" id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required>
 
-        <button type="submit" class="btn btn-primary btn-block btn-lg">{{ 'Deposit money' if is_dep else 'Withdraw money' }}</button>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">{{ 'Send deposit request' if is_dep else 'Send withdrawal request' }}</button>
     </form>
     <aside class="panel info">
-        <h2>Good to know</h2>
+        <h2>How it works</h2>
         <ul class="check-list">
+            <li>Your request waits in the branch queue with status <strong>Pending</strong>.</li>
+            <li>When a bank officer approves it, the money moves and you get an alert.</li>
             {% if is_dep %}
-            <li>The money is added to your account immediately.</li>
-            <li>Deposits above ₹50,000 in cash may need your PAN at the branch.</li>
+            <li>Large cash deposits may need an ID document at the branch.</li>
             {% else %}
-            <li>Daily cash withdrawal limit: <strong>{{ DAILY_WITHDRAW_LIMIT|money }}</strong>.</li>
-            <li>You cannot withdraw more than your available balance.</li>
+            <li>The amount is kept aside while you wait, so you cannot spend it twice.</li>
+            <li>Daily cash withdrawal limit: <strong>{{ DAILY_WITHDRAW_LIMIT|money }}</strong> (waiting requests count too).</li>
             {% endif %}
-            <li>Every transaction gets a reference number and a receipt.</li>
+            <li>You can cancel a request while it is still pending.</li>
             <li>Never share your PIN with anyone, not even bank staff.</li>
         </ul>
     </aside>
 </div>
+<section class="panel">
+    <h2>My deposit &amp; withdrawal requests</h2>
+    {% if reqs %}
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Ref</th><th>Date</th><th>Type</th><th class="num">Amount</th><th>Status</th><th>Details</th><th></th></tr></thead>
+        <tbody>
+        {% for r in reqs %}
+            <tr><td><code>{{ r.ref }}</code></td><td>{{ r.created_at|nicedate }}</td><td>{{ r.kind }}</td>
+                <td class="num">{{ r.amount|money }}</td>
+                <td><span class="badge st-{{ r.status|lower }}">{{ r.status }}</span></td>
+                <td class="small">{% if r.status == 'Approved' %}<a href="{{ url_for('receipt', ref=r.tx_ref) }}">Receipt {{ r.tx_ref }}</a>{% elif r.status == 'Rejected' %}{{ r.reason }}{% elif r.status == 'Pending' %}Waiting for a bank officer{% endif %}</td>
+                <td>{% if r.status == 'Pending' %}<form method="post" action="{{ url_for('cancel_cash', rid=r.id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="linkbtn out">Cancel</button></form>{% endif %}</td></tr>
+        {% endfor %}
+        </tbody></table></div>
+    {% else %}<p class="muted">No requests yet.</p>{% endif %}
+</section>
 {% endblock %}

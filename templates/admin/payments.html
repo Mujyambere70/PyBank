@@ -1,0 +1,18 @@
+{% extends "admin/layout.html" %}
+{% block title %}Other-bank payments{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Payments to other banks</h1><p class="muted small">IMPS / UPI settle at once, NEFT in half-hourly batches, SWIFT after about an hour. Sandbox: no real network.</p></div>
+    <div class="chips">{% for s in ['', 'Processing', 'Completed', 'Returned'] %}<a href="{{ url_for('office_payments', status=s) }}" class="chip {{ 'active' if status == s }}">{{ s or 'All' }}</a>{% endfor %}</div></div>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Ref</th><th>Date</th><th>Customer</th><th>Via</th><th>Beneficiary</th><th>Bank</th><th class="num">Amount</th><th>Status</th><th>UTR / reason</th></tr></thead>
+        <tbody>{% for p in rows %}
+        <tr><td><code>{{ p.ref }}</code></td><td>{{ p.created_at|nicedate }}</td>
+            <td><a href="{{ url_for('office_customer', cid=p.customer_id) }}">{{ p.customer_id }}</a></td><td>{{ p.rail }}</td>
+            <td>{{ p.beneficiary_name }}<br><small class="muted">{{ p.beneficiary_account }}</small></td>
+            <td>{{ p.bank_name }}<br><small class="muted">{{ p.bank_code }}{% if p.country != 'IN' %} &middot; {{ p.country }}{% endif %}</small></td>
+            <td class="num">{{ p.amount|money(p.currency) }}</td><td><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></td>
+            <td class="small">{{ p.utr or p.reason or ('due ' ~ p.settle_after[11:16]) }}</td></tr>
+        {% else %}<tr><td colspan="9" class="muted">No payments.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

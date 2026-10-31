@@ -1,16 +1,20 @@
 """
-demo_data.py - fills an empty PyBank database with 3 demo customers and
-about 6 months of realistic transactions (salary, bills, UPI, ATM, ...).
+demo_data.py - fills an empty PyBank database with 5 demo customers (India, Russia, Rwanda) and
+about 6 months of realistic transactions (salary, bills, UPI, cards, ATM, ...), plus an online
+application waiting for approval, a change of personal data, payments to other banks and loans.
 
 The bank administrator is the developer of this project (Jean Michel Mujyambere).
 All customers and companies here are fictional.
 Run alone:  python demo_data.py   (only works on an empty database)
 """
 
+import io
+import json
 import random
 from datetime import date, datetime, timedelta
 
-from bank import Bank
+from bank import Bank, add_months
+from world import format_money
 
 DEMO_PASSWORD = "Demo@1234"
 DEMO_PIN = "2580"
@@ -31,6 +35,7 @@ CUSTOMERS = [
         "city": "Ambala City", "state": "Haryana", "pincode": "134003", "occupation": "Salaried",
         "account_type": "Savings", "initial_deposit": "15000", "salary": 48000,
         "employer": "Green Valley Public School", "fd": (70, 20000, 6),
+        "loan": (100, 150000, 24, "Personal", "Home renovation - new kitchen and bathroom tiles"),
     },
     {
         "customer_id": "PB10000003", "full_name": "Arjun Malhotra", "dob": "1982-11-25", "gender": "Male",
@@ -38,7 +43,37 @@ CUSTOMERS = [
         "city": "Mullana", "state": "Haryana", "pincode": "133203", "occupation": "Business",
         "account_type": "Current", "initial_deposit": "150000", "salary": 0, "employer": "", "fd": (40, 300000, 24),
     },
+    {   # Russian-speaking customer in Krasnoyarsk: ruble account, interface in Russian
+        "customer_id": "PB10000004", "full_name": "Anna Smirnova", "dob": "1996-04-11", "gender": "Female",
+        "email": "anna.smirnova@example.com", "mobile": "+7 913 000 41 26", "address": "ul. Karla Marksa 48, kv. 17",
+        "city": "Krasnoyarsk", "state": "Krasnoyarsk Krai", "pincode": "660049", "occupation": "Salaried",
+        "account_type": "Savings", "initial_deposit": "30000", "salary": 98000, "country": "RU", "lang": "ru",
+        "employer": "ООО СИБИРЬ ДАТА", "fd": (60, 50000, 12), "style": "ru",
+    },
+    {   # French-speaking customer in Kigali: Rwandan franc account
+        "customer_id": "PB10000005", "full_name": "Amani Uwase", "dob": "1993-09-28", "gender": "Female",
+        "email": "amani.uwase@example.com", "mobile": "+250 780 000 512", "address": "KG 11 Ave, House 23",
+        "city": "Kigali", "state": "Gasabo", "pincode": "00000", "occupation": "Salaried",
+        "account_type": "Savings", "initial_deposit": "200000", "salary": 900000, "country": "RW", "lang": "fr",
+        "employer": "UMUCYO DESIGN LTD", "fd": (50, 500000, 6), "style": "rw",
+    },
 ]
+
+# shops and bills for the customers outside India (all names are made up)
+LOCAL = {
+    "ru": {"salary": "ЗАРПЛАТА/{employer}", "rent": ("ПЕРЕВОД/АРЕНДА КВАРТИРЫ/И. ПЕТРОВ", 28000),
+           "bills": [(10, "ЖКХ/УК СИБИРСКИЙ ДОМ/КОММУНАЛЬНЫЕ УСЛУГИ", (4200, 6900)),
+                     (12, "ОПЛАТА/ТАЙГА-ТЕЛЕКОМ/ИНТЕРНЕТ", (650, 650)), (15, "ОПЛАТА/МОБИЛЬНАЯ СВЯЗЬ", (450, 690))],
+           "shops": ["ПРОДУКТЫ СВЕЖИЙ ДОМ", "МАРКЕТ ЕНИСЕЙ", "ЛАВКА У ДОМА"], "food": ["КОФЕЙНЯ НА МИРА", "СТОЛОВАЯ СИБИРЬ"],
+           "online": ["ИНТЕРНЕТ-МАГАЗИН ВСЁ ДЛЯ ДОМА", "КНИЖНЫЙ ДВОР"], "atm": "СНЯТИЕ НАЛИЧНЫХ/БАНКОМАТ КРАСНОЯРСК",
+           "card": "ОПЛАТА КАРТОЙ", "scale": 1.0},
+    "rw": {"salary": "VIREMENT/SALAIRE/{employer}", "rent": ("VIREMENT/LOYER/J. MUGISHA", 180000),
+           "bills": [(10, "PAIEMENT/EAU ET ELECTRICITE", (18000, 32000)), (12, "PAIEMENT/INTERNET FIBRE", (25000, 25000)),
+                     (15, "RECHARGE MOBILE", (5000, 10000))],
+           "shops": ["MARCHE KIMIRONKO", "SUPERMARCHE IMBUTO", "EPICERIE DU COIN"], "food": ["CAFE UMUCYO", "RESTAURANT INZOZI"],
+           "online": ["BOUTIQUE EN LIGNE AKAGERA", "LIBRAIRIE IKIREZI"], "atm": "RETRAIT DAB/PYBANK KIGALI",
+           "card": "PAIEMENT CARTE", "scale": 9.0},
+}
 
 SHOPS = ["FreshBasket Mart", "Daily Needs Store", "Green Grocers", "Super Bazaar"]
 FOOD = ["Spice Route Cafe", "Punjab Dhaba", "Pizza Corner", "Chai Point Express", "Biryani House"]
@@ -56,8 +91,26 @@ def _events_for(person, start, end, rng):
     """Return a list of (date, type, category, description, rupees) sorted by date."""
     ev = []
     d = start
+    loc = LOCAL.get(person.get("style"))
     while d <= end:
-        if person["occupation"] == "Salaried":
+        if loc:
+            k = loc["scale"]
+            if d.day == 1:
+                ev.append((d, "CR", "Salary", loc["salary"].format(employer=person["employer"]), person["salary"]))
+            if d.day == 3:
+                ev.append((d, "DR", "Rent", loc["rent"][0], loc["rent"][1]))
+            for day, text, (lo, hi) in loc["bills"]:
+                if d.day == day:
+                    ev.append((d, "DR", "Bill payment", text, rng.randint(lo, hi)))
+            if d.weekday() in (2, 6) and rng.random() < 0.8:
+                ev.append((d, "DR", "Card", f"{loc['card']}/{rng.choice(loc['shops'])}", int(rng.randint(400, 3200) * k)))
+            if d.weekday() in (4, 5) and rng.random() < 0.6:
+                ev.append((d, "DR", "Card", f"{loc['card']}/{rng.choice(loc['food'])}", int(rng.randint(300, 1800) * k)))
+            if rng.random() < 0.07:
+                ev.append((d, "DR", "Shopping", f"{loc['card']}/{rng.choice(loc['online'])}", int(rng.randint(900, 7000) * k)))
+            if rng.random() < 0.06:
+                ev.append((d, "DR", "Withdrawal", loc["atm"], int(rng.choice([3000, 5000]) * k)))
+        elif person["occupation"] == "Salaried":
             if d.day == 1:
                 ev.append((d, "CR", "Salary", f"NEFT/SALARY/{person['employer'].upper()}", person["salary"]))
             if d.day == 3:
@@ -120,13 +173,18 @@ def seed(bank, office=None, months=6, seed_value=42):
         seed_staff(office)
     if not bank.is_empty():
         return
+    with bank.alerts_paused():            # demo customers are fictional: never email or text them
+        _seed(bank, office, months, seed_value)
+
+
+def _seed(bank, office, months, seed_value):
     rng = random.Random(seed_value)
     end = date.today()
     start = (end.replace(day=1) - timedelta(days=31 * (months - 1))).replace(day=1)
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     for person in CUSTOMERS:
-        data = {k: v for k, v in person.items() if k not in ("customer_id", "salary", "employer", "fd")}
+        data = {k: v for k, v in person.items() if k not in ("customer_id", "salary", "employer", "fd", "style", "loan")}
         data.update(password=DEMO_PASSWORD, pin=DEMO_PIN)
         opened = datetime.combine(start - timedelta(days=12), datetime.min.time()) + timedelta(hours=11)
         cid, account = bank.register(data, when=opened.strftime("%Y-%m-%d %H:%M:%S"),
@@ -139,6 +197,17 @@ def seed(bank, office=None, months=6, seed_value=42):
         fd_days, fd_rupees, fd_months = person["fd"]
         fd_when = (datetime.now() - timedelta(days=fd_days)).replace(hour=12, minute=5).strftime("%Y-%m-%d %H:%M:%S")
         fd_done = False
+        loan_id = None
+        if person.get("loan"):            # a personal loan paid out ~3 months ago, EMIs paid every month since
+            l_days, l_rupees, l_months, l_product, l_purpose = person["loan"]
+            l_when = (datetime.now() - timedelta(days=l_days)).replace(hour=14, minute=10, second=0)
+            loan_marks = [(l_when.strftime("%Y-%m-%d %H:%M:%S"), "LOAN", "disburse")]
+            due = add_months(l_when.date(), 1)
+            while datetime.combine(due, datetime.min.time()) + timedelta(hours=9) < datetime.now():
+                loan_marks.append(((datetime.combine(due, datetime.min.time()) + timedelta(hours=9, minutes=30))
+                                   .strftime("%Y-%m-%d %H:%M:%S"), "LOAN", "emi"))
+                due = add_months(due, 1)
+            events = sorted(events + [(w, t, k, "", 0) for w, t, k in loan_marks])
         for when, typ, cat, desc, rupees in events:
             if when > now:
                 continue
@@ -146,6 +215,13 @@ def seed(bank, office=None, months=6, seed_value=42):
                 bank.open_fd(cid, fd_rupees * 100, fd_months, DEMO_PIN, when=fd_when)   # customer booked an FD
                 balance = bank.get_account(cid).balance
                 fd_done = True
+            if typ == "LOAN":
+                if cat == "disburse":
+                    loan_id = _demo_loan(bank, cid, account.number, person["loan"], when)
+                else:
+                    bank.pay_emi(cid, loan_id, DEMO_PIN, when=when)
+                balance = bank.get_account(cid).balance
+                continue
             if rupees is None:          # quarterly interest ~3.5% a year (posted at day end)
                 amount = int(balance * 0.035 / 4)
             else:
@@ -163,6 +239,121 @@ def seed(bank, office=None, months=6, seed_value=42):
             conn.execute("UPDATE customers SET last_login = ? WHERE customer_id = ?", (at, cid))
 
     _seed_customer_items(bank, rng)
+    _seed_version2(bank, office)
+
+
+def _demo_loan(bank, cid, number, loan, when):
+    """Insert an approved loan and pay it out at the given (past) time."""
+    _, rupees, months, product, purpose = loan
+    rate = bank.loan_rate(product)
+    principal = rupees * 100
+    start = datetime.strptime(when, "%Y-%m-%d %H:%M:%S").date()
+    with bank._connect() as conn:
+        cur = conn.execute(
+            "INSERT INTO loans (loan_number, customer_id, account_number, product, principal, rate, months, emi, purpose, "
+            "status, applied_at, decided_at, decided_by, disbursed_at, outstanding, next_due) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', ?, ?, ?, ?, ?, ?)",
+            ("LN40271839", cid, number, product, principal, rate, months, bank.emi(principal, rate, months), purpose,
+             (datetime.strptime(when, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)).strftime("%Y-%m-%d %H:%M:%S"),
+             when, "Jean Michel Mujyambere", when, principal, add_months(start, 1).isoformat()))
+        loan_id = cur.lastrowid
+    bank.post(number, "CR", "Loan", f"LOAN DISBURSAL/LN40271839/{product.upper()} LOAN", principal, when)
+    return loan_id
+
+
+def _seed_version2(bank, office):
+    """Deposit/withdrawal requests waiting for staff, a loan application, alerts and paid interest quarters."""
+    rahul, priya, arjun, anna, amani = "PB10000001", "PB10000002", "PB10000003", "PB10000004", "PB10000005"
+    # savings interest of the past quarters is already in the demo history - mark those quarters as paid
+    with bank._connect() as conn:
+        for name, start, end in bank.due_quarters():
+            rows = conn.execute("SELECT a.currency, COUNT(DISTINCT t.account_number), SUM(t.amount) FROM transactions t "
+                                "JOIN accounts a ON a.number = t.account_number WHERE t.category = 'Interest' "
+                                "AND t.created_at >= ? AND t.created_at <= ? GROUP BY a.currency",
+                                (start.isoformat(), end.isoformat() + " 23:59:59")).fetchall()
+            totals = {r[0]: r[2] for r in rows}
+            conn.execute("INSERT INTO interest_runs (quarter, run_at, accounts, total, totals) VALUES (?, ?, ?, ?, ?)",
+                         (name, end.isoformat() + " 23:59:00", sum(r[1] for r in rows), sum(totals.values()),
+                          json.dumps(totals)))
+    # one handled request of each kind, so the history is not empty
+    ok = bank.request_cash(rahul, "Deposit", 3_000 * 100, DEMO_PIN, "Birthday gift cash")
+    no = bank.request_cash(arjun, "Withdrawal", 40_000 * 100, DEMO_PIN, "Supplier payment")
+    staff = {"staff_id": "EMP002", "full_name": "Neha Sharma"}
+    with bank._connect() as conn:
+        ids = {r["ref"]: r["id"] for r in conn.execute("SELECT id, ref FROM cash_requests")}
+    if office is not None:
+        office.decide_cash(staff, ids[ok], True) if hasattr(office, "decide_cash") else bank.decide_cash_request(ids[ok], True, "Neha Sharma")
+        office.decide_cash(staff, ids[no], False, "Signature does not match our records - please visit the branch with ID proof") \
+            if hasattr(office, "decide_cash") else bank.decide_cash_request(ids[no], False, "Neha Sharma", "Signature mismatch")
+    else:
+        bank.decide_cash_request(ids[ok], True, "Neha Sharma")
+        bank.decide_cash_request(ids[no], False, "Neha Sharma", "Signature does not match our records - please visit the branch")
+    # waiting for approval right now
+    bank.request_cash(rahul, "Withdrawal", 5_000 * 100, DEMO_PIN, "Household expenses")
+    bank.request_cash(priya, "Deposit", 12_000 * 100, DEMO_PIN, "Tuition fees received")
+    bank.apply_loan(arjun, "Vehicle", 6_50_000 * 100, 48, "Small delivery truck for the grain business", DEMO_PIN,
+                    documents=[("ID proof", "arjun_malhotra_id.pdf", sample_pdf("ID proof", "Arjun Malhotra")),
+                               ("Income proof", "malhotra_traders_tax_return.pdf",
+                                sample_pdf("Income proof - tax return summary", "Malhotra Traders"))])
+    # in-app alerts for the latest transactions (shown on the Alerts page)
+    for cid in (rahul, priya, arjun, anna, amani):
+        number = bank.get_account(cid).number
+        with bank._connect() as conn:
+            for t in reversed(bank.transactions(number, limit=8)):
+                word = "credited with" if t.type == "CR" else "debited by"
+                when = datetime.strptime(t.created_at, "%Y-%m-%d %H:%M:%S").strftime("%d-%m-%y %H:%M")
+                conn.execute("INSERT INTO alerts (customer_id, channel, destination, subject, body, status, created_at) "
+                             "VALUES (?, 'in-app', '', ?, ?, 'Delivered', ?)",
+                             (cid, f"A/c XX{number[-4:]} {word} {format_money(t.amount, t.currency, 'en')}",
+                              f"PyBank: A/c XX{number[-4:]} {word} {format_money(t.amount, t.currency, 'en')} on {when} "
+                              f"({t.category}, Ref {t.ref}). Avl bal {format_money(t.balance_after, t.currency, 'en')}. "
+                              f"Not you? Call 1800-202-5050.",
+                              t.created_at))
+
+
+    _seed_version3(bank, office)
+
+
+def sample_pdf(title, name):
+    """A small PDF that stands for an uploaded document (demo only)."""
+    from reportlab.lib.pagesizes import A5
+    from reportlab.pdfgen import canvas
+    buf = io.BytesIO()
+    pdf = canvas.Canvas(buf, pagesize=A5)
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(40, 520, title)
+    pdf.setFont("Helvetica", 11)
+    pdf.drawString(40, 495, f"Name: {name}")
+    pdf.drawString(40, 470, "SAMPLE DOCUMENT - PyBank demo data, not a real document.")
+    pdf.rect(30, 420, 360, 140)
+    pdf.save()
+    return buf.getvalue()
+
+
+def _seed_version3(bank, office):
+    """International demo: an application waiting for approval, a change of personal data, payments to other banks."""
+    rahul, anna = "PB10000001", "PB10000004"
+    # 1. a new customer from Spain applied online yesterday (Spanish interface, euro account)
+    bank.register({"full_name": "Lucia Fernandez", "dob": "1998-06-21", "gender": "Female",
+                   "email": "lucia.fernandez@example.com", "mobile": "+34 600 000 318", "address": "Calle Mayor 12, 3B",
+                   "city": "Madrid", "state": "Madrid", "pincode": "28013", "occupation": "Student", "country": "ES",
+                   "lang": "es", "account_type": "Savings", "initial_deposit": "500", "password": DEMO_PASSWORD,
+                   "pin": DEMO_PIN}, when=_ago(1, 18), customer_id="PB10000006", online=True,
+                  documents=[("ID proof", "lucia_fernandez_passport.pdf", sample_pdf("Passport", "Lucia Fernandez"))])
+    # 2. Rahul moved to a new flat and asked to change his address (waiting for approval)
+    bank.request_profile_change(rahul, {"address": "Flat 12, Green Park Apartments", "pincode": "133001",
+                                        "city": "Ambala Cantt"},
+                                documents=[("Address proof", "electricity_bill.pdf",
+                                            sample_pdf("Address proof - electricity bill", "Rahul Verma"))])
+    # 3. payments to other banks: IMPS (done), NEFT to a closed account (returned), SWIFT abroad (in progress)
+    bank.send_external(rahul, "IMPS", {"name": "Sunita Kapoor", "account": "50100234567812", "ifsc": "NOVA0001234",
+                                       "remarks": "Rent November"}, 15000 * 100, DEMO_PIN)
+    bank.send_external(rahul, "NEFT", {"name": "Vikas Sharma", "account": "38291100000", "ifsc": "SUNR0004521",
+                                       "remarks": "Old account"}, 2000 * 100, DEMO_PIN)
+    bank.process_external(datetime.now() + timedelta(hours=1))         # the NEFT batch ran
+    bank.send_external(anna, "SWIFT", {"name": "Max Weber", "account": "DE89370400440532013000", "bic": "RHMUDEFF",
+                                       "bank_name": "Rheinland Musterbank", "remarks": "Language course fee"},
+                       45000 * 100, DEMO_PIN)
 
 
 def _ago(days, hour=11):

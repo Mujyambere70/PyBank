@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Enter your code{% endblock %}
+{% block content %}
+<section class="auth">
+    <div class="wrap auth-grid">
+        <form method="post" class="auth-card" autocomplete="off">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="" class="auth-logo">
+            <h1>Two-factor login</h1>
+            <p class="muted">Open your authenticator app and type the 6-digit code for <strong>{{ 'PyBank Back Office' if who == 'staff' else 'PyBank' }}</strong>.</p>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="code">One-time code</label>
+            <input type="text" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" placeholder="123 456" required autofocus class="code-input">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Verify and continue</button>
+            <p class="small center"><a href="{{ url_for('staff_login' if who == 'staff' else 'login') }}">Back to login</a></p>
+            <p class="small muted center">{% if who == 'staff' %}Lost your phone? Ask another admin to turn off two-factor login for you.{% else %}Lost your phone? Call the branch to turn off two-factor login for you.{% endif %}</p>
+        </form>
+        <aside class="auth-side">
+            <img src="{{ url_for('static', filename='images/secure.jpg') }}" alt="" class="rounded">
+            <h2>Why this step?</h2>
+            <ul class="check-list light">
+                <li>Your password alone is not enough to enter.</li>
+                <li>The code changes every 30 seconds and works only once.</li>
+                <li>Never tell this code to anyone - not even bank staff.</li>
+            </ul>
+        </aside>
+    </div>
+</section>
+{% endblock %}

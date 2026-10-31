@@ -6,14 +6,13 @@
     <div class="wrap narrow">
         <h2>Savings account</h2>
         <div class="table-card"><table class="data">
-            <thead><tr><th>Daily balance</th><th class="num">Interest rate (p.a.)</th></tr></thead>
+            <thead><tr><th>Account</th><th class="num">Interest rate (p.a.)</th></tr></thead>
             <tbody>
-                <tr><td>Up to ₹1 lakh</td><td class="num">3.00%</td></tr>
-                <tr><td>Above ₹1 lakh up to ₹10 lakh</td><td class="num">3.50%</td></tr>
-                <tr><td>Above ₹10 lakh</td><td class="num">4.00%</td></tr>
+                <tr><td>Savings account (any balance)</td><td class="num">{{ '%.2f'|format(SETTINGS.savings_rate|float) }}%</td></tr>
+                <tr><td>Current account</td><td class="num">Nil</td></tr>
             </tbody>
         </table></div>
-        <p class="muted small">Interest is calculated on the daily balance and paid every quarter (March, June, September, December).</p>
+        <p class="muted small">Interest is calculated on the balance of every day and paid every quarter (31 March, 30 June, 30 September, 31 December).</p>
 
         <h2>Fixed deposits (below ₹2 crore) <small class="muted">&middot; open online in Net Banking</small></h2>
         <div class="table-card"><table class="data">
@@ -27,12 +26,12 @@
 
         <h2>Loans</h2>
         <div class="table-card"><table class="data">
-            <thead><tr><th>Loan</th><th class="num">Interest from (p.a.)</th><th class="num">Processing fee</th></tr></thead>
+            <thead><tr><th>Loan</th><th class="num">Interest (p.a.)</th><th>How to apply</th></tr></thead>
             <tbody>
-                <tr><td>Home loan</td><td class="num">8.40%</td><td class="num">0.35%</td></tr>
-                <tr><td>Car loan</td><td class="num">8.90%</td><td class="num">₹2,500</td></tr>
-                <tr><td>Personal loan</td><td class="num">10.75%</td><td class="num">1.00%</td></tr>
-                <tr><td>Education loan</td><td class="num">9.15%</td><td class="num">Nil</td></tr>
+                <tr><td>Home loan</td><td class="num">from 8.40%</td><td>At the branch</td></tr>
+                <tr><td>Car / vehicle loan</td><td class="num">{{ '%.2f'|format(SETTINGS.loan_rate_Vehicle|float) }}%</td><td>Net Banking or branch</td></tr>
+                <tr><td>Personal loan</td><td class="num">{{ '%.2f'|format(SETTINGS.loan_rate_Personal|float) }}%</td><td>Net Banking or branch</td></tr>
+                <tr><td>Education loan</td><td class="num">{{ '%.2f'|format(SETTINGS.loan_rate_Education|float) }}%</td><td>Net Banking or branch</td></tr>
             </tbody>
         </table></div>
 

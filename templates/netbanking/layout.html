@@ -24,12 +24,13 @@
     <aside class="nb-side">
         {% for ep, icon, label in [
             ('dashboard', '&#127968;', 'Dashboard'), ('account_details', '&#128179;', 'Account Details'),
-            ('transfer', '&#8644;', 'Fund Transfer'), ('deposit', '&#11015;', 'Deposit'),
+            ('transfer', '&#8644;', 'Fund Transfer'), ('other_bank', '&#127758;', 'Other Banks & Abroad'), ('deposit', '&#11015;', 'Deposit'),
             ('withdraw', '&#11014;', 'Withdraw'), ('statement', '&#128196;', 'Statement'),
-            ('payees', '&#128101;', 'Beneficiaries'), ('fixed_deposits', '&#128176;', 'Fixed Deposits'),
+            ('estatements', '&#128462;', 'E-statements'), ('payees', '&#128101;', 'Beneficiaries'), ('fixed_deposits', '&#128176;', 'Fixed Deposits'),
+            ('loans', '&#127974;', 'Loans'), ('alerts', '&#128276;', 'Alerts'),
             ('service_requests', '&#128172;', 'Service Requests'),
             ('profile', '&#128100;', 'My Profile'), ('security', '&#128274;', 'Security')] %}
-            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'transfer' and request.endpoint == 'receipt') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'transfer' and request.endpoint == 'receipt') or (ep == 'loans' and request.endpoint == 'loan_detail') or (ep == 'other_bank' and request.endpoint == 'payment_detail') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
         {% endfor %}
         <a href="{{ url_for('logout') }}" class="logout"><span>&#9211;</span>Logout</a>
     </aside>

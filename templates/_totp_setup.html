@@ -1,0 +1,50 @@
+{# Two-factor setup box. Needs: new_secret, new_secret_grouped, otp_uri, action_field ('action' or 'form'), totp_enabled #}
+<section class="panel" id="two-factor">
+    <h2>Two-factor login (one-time code)</h2>
+    {% if totp_enabled %}
+        <p><span class="badge ok">ON</span> When you log in, you also type the 6-digit code from your authenticator app.</p>
+        <form method="post" autocomplete="off" class="form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="{{ action_field }}" value="2fa_disable">
+            <div><label>Login password</label><input type="password" name="password" required></div>
+            <div><label>Code from the app</label><input name="code" inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" placeholder="123 456" required></div>
+            <div><button class="btn btn-outline btn-block" onclick="return confirm('Turn off two-factor login?')">Turn off</button></div>
+        </form>
+    {% elif new_secret %}
+        <ol class="steps-list">
+            <li>Open an authenticator app on your phone (Google Authenticator, Microsoft Authenticator, Authy …).</li>
+            <li>Scan this QR code, or type the setup key by hand.</li>
+            <li>Type the 6-digit code the app shows, to confirm.</li>
+        </ol>
+        <div class="totp-box">
+            <div id="qr" class="qr" data-uri="{{ otp_uri }}"></div>
+            <div>
+                <label>Setup key</label>
+                <code class="setup-key">{{ new_secret_grouped }}</code>
+                <p class="small muted">Time-based, 6 digits, every 30 seconds.</p>
+                <form method="post" autocomplete="off">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="{{ action_field }}" value="2fa_confirm">
+                    <label>Code from the app</label>
+                    <input name="code" inputmode="numeric" pattern="[0-9 ]{6,7}" maxlength="7" placeholder="123 456" required autofocus>
+                    <button class="btn btn-primary btn-block">Confirm and turn on</button>
+                </form>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+        <script>
+        (function () {
+            var box = document.getElementById('qr');
+            try { var q = qrcode(0, 'M'); q.addData(box.dataset.uri); q.make(); box.innerHTML = q.createSvgTag(4, 8); }
+            catch (e) { box.innerHTML = '<p class="small muted">QR code could not load - type the setup key instead.</p>'; }
+        })();
+        </script>
+    {% else %}
+        <p><span class="badge">OFF</span> Add a second step to your login: a 6-digit code that changes every 30 seconds in an app on your phone. Even if someone learns your password, they cannot log in without your phone.</p>
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="{{ action_field }}" value="2fa_start">
+            <button class="btn btn-primary">Set up two-factor login</button>
+        </form>
+    {% endif %}
+</section>

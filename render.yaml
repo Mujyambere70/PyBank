@@ -1,0 +1,32 @@
+# Render Blueprint for PyBank (free plan).
+# The data lives in an outside PostgreSQL database (Neon free plan), because the free web service
+# loses its disk at every restart. Put the Neon connection string in DATABASE_URL.
+services:
+  - type: web
+    name: michel-pybank
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 60
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL          # postgresql://USER:PASSWORD@HOST/neondb?sslmode=require  (from Neon)
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      # optional - email alerts (Brevo free plan works on Render free; normal SMTP ports are blocked there)
+      - key: BREVO_API_KEY
+        sync: false
+      - key: ALERT_EMAIL_FROM      # a sender address you verified in Brevo
+        sync: false
+      - key: BACKUP_EMAIL          # the daily backup file is emailed here
+        sync: false
+      # optional - SMS alerts (Twilio)
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM
+        sync: false

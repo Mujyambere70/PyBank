@@ -1,5 +1,6 @@
 """Integration tests: Flask routes + Bank + database together (Flask test client)."""
 
+import io
 import os
 import re
 import sys
@@ -7,6 +8,8 @@ import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from support import DRIVER, cash, target  # noqa: E402
 
 from app import create_app  # noqa: E402
 
@@ -25,7 +28,7 @@ class TestRoutes(unittest.TestCase):
 
     def setUp(self):
         db = os.path.join(self.tmp.name, f"{self._testMethodName}.db")
-        self.app = create_app(db)            # with demo data
+        self.app = create_app(target(db), driver=DRIVER)            # with demo data
         self.client = self.app.test_client()
 
     # ---------- helpers ----------
@@ -73,10 +76,14 @@ class TestRoutes(unittest.TestCase):
                       occupation="Student", email="neha@example.com", mobile="9700000001",
                       address="45 Model Town", city="Ambala", state="Haryana", pincode="134003",
                       account_type="Savings", initial_deposit="1000", password="Neha2026x",
-                      password2="Neha2026x", pin="4826", pin2="4826", terms="yes")
+                      password2="Neha2026x", pin="4826", pin2="4826", terms="yes", country="IN",
+                      id_doc=(io.BytesIO(b"%PDF-1.4 test id"), "passport.pdf"))
         html = self.text(r)
-        self.assertIn("Congratulations, Neha", html)
+        self.assertIn("Thank you, Neha", html)                  # the application waits for the bank
         cid = re.search(r'id="customerId">(PB\d{8})<', html).group(1)
+        r = self.login(login=cid, password="Neha2026x")
+        self.assertIn("being checked by the bank", self.text(r))
+        self.app.bank.decide_customer(cid, True, "Officer")      # staff approve it
         r = self.login(login=cid, password="Neha2026x")
         self.assertIn("Neha Gupta", self.text(r))
         self.assertIn("₹1,000.00", self.text(r))
@@ -107,8 +114,13 @@ class TestRoutes(unittest.TestCase):
     def test_deposit_and_withdraw_with_receipt(self):
         self.login()
         r = self.post("/netbanking/deposit", amount="1500", note="Gift", pin=PIN)
-        self.assertIn("Transaction successful", self.text(r))
-        self.assertIn("Cash deposit - Gift", self.text(r))
+        self.assertIn("was sent to the branch", self.text(r))      # waits for a bank officer
+        req = self.app.bank.cash_requests("PB10000001")[0]
+        self.assertEqual((req["status"], req["amount"]), ("Pending", 150000))
+        t = self.app.bank.decide_cash_request(req["id"], True, "Officer")[1]
+        r = self.client.get(f"/netbanking/receipt/{t.ref}")
+        self.assertIn("CASH DEPOSIT/", self.text(r))
+        self.assertIn("Gift", self.text(r))
         r = self.post("/netbanking/withdraw", amount="999999", pin=PIN)
         self.assertIn("limit", self.text(r))
         r = self.post("/netbanking/withdraw", amount="500", pin="0000")
@@ -153,9 +165,16 @@ class TestRoutes(unittest.TestCase):
 
     def test_profile_and_security(self):
         self.login()
-        r = self.post("/netbanking/profile", email="rahul.new@example.com", mobile="9812345670",
-                      address="House 214, Sector 9", city="Ambala Cantt", state="Haryana", pincode="133001")
-        self.assertIn("contact details were updated", self.text(r))
+        for p in self.app.bank.profile_changes("PB10000001", "Pending"):      # the demo already has one waiting
+            self.app.bank.cancel_profile_change("PB10000001", p["id"])
+        r = self.post("/netbanking/profile", full_name="Rahul Verma", email="rahul.new@example.com",
+                      mobile="9812345670", address="House 214, Sector 9", city="Ambala Cantt", state="Haryana",
+                      pincode="133001", country="IN", occupation="Salaried")
+        self.assertIn("sent to the bank", self.text(r))
+        self.assertEqual(self.app.bank.get_customer("PB10000001").email, "rahul.verma@example.com")   # not yet
+        pid = self.app.bank.profile_changes("PB10000001", "Pending")[0]["id"]
+        self.app.bank.decide_profile_change(pid, True, "Officer")
+        self.assertEqual(self.app.bank.get_customer("PB10000001").email, "rahul.new@example.com")
         r = self.post("/netbanking/security", action="pin", password="Demo@1234", new_pin="9035", new_pin2="9035")
         self.assertIn("PIN was changed", self.text(r))
 

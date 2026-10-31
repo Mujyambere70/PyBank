@@ -1,0 +1,35 @@
+{% extends "admin/layout.html" %}
+{% block title %}Loans{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Loans</h1><p class="muted small">Approve an application and the amount is paid into the customer's account at once.</p></div>
+    <div class="chips">{% for s in ['', 'Pending', 'Active', 'Closed', 'Rejected', 'Cancelled'] %}<a href="{{ url_for('office_loans', status=s) }}" class="chip {{ 'active' if status == s }}">{{ s or 'All' }}</a>{% endfor %}</div></div>
+{% for ln in rows %}
+<section class="panel req">
+    <div class="req-head"><strong>{{ ln.product }} loan &middot; {{ ln.principal|money(ln.currency) }}</strong>
+        <span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span>{% if ln.overdue %} <span class="badge bad">EMI overdue</span>{% endif %}
+        <small class="muted"><code>{{ ln.loan_number }}</code> &middot; <a href="{{ url_for('office_customer', cid=ln.customer_id) }}">{{ ln.full_name }} ({{ ln.customer_id }})</a> &middot; applied {{ ln.applied_at|nicedate }}</small></div>
+    <p class="small">{{ ln.months }} months @ {{ '%.2f'|format(ln.rate) }}% &middot; EMI <strong>{{ ln.emi|money(ln.currency) }}</strong> &middot; Purpose: {{ ln.purpose }}
+        {% if ln.penalty_total %}<br><span class="out">Late fees charged: {{ ln.penalty_total|money(ln.currency) }} ({{ ln.late_count }} late EMI){% if ln.penalty_due %} &middot; unpaid {{ ln.penalty_due|money(ln.currency) }}{% endif %}</span>{% endif %}
+        {% if ln.status == 'Active' %}<br>Outstanding <strong>{{ ln.outstanding|money(ln.currency) }}</strong> &middot; {{ ln.emis_paid }} of {{ ln.months }} EMIs paid &middot; next due {{ ln.next_due }}{% endif %}</p>
+    {% if ln.status == 'Pending' %}
+    <div class="review-grid">
+        {% if ln.report %}
+        <div class="score-mini band-{{ ln.report.band|lower }}"><b>{{ ln.report.score }}</b><small>{{ ln.report.band }}</small>
+            <ul>{% for name, pts, top, why in ln.report.parts %}<li>{{ name }}: <b>{{ pts }}</b>{% if top %}/{{ top }}{% endif %} &middot; {{ why }}</li>{% endfor %}</ul>
+            {% if ln.report.score < 550 %}<p class="small out">Low score: check income and repayments carefully.</p>{% endif %}</div>
+        {% endif %}
+        <div><b class="small">Documents</b>
+            {% for d in ln.documents %}<div><a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">{{ d.kind }}: {{ d.filename }}</a></div>{% else %}<p class="small muted">No documents uploaded (branch file).</p>{% endfor %}</div>
+    </div>
+    <div class="btn-row">
+        <form method="post" action="{{ url_for('office_loan_action', loan_id=ln.id, action='approve', status=status) }}" onsubmit="return confirm('Approve and pay {{ ln.principal|money(ln.currency) }} to {{ ln.full_name }}?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-sm">&#10004; Approve &amp; pay out</button></form>
+        <form method="post" action="{{ url_for('office_loan_action', loan_id=ln.id, action='reject', status=status) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input name="reason" placeholder="Reason for rejecting (shown to the customer)" required minlength="3" maxlength="200">
+            <button class="btn btn-danger btn-sm">Reject</button></form>
+    </div>
+    {% elif ln.decided_by %}<small class="muted">{{ 'Approved' if ln.status in ('Active', 'Closed') else ln.status }} by {{ ln.decided_by }}{% if ln.reason %} &middot; {{ ln.reason }}{% endif %}</small>{% endif %}
+</section>
+{% else %}<section class="panel"><p class="muted">No loans here.</p></section>{% endfor %}
+{% endblock %}

@@ -1,7 +1,21 @@
 {% extends "netbanking/layout.html" %}
 {% block title %}My Profile{% endblock %}
 {% block nb_content %}
-<div class="nb-title"><h1>My profile</h1></div>
+<div class="nb-title"><div><h1>My profile</h1><p class="muted small">Changes of personal data are checked and approved by the bank.</p></div></div>
+{% set pending = changes|selectattr('status', 'equalto', 'Pending')|list %}
+{% if pending %}{% set p = pending[0] %}
+<section class="panel notice-warning-panel">
+    <div class="panel-head"><h2>Change waiting for approval</h2><span class="badge st-pending">Pending</span></div>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Field</th><th>Now</th><th>New</th></tr></thead>
+        <tbody>{% for field, pair in p.changes.items() %}
+        <tr><td>{{ labels[field] }}</td><td>{{ country_name(pair[0], LANG) if field == 'country' else pair[0] }}</td><td><strong>{{ country_name(pair[1], LANG) if field == 'country' else pair[1] }}</strong></td></tr>
+        {% endfor %}</tbody></table></div>
+    <p class="small muted">Sent {{ p.created_at|nicedate }}.{% for d in p.documents %} Proof: <a href="{{ url_for('my_document', doc_id=d.id) }}">{{ d.filename }}</a>.{% endfor %}</p>
+    <form method="post" action="{{ url_for('cancel_profile_change', pid=p.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-outline btn-sm">Cancel this change</button></form>
+</section>
+{% endif %}
 <div class="dash-grid">
     <section class="panel">
         <div class="profile-top"><div class="avatar big">{{ customer.initials }}</div>
@@ -11,24 +25,57 @@
             <tr><th>Date of birth</th><td>{{ customer.dob }}</td></tr>
             <tr><th>Gender</th><td>{{ customer.gender }}</td></tr>
             <tr><th>Occupation</th><td>{{ customer.occupation }}</td></tr>
+            <tr><th>Email</th><td>{{ customer.email }}</td></tr>
+            <tr><th>Mobile</th><td>{{ customer.mobile }}</td></tr>
+            <tr><th>Address</th><td>{{ customer.address }}, {{ customer.city }}{% if customer.state %}, {{ customer.state }}{% endif %} {{ customer.pincode }}<br>{{ country_name(customer.country, LANG) }}</td></tr>
+            <tr><th>Account currency</th><td>{{ account.currency }} &middot; {{ currency_name(account.currency, LANG) }}</td></tr>
             <tr><th>KYC status</th><td><span class="badge ok">Verified</span></td></tr>
         </table>
-        <p class="small muted">To change your name or date of birth, please visit your home branch with an ID proof.</p>
+        {% if docs %}
+        <h2 style="margin-top:18px">My documents</h2>
+        {% for d in docs %}<div class="mini-row"><div><strong>{{ d.kind }}</strong><small>{{ d.filename }} &middot; {{ d.uploaded_at|nicedate(false) }}</small></div>
+            <a href="{{ url_for('my_document', doc_id=d.id) }}" class="link-arrow">Open &rarr;</a></div>{% endfor %}
+        {% endif %}
+        <p class="small muted">Date of birth and gender can be corrected only at the branch.</p>
     </section>
     {% set f = form %}
-    <form method="post" class="panel">
-        <h2>Contact details</h2>
+    <form method="post" class="panel" enctype="multipart/form-data" autocomplete="off">
+        <h2>Change my personal data</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <label for="email">Email</label><input type="email" id="email" name="email" value="{{ f.get('email', '') }}" required>
-        <label for="mobile">Mobile</label><input type="tel" id="mobile" name="mobile" value="{{ f.get('mobile', '') }}" pattern="[6-9][0-9]{9}" maxlength="10" required>
+        <label for="full_name">Full name</label><input id="full_name" name="full_name" value="{{ f.get('full_name', '') }}" required>
+        <div class="form-grid">
+            <div><label for="email">Email</label><input type="email" id="email" name="email" value="{{ f.get('email', '') }}" required></div>
+            <div><label for="mobile">Mobile</label><input type="tel" id="mobile" name="mobile" value="{{ f.get('mobile', '') }}" placeholder="+7 913 555 12 34" required></div>
+        </div>
+        <label for="country">Country</label>
+        <select id="country" name="country">{% for code, name in countries %}<option value="{{ code }}" {% if f.get('country') == code %}selected{% endif %}>{{ name }}</option>{% endfor %}</select>
         <label for="address">Address</label><input type="text" id="address" name="address" value="{{ f.get('address', '') }}" required>
         <div class="form-grid">
             <div><label for="city">City</label><input type="text" id="city" name="city" value="{{ f.get('city', '') }}" required></div>
-            <div><label for="pincode">PIN code</label><input type="text" id="pincode" name="pincode" value="{{ f.get('pincode', '') }}" pattern="[1-9][0-9]{5}" maxlength="6" required></div>
+            <div><label for="pincode">Postal code</label><input type="text" id="pincode" name="pincode" value="{{ f.get('pincode', '') }}" maxlength="10" required></div>
         </div>
-        <label for="state">State</label>
-        <select id="state" name="state">{% for s in states %}<option {% if f.get('state') == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-        <button type="submit" class="btn btn-primary btn-block">Save changes</button>
+        <div class="form-grid">
+            <div><label for="state">State / region</label><input id="state" name="state" value="{{ f.get('state', '') }}" list="states-in"></div>
+            <div><label for="occupation">Occupation</label>
+                <select id="occupation" name="occupation">{% for o in occupations %}<option {% if f.get('occupation') == o %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></div>
+        </div>
+        <datalist id="states-in">{% for s in states %}<option value="{{ s }}">{% endfor %}</datalist>
+        <div class="form-grid">
+            <div><label for="proof_kind">Proof document</label>
+                <select id="proof_kind" name="proof_kind">{% for k in DOC_KINDS %}<option {% if f.get('proof_kind') == k %}selected{% endif %}>{{ k }}</option>{% endfor %}</select></div>
+            <div><label for="proof">File (PDF, JPG, PNG)</label><input type="file" id="proof" name="proof" accept=".pdf,.jpg,.jpeg,.png"></div>
+        </div>
+        <p class="small muted">A new name needs an ID proof; a new address or country needs an address proof (e.g. a utility bill).</p>
+        <button type="submit" class="btn btn-primary btn-block" {% if pending %}disabled{% endif %}>Send change to the bank</button>
     </form>
 </div>
+{% if changes|rejectattr('status', 'equalto', 'Pending')|list %}
+<section class="panel">
+    <h2>Earlier changes</h2>
+    {% for c in changes if c.status != 'Pending' %}
+    <div class="mini-row"><div><strong>{% for k in c.changes %}{{ labels[k] }}{{ ', ' if not loop.last }}{% endfor %}</strong><small>{{ c.created_at|nicedate }}{% if c.decided_by %} &middot; {{ c.decided_by }}{% endif %}{% if c.reason %} &middot; {{ c.reason }}{% endif %}</small></div>
+        <span class="badge st-{{ c.status|lower }}">{{ c.status }}</span></div>
+    {% endfor %}
+</section>
+{% endif %}
 {% endblock %}

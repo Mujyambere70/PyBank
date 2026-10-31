@@ -1,26 +1,5 @@
 {% extends "base.html" %}
-{% block title %}About Us<section class="section" id="developer">
-    <div class="wrap">
-        <div class="section-head"><h2>About this project</h2>
-            <p class="muted">PyBank is a Python-Based Banking System built as an academic portfolio project. The bank, customers and money are fictional.</p></div>
-        <div class="dev-card">
-            <div class="dev-avatar">JM</div>
-            <div>
-                <h3>Jean Michel Mujyambere</h3>
-                <p class="muted">Software Engineer &middot; Python Developer &middot; Data Analyst</p>
-                <ul class="check-list">
-                    <li><strong>Bachelor of Computer Applications (AI &amp; ML)</strong>, Maharishi Markandeshwar University, Mullana-Ambala, India (2022&ndash;2025) &mdash; PyBank started as the BCA project from the synopsis &ldquo;Python-Based Banking System&rdquo;.</li>
-                    <li><strong>Master&rsquo;s student, Applied Mathematics and Informatics</strong> (Data Analysis), Siberian Federal University, Krasnoyarsk, Russia (2026&ndash;present).</li>
-                    <li>HyperionDev Software Engineering Bootcamp &middot; Google Advanced Data Analytics, Cybersecurity and UX Design certificates.</li>
-                    <li>Other projects: <strong>Yo Delivery</strong> (e-commerce platform), <strong>TaskFlow</strong> (task management system), Chess Match game, Finance Calculator.</li>
-                </ul>
-                <div class="chips"><span class="chip">Python</span><span class="chip">Flask</span><span class="chip">SQLite</span><span class="chip">OOP</span><span class="chip">Jinja2</span><span class="chip">HTML &amp; CSS</span><span class="chip">JavaScript</span><span class="chip">Unit testing</span></div>
-                <p class="small" style="margin-top:12px"><a href="https://github.com/Mujyambere70" target="_blank" rel="noopener">github.com/Mujyambere70</a> &middot; Bank staff sign in: <a href="{{ url_for('staff_login') }}">Back Office</a></p>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
+{% block title %}About Us{% endblock %}
 {% block content %}
 <section class="page-hero"><div class="wrap"><h1>About PyBank</h1><p>Simple, transparent and secure banking.</p></div></section>
 <section class="section">

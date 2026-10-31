@@ -22,6 +22,8 @@
         <button type="submit" class="btn btn-primary btn-block">Change PIN</button>
     </form>
 </div>
+{% set action_field = 'action' %}{% set totp_enabled = customer.totp_enabled %}
+{% include "_totp_setup.html" %}
 <section class="panel">
     <h2>Security tips</h2>
     <ul class="check-list">

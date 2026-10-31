@@ -14,8 +14,68 @@
         {% for m in FD_TENURES %}<div><label>{{ m }} months</label><input type="number" name="fd_rate_{{ m }}" value="{{ s['fd_rate_%d'|format(m)] }}" step="0.05" min="0.05" max="15" required></div>{% endfor %}
     </div>
     <p class="small muted">New rates are used for new FDs only. Existing FDs keep their rate.</p>
+    <h2 style="margin-top:22px">Savings &amp; loan interest rates (% a year)</h2>
+    <div class="form-grid">
+        <div><label>Savings accounts</label><input type="number" name="savings_rate" value="{{ s.savings_rate }}" step="0.05" min="0" max="30" required></div>
+        {% for p in PRODUCTS %}<div><label>{{ p }} loan</label><input type="number" name="loan_rate_{{ p }}" value="{{ s['loan_rate_' ~ p] }}" step="0.05" min="0" max="30" required></div>{% endfor %}
+    </div>
+    <p class="small muted">Savings interest is worked out on the balance of every day and paid after each quarter (31 Mar, 30 Jun, 30 Sep, 31 Dec). New loan rates apply to new applications.</p>
+    <h2 style="margin-top:22px">Late EMI fee</h2>
+    <div class="form-grid"><div><label>% of the EMI, charged once for each EMI that cannot be auto-debited</label>
+        <input type="number" name="late_fee_percent" value="{{ s.late_fee_percent }}" step="0.25" min="0" max="30" required></div></div>
     <h2 style="margin-top:22px">Website</h2>
     <label class="checkbox"><input type="checkbox" name="online_account_opening" value="1" {{ 'checked' if s.online_account_opening == '1' }}> Allow customers to open accounts online</label>
     <button class="btn btn-primary btn-block">Save settings</button>
 </form>
+<div class="dash-grid" id="international">
+    <section class="panel">
+        <h2>Exchange rates <small class="muted">(units for 1 USD)</small></h2>
+        <p class="small muted">Used for transfers between accounts in different currencies. Downloaded every day from open.er-api.com; you can also type them.</p>
+        <form method="post" action="{{ url_for('office_settings_international') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="fx">
+            <div class="table-wrap"><table class="data compact">
+                <thead><tr><th>Currency</th><th>Rate</th><th>Updated</th></tr></thead>
+                <tbody>{% for c in CURRENCIES %}<tr><td>{{ c }}</td>
+                    <td><input name="fx_{{ c }}" value="{{ fx[c].per_usd if c in fx else '' }}" inputmode="decimal" style="max-width:130px" {% if c == 'USD' %}readonly{% endif %}></td>
+                    <td class="small muted">{% if c in fx %}{{ fx[c].updated_at|nicedate }} &middot; {{ fx[c].source }}{% else %}missing{% endif %}</td></tr>{% endfor %}</tbody>
+            </table></div>
+            <button class="btn btn-primary btn-block">Save typed rates</button>
+        </form>
+        <form method="post" action="{{ url_for('office_settings_international') }}" style="margin-top:8px">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="fx_download">
+            <button class="btn btn-outline btn-block">&#8635; Download today's rates now</button></form>
+    </section>
+    <form method="post" action="{{ url_for('office_settings_international') }}" class="panel">
+        <h2>Daily limits per currency</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="limits">
+        <div class="table-wrap"><table class="data compact">
+            <thead><tr><th>Currency</th><th>Cash withdrawal</th><th>Transfers</th></tr></thead>
+            <tbody>{% for c, (w, t) in limits.items() %}<tr><td>{{ c }}</td>
+                {% if c == 'INR' %}<td class="small muted" colspan="2">set above: {{ w|money('INR') }} &middot; {{ t|money('INR') }}</td>
+                {% else %}<td><input name="limit_withdraw_{{ c }}" value="{{ w // 100 }}" inputmode="numeric" style="max-width:120px"></td>
+                <td><input name="limit_transfer_{{ c }}" value="{{ t // 100 }}" inputmode="numeric" style="max-width:120px"></td>{% endif %}</tr>{% endfor %}</tbody>
+        </table></div>
+        <button class="btn btn-primary btn-block">Save limits</button>
+    </form>
+</div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Quarterly savings interest</h2>
+        {% if due %}<p>Waiting to be paid: <strong>{{ due|join(', ') }}</strong>. It is paid automatically on the first visit of the day, or now:</p>{% else %}<p class="muted">Nothing waiting - every finished quarter is paid.</p>{% endif %}
+        <form method="post" action="{{ url_for('office_interest_run') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-outline btn-block" {% if not due %}disabled{% endif %}>Pay interest now</button></form>
+        {% if runs %}<div class="table-wrap"><table class="data compact" style="margin-top:14px"><thead><tr><th>Quarter</th><th>Paid on</th><th class="num">Accounts</th><th class="num">Total</th></tr></thead>
+            <tbody>{% for r in runs %}<tr><td>{{ r.quarter }}</td><td>{{ r.run_at|nicedate(false) }}</td><td class="num">{{ r.accounts }}</td><td class="num">{% for c, v in r.totals.items() %}{{ v|money(c) }}<br>{% else %}0{% endfor %}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+    </section>
+    <section class="panel">
+        <h2>System status</h2>
+        <ul class="check-list">
+            <li>Database: <strong>{{ database }}</strong>{% if database.startswith('SQLite') %} <span class="badge bad">data is lost on Render restarts - set DATABASE_URL</span>{% else %} <span class="badge ok">permanent</span>{% endif %}</li>
+            <li>Login key (SECRET_KEY): {% if secret_from_env %}<span class="badge ok">from environment</span>{% else %}<span class="badge ok">saved in the database</span>{% endif %}</li>
+            <li>Email alerts: {% if providers.email %}<span class="badge ok">{{ providers.email|upper }}</span>{% else %}<span class="badge">off - set BREVO_API_KEY + ALERT_EMAIL_FROM</span>{% endif %}</li>
+            <li>SMS alerts: {% if providers.sms %}<span class="badge ok">{{ providers.sms|capitalize }}</span>{% else %}<span class="badge">off - set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM</span>{% endif %}</li>
+        </ul>
+        <p class="small muted">Alerts are always kept in Net Banking (Alerts page) even when email and SMS are off.</p>
+    </section>
+</div>
 {% endblock %}

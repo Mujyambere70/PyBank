@@ -11,7 +11,10 @@
             <tr><th>Account type</th><td>{{ account.type }} Account</td></tr>
             <tr><th>Status</th><td><span class="badge ok">{{ account.status }}</span></td></tr>
             <tr><th>IFSC code</th><td>{{ account.ifsc }}</td></tr>
-            <tr><th>Branch</th><td>{{ account.branch }}<br><small class="muted">{{ BRANCH.address }}</small></td></tr>
+            {% set br = BRANCHES['RU'] if account.ifsc == BRANCHES['RU'].ifsc else BRANCHES['IN'] %}
+            <tr><th>SWIFT / BIC</th><td>{{ br.swift }}</td></tr>
+            <tr><th>Currency</th><td>{{ account.currency }} &middot; {{ currency_name(account.currency, LANG) }}</td></tr>
+            <tr><th>Branch</th><td>{{ account.branch }}<br><small class="muted">{{ br.address }}</small></td></tr>
             <tr><th>Opened on</th><td>{{ account.opened_at|nicedate(false) }}</td></tr>
             <tr><th>Interest rate</th><td>{{ account.interest_rate }}% p.a.{% if not account.interest_rate %} (current account){% endif %}</td></tr>
             <tr><th>Debit card</th><td>XXXX XXXX XXXX {{ account.card_last4 }}</td></tr>

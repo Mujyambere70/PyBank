@@ -1,0 +1,31 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Payment {{ p.ref }}{% endblock %}
+{% block nb_content %}
+<div class="receipt panel narrow-panel">
+    <div class="receipt-status">
+        {% if p.status == 'Completed' %}<div class="success-icon small">&#10003;</div><h1>Payment completed</h1>
+        {% elif p.status == 'Returned' %}<div class="success-icon small fail">&#8617;</div><h1>Payment returned</h1>
+        {% else %}<div class="success-icon small wait">&#8987;</div><h1>Payment is being processed</h1>{% endif %}
+        <div class="receipt-amount out">-{{ p.amount|money(p.currency) }}</div>
+    </div>
+    <table class="details">
+        <tr><th>PyBank reference</th><td><strong>{{ p.ref }}</strong></td></tr>
+        <tr><th>Sent by</th><td>{{ p.rail }} &middot; {{ rail.speed }}</td></tr>
+        <tr><th>Date &amp; time</th><td>{{ p.created_at|nicedate }}</td></tr>
+        <tr><th>Beneficiary</th><td>{{ p.beneficiary_name }}</td></tr>
+        <tr><th>Account / UPI ID</th><td>{{ p.beneficiary_account }}</td></tr>
+        <tr><th>Bank</th><td>{{ p.bank_name }}{% if p.bank_code %} &middot; {{ p.bank_code }}{% endif %}{% if p.country and p.country != 'IN' %} &middot; {{ country_name(p.country, LANG) }}{% endif %}</td></tr>
+        {% if p.remarks %}<tr><th>Remarks</th><td>{{ p.remarks }}</td></tr>{% endif %}
+        <tr><th>Status</th><td><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></td></tr>
+        {% if p.status == 'Processing' %}<tr><th>Expected</th><td>{{ p.settle_after|nicedate }}</td></tr>{% endif %}
+        {% if p.utr %}<tr><th>{{ 'UETR' if p.rail == 'SWIFT' else 'UTR / RRN' }}</th><td><code>{{ p.utr }}</code></td></tr>{% endif %}
+        {% if p.reason %}<tr><th>Reason</th><td>{{ p.reason }}</td></tr>{% endif %}
+        {% if p.return_ref %}<tr><th>Money returned</th><td><a href="{{ url_for('receipt', ref=p.return_ref) }}">{{ p.return_ref }}</a></td></tr>{% endif %}
+    </table>
+    <div class="btn-row no-print">
+        <button type="button" class="btn btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>
+        <a href="{{ url_for('other_bank') }}" class="btn btn-primary">New payment</a>
+    </div>
+    <p class="small muted center">Sandbox: no real money was sent to another bank.</p>
+</div>
+{% endblock %}

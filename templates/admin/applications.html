@@ -1,0 +1,60 @@
+{% extends "admin/layout.html" %}
+{% block title %}New accounts & data changes{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>New accounts &amp; changes of personal data</h1>
+    <p class="muted small">Online applications open only after you approve them. Customers' changes of personal data are applied only after approval. Check the documents first.</p></div></div>
+
+<h2 class="section-title">Account applications <span class="badge {{ 'st-pending' if rows }}">{{ rows|length }}</span></h2>
+{% for r in rows %}
+<section class="panel req">
+    <div class="req-head"><strong>{{ r.full_name }}</strong> <span class="badge st-pending">Pending</span>
+        <small class="muted"><code>{{ r.customer_id }}</code> &middot; applied {{ r.created_at|nicedate }} &middot; {{ LANGUAGES.get(r.lang, r.lang) }}</small></div>
+    <div class="review-grid">
+        <table class="details compact">
+            <tr><th>Country</th><td>{{ country_name(r.country) }}</td></tr>
+            <tr><th>Date of birth</th><td>{{ r.dob }} &middot; {{ r.gender }}</td></tr>
+            <tr><th>Contact</th><td>{{ r.email }}<br>{{ r.mobile }}</td></tr>
+            <tr><th>Address</th><td>{{ r.address }}, {{ r.city }}{% if r.state %}, {{ r.state }}{% endif %} {{ r.pincode }}</td></tr>
+            <tr><th>Occupation</th><td>{{ r.occupation }}</td></tr>
+            <tr><th>Account</th><td>{{ r.type }} &middot; {{ r.currency }} &middot; {{ r.number }}</td></tr>
+            <tr><th>Opening deposit</th><td>{{ r.opening_deposit|money(r.currency) }}</td></tr>
+        </table>
+        <div><b class="small">Documents</b>
+            {% for d in r.documents %}<div><a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">{{ d.kind }}: {{ d.filename }}</a> <small class="muted">{{ '{:,.0f}'.format(d.size / 1024) }} KB</small></div>{% else %}<p class="small out">No document!</p>{% endfor %}</div>
+    </div>
+    <div class="btn-row">
+        <form method="post" action="{{ url_for('office_application_action', cid=r.customer_id, action='approve') }}" onsubmit="return confirm('Open the account of {{ r.full_name }}?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-sm">&#10004; Approve &amp; open account</button></form>
+        <form method="post" action="{{ url_for('office_application_action', cid=r.customer_id, action='reject') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input name="reason" placeholder="Reason for rejecting (sent to the applicant)" required minlength="3" maxlength="200">
+            <button class="btn btn-danger btn-sm">Reject</button></form>
+    </div>
+</section>
+{% else %}<section class="panel"><p class="muted">No applications waiting.</p></section>{% endfor %}
+
+<h2 class="section-title">Changes of personal data <span class="badge {{ 'st-pending' if changes }}">{{ changes|length }}</span></h2>
+{% for p in changes %}
+<section class="panel req">
+    <div class="req-head"><strong>{{ p.customer_name }}</strong> <span class="badge st-pending">Pending</span>
+        <small class="muted"><a href="{{ url_for('office_customer', cid=p.customer_id) }}">{{ p.customer_id }}</a> &middot; {{ p.created_at|nicedate }}</small></div>
+    <div class="review-grid">
+        <div class="table-wrap"><table class="data compact">
+            <thead><tr><th>Field</th><th>Now</th><th>New</th></tr></thead>
+            <tbody>{% for field, pair in p.changes.items() %}
+            <tr><td>{{ labels[field] }}</td><td>{{ country_name(pair[0]) if field == 'country' else pair[0] }}</td><td><strong>{{ country_name(pair[1]) if field == 'country' else pair[1] }}</strong></td></tr>
+            {% endfor %}</tbody></table></div>
+        <div><b class="small">Proof</b>
+            {% for d in p.documents %}<div><a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">{{ d.kind }}: {{ d.filename }}</a></div>{% else %}<p class="small muted">No document (not needed for email, phone or occupation).</p>{% endfor %}</div>
+    </div>
+    <div class="btn-row">
+        <form method="post" action="{{ url_for('office_profile_change_action', pid=p.id, action='approve') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-sm">&#10004; Approve change</button></form>
+        <form method="post" action="{{ url_for('office_profile_change_action', pid=p.id, action='reject') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input name="reason" placeholder="Reason for rejecting (shown to the customer)" required minlength="3" maxlength="200">
+            <button class="btn btn-danger btn-sm">Reject</button></form>
+    </div>
+</section>
+{% else %}<section class="panel"><p class="muted">No changes waiting.</p></section>{% endfor %}
+{% endblock %}

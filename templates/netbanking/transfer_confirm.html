@@ -15,7 +15,11 @@
         <tr><th>To (beneficiary)</th><td><strong id="beneficiary">{{ beneficiary }}</strong><br><small class="muted">A/c {{ form.get('to_account') }} &middot; PyBank</small></td></tr>
         <tr><th>Amount</th><td><strong class="big">{{ amount|money }}</strong></td></tr>
         <tr><th>Remarks</th><td>{{ form.get('remarks') or '-' }}</td></tr>
-        <tr><th>Charges</th><td>₹0.00</td></tr>
+        {% if quote %}
+        <tr><th>Exchange rate</th><td>1 {{ account.currency }} = {{ '%.4f'|format(quote.rate) }} {{ quote.currency }}</td></tr>
+        <tr><th>Beneficiary receives</th><td><strong>{{ quote.amount|money(quote.currency) }}</strong></td></tr>
+        {% endif %}
+        <tr><th>Charges</th><td>{{ 0|money }}</td></tr>
     </table>
     <label for="pin">Enter your transaction PIN to confirm</label>
     <input type="password" id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" required autofocus>

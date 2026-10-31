@@ -20,7 +20,7 @@
         <td>{{ c.customer_id }}</td>
         <td>{{ c.number }}<br><small class="muted">{{ c.account_type }}</small></td>
         <td class="small">{{ c.email }}<br>{{ c.mobile }}</td>
-        <td class="num"><strong>{{ c.balance|money }}</strong></td>
+        <td class="num"><strong>{{ c.balance|money(c.currency) }}</strong></td>
         <td>{% if c.account_status == 'Active' %}<span class="badge ok">Active</span>{% else %}<span class="badge bad">{{ c.account_status }}</span>{% endif %}
             {% if c.open_requests %}<br><span class="badge st-open">{{ c.open_requests }} request(s)</span>{% endif %}</td>
         <td><a href="{{ url_for('office_customer', cid=c.customer_id) }}" class="btn btn-outline btn-sm">Manage</a></td>

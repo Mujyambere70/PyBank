@@ -1,0 +1,73 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Alerts{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Alerts</h1><p class="muted small">An alert is made for every transaction, request and loan decision.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <h2>Where should we send alerts?</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label class="checkbox"><input type="checkbox" name="email" value="1" {% if customer.alert_email %}checked{% endif %}> Email to <strong>{{ customer.email }}</strong></label>
+        <label class="checkbox"><input type="checkbox" name="sms" value="1" {% if customer.alert_sms %}checked{% endif %}> SMS to <strong>{{ customer.mobile }}</strong></label>
+        <button class="btn btn-primary btn-block">Save</button>
+        <p class="small muted">Alerts are always shown on this page too. Change your email or phone in <a href="{{ url_for('profile') }}">My Profile</a>.</p>
+    </form>
+    <aside class="panel info">
+        <h2>Delivery</h2>
+        <ul class="check-list">
+            <li>Email: {% if providers.email %}<span class="badge ok">On</span>{% else %}<span class="badge">Not set up by the bank yet</span>{% endif %}</li>
+            <li>SMS: {% if providers.sms %}<span class="badge ok">On</span>{% else %}<span class="badge">Not set up by the bank yet</span>{% endif %}</li>
+            <li>If you see a transaction you did not make, call the branch at once and change your password.</li>
+        </ul>
+    </aside>
+</div>
+<section class="panel" id="phone">
+    <div class="panel-head"><h2>&#128241; Notifications on my phone</h2><span class="badge {{ 'ok' if devices else '' }}">{{ devices|length }} device(s)</span></div>
+    <ol class="steps-list">
+        <li>Open this site on your phone and add it to the home screen (browser menu &rarr; <b>Install app</b> / <b>Add to Home Screen</b>).</li>
+        <li>Open PyBank from the home screen, log in and press the button below. Allow notifications.</li>
+        <li>From now on every alert also appears as a notification on the phone.</li>
+    </ol>
+    <div class="btn-row">
+        <button type="button" class="btn btn-primary" id="push-on">Turn on notifications on this device</button>
+        {% if devices %}<form method="post" action="{{ url_for('push_action', action='test') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline">Send a test notification</button></form>{% endif %}
+    </div>
+    <p class="small muted" id="push-msg" aria-live="polite"></p>
+    {% for d in devices %}
+    <div class="mini-row"><div><strong>{{ d.device[:60] or 'Browser' }}</strong><small>{{ d.created_at|nicedate }}</small></div>
+        <form method="post" action="{{ url_for('push_action', action='remove') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ d.id }}"><button class="linkbtn out">Remove</button></form></div>
+    {% endfor %}
+    <p class="small muted">iPhone: works after the app is added to the Home Screen (iOS 16.4 or newer).</p>
+</section>
+<section class="panel">
+    <h2>Recent alerts</h2>
+    {% for a in rows %}
+    <div class="mini-row alert-row">
+        <div><strong>{{ a.subject }}</strong><br><span class="small">{{ a.body }}</span></div>
+        <div class="right small muted">{{ a.created_at|nicedate }}<br>
+            <span class="badge st-{{ a.status.split(':')[0]|lower|replace(' ', '-') }}" title="{{ a.status }}">{{ {'in-app': 'In app', 'email': 'Email', 'sms': 'SMS'}.get(a.channel, a.channel) }}{% if a.channel != 'in-app' %} &middot; {{ a.status.split(':')[0] }}{% endif %}</span></div>
+    </div>
+    {% else %}<p class="muted">No alerts yet.</p>{% endfor %}
+</section>
+<script>
+(function () {
+    var btn = document.getElementById('push-on'), msg = document.getElementById('push-msg');
+    var text = { nosupport: "{{ 'This browser cannot show push notifications. On iPhone, add PyBank to the Home Screen first.'|t }}",
+                 denied: "{{ 'Notifications are blocked. Allow them in the browser settings for this site.'|t }}",
+                 done: "{{ 'Notifications are on for this device.'|t }}", error: "{{ 'Something went wrong. Please try again.'|t }}" };
+    function b64(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+        var raw = atob(s), out = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out; }
+    btn.addEventListener('click', async function () {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) { msg.textContent = text.nosupport; return; }
+        try {
+            if (await Notification.requestPermission() !== 'granted') { msg.textContent = text.denied; return; }
+            var reg = await navigator.serviceWorker.register('/sw.js'); await navigator.serviceWorker.ready;
+            var key = (await (await fetch('{{ url_for("push_key") }}')).json()).key;
+            var sub = await reg.pushManager.getSubscription() || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(key) });
+            var r = await fetch('{{ url_for("push_subscribe") }}', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': '{{ csrf_token() }}' }, body: JSON.stringify(sub) });
+            if (!r.ok) throw new Error('save');
+            msg.textContent = text.done; setTimeout(function () { location.reload(); }, 900);
+        } catch (e) { msg.textContent = text.error; }
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "admin/layout.html" %}
+{% block title %}Approvals{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Deposit &amp; withdrawal approvals</h1><p class="muted small">Customers send these from Net Banking. The money moves only when you approve.</p></div>
+    <div class="chips">{% for s in ['Pending', 'Approved', 'Rejected', 'Cancelled', ''] %}<a href="{{ url_for('office_approvals', status=s) }}" class="chip {{ 'active' if status == s }}">{{ s or 'All' }}</a>{% endfor %}</div></div>
+{% for r in rows %}
+<section class="panel req">
+    <div class="req-head"><strong>{{ r.kind }} &middot; {{ r.amount|money(r.currency) }}</strong>
+        <span class="badge st-{{ r.status|lower }}">{{ r.status }}</span>
+        <small class="muted"><code>{{ r.ref }}</code> &middot; <a href="{{ url_for('office_customer', cid=r.customer_id) }}">{{ r.full_name }} ({{ r.customer_id }})</a> &middot; A/c {{ r.account_number }} &middot; {{ r.created_at|nicedate }}</small></div>
+    <p class="small">Balance now: <strong>{{ r.balance|money(r.currency) }}</strong>{% if r.kind == 'Withdrawal' and r.status == 'Pending' and r.amount > r.balance %} <span class="badge bad">not enough money</span>{% endif %}{% if r.note %} &middot; Remarks: {{ r.note }}{% endif %}</p>
+    {% if r.status == 'Pending' %}
+    <div class="btn-row">
+        <form method="post" action="{{ url_for('office_approval_action', rid=r.id, action='approve') }}" onsubmit="return confirm('Approve {{ r.kind|lower }} of {{ r.amount|money(r.currency) }} for {{ r.full_name }}?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path }}">
+            <button class="btn btn-primary btn-sm">&#10004; Approve</button></form>
+        <form method="post" action="{{ url_for('office_approval_action', rid=r.id, action='reject') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.full_path }}">
+            <input name="reason" placeholder="Reason for rejecting (shown to the customer)" required minlength="3" maxlength="200">
+            <button class="btn btn-danger btn-sm">Reject</button></form>
+    </div>
+    {% else %}
+    <small class="muted">{{ r.status }}{% if r.decided_by %} by {{ r.decided_by }}{% endif %}{% if r.decided_at %} &middot; {{ r.decided_at|nicedate }}{% endif %}{% if r.reason %} &middot; {{ r.reason }}{% endif %}{% if r.tx_ref %} &middot; tx <code>{{ r.tx_ref }}</code>{% endif %}</small>
+    {% endif %}
+</section>
+{% else %}<section class="panel"><p class="muted">{{ 'Nothing to approve right now.' if status == 'Pending' else 'No requests here.' }}</p></section>{% endfor %}
+{% endblock %}

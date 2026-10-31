@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Open an Account Online{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="wrap"><h1>Open an Account Online</h1><p>Takes about 5 minutes. Fields marked * are required.</p></div></section>
+<section class="page-hero"><div class="wrap"><h1>Open an Account Online</h1><p>From any country. Takes about 5 minutes. Fields marked * are required. The bank checks every application before the account opens.</p></div></section>
 <section class="section">
-    <form method="post" class="wrap narrow form-card" autocomplete="off">
+    <form method="post" class="wrap narrow form-card" autocomplete="off" enctype="multipart/form-data" id="reg-form">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <h2><span class="step">1</span> Personal details</h2>
@@ -26,37 +26,59 @@
 
         <h2><span class="step">2</span> Contact details</h2>
         <div class="form-grid">
+            <div class="full"><label for="country">Country where you live *</label>
+                <select id="country" name="country" required>
+                    {% for code, name in countries %}<option value="{{ code }}" data-dial="{{ dial[code] }}" {% if form.get('country', 'IN') == code %}selected{% endif %}>{{ name }}</option>{% endfor %}
+                </select></div>
             <div><label for="email">Email *</label>
                 <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" placeholder="you@example.com" required></div>
             <div><label for="mobile">Mobile number *</label>
-                <div class="input-prefix"><span>+91</span><input type="tel" id="mobile" name="mobile" value="{{ form.get('mobile', '') }}" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit mobile" required></div></div>
+                <div class="input-prefix"><span id="dial">+91</span><input type="tel" id="mobile" name="mobile" value="{{ form.get('mobile', '') }}" maxlength="16" placeholder="Mobile number" required></div></div>
             <div class="full"><label for="address">Address *</label>
                 <input type="text" id="address" name="address" value="{{ form.get('address', '') }}" placeholder="House no., street, area" required></div>
             <div><label for="city">City *</label>
                 <input type="text" id="city" name="city" value="{{ form.get('city', '') }}" required></div>
-            <div><label for="state">State *</label>
-                <select id="state" name="state" required>
-                    <option value="">Select</option>
-                    {% for s in states %}<option {% if form.get('state', 'Haryana') == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
-                </select></div>
-            <div><label for="pincode">PIN code *</label>
-                <input type="text" id="pincode" name="pincode" value="{{ form.get('pincode', '') }}" pattern="[1-9][0-9]{5}" maxlength="6" inputmode="numeric" required></div>
+            <div><label for="state">State / region</label>
+                <input id="state" name="state" value="{{ form.get('state', '') }}" list="states-in" placeholder="e.g. Haryana"></div>
+            <div><label for="pincode">Postal code *</label>
+                <input type="text" id="pincode" name="pincode" value="{{ form.get('pincode', '') }}" maxlength="10" required></div>
         </div>
+        <datalist id="states-in">{% for s in states %}<option value="{{ s }}">{% endfor %}</datalist>
 
         <h2><span class="step">3</span> Account</h2>
+        <div class="form-grid">
+            <div class="full"><label for="currency">Account currency *</label>
+                {% if LANG == 'ru' %}
+                <input type="hidden" name="currency" value="RUB"><input id="currency" value="RUB · {{ currency_name('RUB', LANG) }}" disabled>
+                <small class="muted">With the Russian language the account is opened in rubles.</small>
+                {% else %}
+                <select id="currency" name="currency">
+                    <option value="">Currency of my country (US dollars if the bank does not have it)</option>
+                    {% for c in CURRENCIES %}<option value="{{ c }}" {% if form.get('currency') == c %}selected{% endif %}>{{ c }} · {{ currency_name(c, LANG) }}</option>{% endfor %}
+                </select>
+                {% endif %}</div>
+        </div>
         <div class="choice-grid">
             {% for t, info in ACCOUNT_TYPES.items() %}
             <label class="choice">
                 <input type="radio" name="account_type" value="{{ t }}" {% if form.get('account_type', 'Savings') == t %}checked{% endif %}>
                 <span><strong>{{ t }} Account</strong>
-                    <small>Min. opening deposit {{ info.min_balance|money }}{% if info.interest %} &middot; {{ info.interest }}% interest{% else %} &middot; for business{% endif %}</small></span>
+                    <small>{% if info.interest %}{{ SETTINGS.savings_rate }}% interest{% else %}for business{% endif %}</small></span>
             </label>
             {% endfor %}
         </div>
+        <div class="table-wrap"><table class="data compact min-deposits">
+            <thead><tr><th>Currency</th><th class="num">Savings: min. opening deposit</th><th class="num">Current: min. opening deposit</th></tr></thead>
+            <tbody>{% for c in CURRENCIES %}<tr><td>{{ c }}</td><td class="num">{{ policy(c, 'savings')|money(c) }}</td><td class="num">{{ policy(c, 'current')|money(c) }}</td></tr>{% endfor %}</tbody>
+        </table></div>
         <div class="form-grid">
-            <div><label for="initial_deposit">Opening deposit (₹) *</label>
-                <input type="number" id="initial_deposit" name="initial_deposit" value="{{ form.get('initial_deposit', '500') }}" min="500" step="0.01" required></div>
+            <div><label for="initial_deposit">Opening deposit *</label>
+                <input type="number" id="initial_deposit" name="initial_deposit" value="{{ form.get('initial_deposit', '') }}" min="1" step="0.01" required>
+                <small class="muted">You pay it at the branch or by transfer; it is credited when the account is approved.</small></div>
         </div>
+        <h2><span class="step">&#128196;</span> Identity document</h2>
+        <label for="id_doc">Passport or national ID card * <small class="muted">(PDF, JPG or PNG, up to 2 MB)</small></label>
+        <input type="file" id="id_doc" name="id_doc" accept=".pdf,.jpg,.jpeg,.png" required>
 
         <h2><span class="step">4</span> Security</h2>
         <div class="form-grid">
@@ -73,7 +95,14 @@
         <label class="checkbox"><input type="checkbox" name="terms" value="yes" required>
             I confirm the details are correct and accept the PyBank terms &amp; conditions.</label>
 
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Open My Account</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Send my application</button>
     </form>
 </section>
+<script>
+(function () {
+    var c = document.getElementById('country'), d = document.getElementById('dial');
+    function upd() { d.textContent = '+' + (c.options[c.selectedIndex].dataset.dial || ''); }
+    c.addEventListener('change', upd); upd();
+})();
+</script>
 {% endblock %}

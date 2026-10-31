@@ -2,14 +2,16 @@
 {% block title %}Open account{% endblock %}
 {% block office_content %}
 <div class="nb-title"><div><h1>Open a new account</h1><p class="muted small">For a customer who visits the branch with ID proof.</p></div></div>
-<form method="post" class="panel" autocomplete="off">
+<form method="post" class="panel" autocomplete="off" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <h2>Customer details</h2>
     {% set f = form %}{% include "admin/_customer_fields.html" %}
     <h2 style="margin-top:22px">Account</h2>
     <div class="form-grid">
         <div><label>Account type</label><select name="account_type">{% for t, v in ACCOUNT_TYPES.items() %}<option {% if form.get('account_type') == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
-        <div><label>Opening deposit (₹) <small class="muted">Savings min {{ ACCOUNT_TYPES['Savings'].min_balance|money }}, Current min {{ ACCOUNT_TYPES['Current'].min_balance|money }}</small></label><input type="number" name="initial_deposit" value="{{ form.get('initial_deposit', '1000') }}" min="0" required></div>
+        <div><label>Currency</label><select name="currency">{% for c in CURRENCIES %}<option {% if form.get('currency', 'INR') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+        <div><label>Opening deposit <small class="muted">(in the account currency; see the minimums on the Rates page)</small></label><input type="number" name="initial_deposit" value="{{ form.get('initial_deposit', '1000') }}" min="0" step="0.01" required></div>
+        <div><label>ID proof (scan, optional at the branch)</label><input type="file" name="id_doc" accept=".pdf,.jpg,.jpeg,.png"></div>
         <div><label>First password (customer changes it later)</label><input name="password" value="{{ form.get('password', '') }}" required placeholder="8+ letters and numbers"></div>
         <div><label>Transaction PIN (4 digits)</label><input name="pin" value="{{ form.get('pin', '') }}" pattern="[0-9]{4}" maxlength="4" required></div>
     </div>

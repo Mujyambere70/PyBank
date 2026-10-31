@@ -6,6 +6,8 @@ import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from support import DRIVER, cash, target  # noqa: E402
 
 from bank import (Bank, BankAccount, BankError, format_money, mask_name,  # noqa: E402
                   parse_amount)
@@ -59,7 +61,7 @@ class TestBankAccount(unittest.TestCase):
 class TestBank(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.bank = Bank(os.path.join(self.tmp.name, "test.db"))
+        self.bank = Bank(target(os.path.join(self.tmp.name, "test.db")), driver=DRIVER)
         self.cid, self.acc = self.bank.register(PERSON)
         self.cid2, self.acc2 = self.bank.register({**PERSON, "full_name": "Other Person",
                                                    "email": "o@example.com", "mobile": "9822222222"})
@@ -104,16 +106,16 @@ class TestBank(unittest.TestCase):
 
     def test_deposit_withdraw_need_pin(self):
         with self.assertRaises(BankError):
-            self.bank.deposit(self.cid, 100, "0000")
-        self.bank.deposit(self.cid, 50000, "4826")
-        self.bank.withdraw(self.cid, 20000, "4826")
+            cash(self.bank, self.cid, 100, "0000", kind='Deposit')
+        cash(self.bank, self.cid, 50000, "4826", kind='Deposit')
+        cash(self.bank, self.cid, 20000, "4826", kind='Withdrawal')
         self.assertEqual(self.bank.get_account(self.cid).balance, 1_030_000)
 
     def test_daily_withdraw_limit(self):
-        self.bank.deposit(self.cid, 10_000_000, "4826")
-        self.bank.withdraw(self.cid, 4_000_000, "4826")
+        cash(self.bank, self.cid, 10_000_000, "4826", kind='Deposit')
+        cash(self.bank, self.cid, 4_000_000, "4826", kind='Withdrawal')
         with self.assertRaises(BankError) as e:
-            self.bank.withdraw(self.cid, 1_500_000, "4826")
+            cash(self.bank, self.cid, 1_500_000, "4826", kind='Withdrawal')
         self.assertIn("limit", str(e.exception))
 
     def test_transfer_moves_money_both_sides(self):
@@ -137,8 +139,8 @@ class TestBank(unittest.TestCase):
         self.assertEqual(self.bank.find_beneficiary(self.acc2.number), "O**** P*****")
 
     def test_statement_filters(self):
-        self.bank.deposit(self.cid, 100, "4826")
-        self.bank.withdraw(self.cid, 50, "4826")
+        cash(self.bank, self.cid, 100, "4826", kind='Deposit')
+        cash(self.bank, self.cid, 50, "4826", kind='Withdrawal')
         all_rows = self.bank.transactions(self.acc.number)
         self.assertEqual([t.category for t in all_rows][:2], ["Withdrawal", "Deposit"])
         self.assertTrue(all(t.type == "CR" for t in self.bank.transactions(self.acc.number, kind="CR")))
@@ -150,7 +152,7 @@ class TestBank(unittest.TestCase):
         self.bank.change_password(self.cid, "Secret123", "NewPass123")
         self.bank.authenticate(self.cid, "NewPass123")
         self.bank.change_pin(self.cid, "NewPass123", "9035")
-        self.bank.deposit(self.cid, 100, "9035")
+        cash(self.bank, self.cid, 100, "9035", kind='Deposit')
 
     def test_update_contact(self):
         self.bank.update_contact(self.cid, "new@example.com", "9855555555", "1 New Street",
@@ -166,7 +168,7 @@ class TestDemoData(unittest.TestCase):
     def test_seed(self):
         import demo_data
         with tempfile.TemporaryDirectory() as d:
-            bank = Bank(os.path.join(d, "t.db"))
+            bank = Bank(target(os.path.join(d, "t.db")), driver=DRIVER)
             demo_data.seed(bank)
             for cid in ("PB10000001", "PB10000002", "PB10000003"):
                 acc = bank.get_account(cid)

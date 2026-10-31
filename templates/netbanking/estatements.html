@@ -1,0 +1,28 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}E-statements{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Monthly e-statements</h1><p class="muted small">PDF statements of your account, one for every month.</p></div>
+    <a href="{{ url_for('statement') }}" class="btn btn-outline">&#128196; Statement with filters</a></div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Download a month</h2>
+        <form method="get" action="{{ url_for('statement_pdf') }}" class="inline-form">
+            <select name="month">{% for m in months %}<option value="{{ m }}">{{ m }}</option>{% endfor %}</select>
+            <button class="btn btn-primary">&#11015; PDF</button>
+        </form>
+        <h2 style="margin-top:20px">Statements made for me</h2>
+        {% for r in rows %}
+        <div class="mini-row"><div><strong>{{ r.month }}</strong><small>{{ '{:,.0f}'.format(r.size / 1024) }} KB{% if r.emailed %} &middot; emailed {{ r.emailed|nicedate(false) }}{% endif %}</small></div>
+            <a href="{{ url_for('estatement_file', sid=r.id) }}" class="link-arrow">PDF &rarr;</a></div>
+        {% else %}<p class="muted small">The first one is made on the 1st of next month.</p>{% endfor %}
+    </section>
+    <form method="post" class="panel info">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <h2>Monthly email</h2>
+        <p>On the 1st of every month we make last month's statement and send it to <strong>{{ customer.email }}</strong>.</p>
+        <label class="checkbox"><input type="checkbox" name="on" value="1" {% if customer.estatement %}checked{% endif %}> Make and email my e-statement every month</label>
+        <button class="btn btn-primary btn-block">Save</button>
+        <p class="small muted">{% if LANG == 'ar' %}The PDF labels are in English: Arabic letters cannot be drawn correctly in this PDF yet.{% else %}The PDF is in your language.{% endif %}</p>
+    </form>
+</div>
+{% endblock %}

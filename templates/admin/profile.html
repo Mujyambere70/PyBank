@@ -25,4 +25,6 @@
         <p class="small muted">At least 8 characters with letters and numbers. Your role can only be changed by another admin.</p>
     </form>
 </div>
+{% set action_field = 'form' %}{% set totp_enabled = me.totp_enabled %}
+{% include "_totp_setup.html" %}
 {% endblock %}

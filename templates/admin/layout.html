@@ -25,6 +25,10 @@
         <div class="side-label">Operations</div>
         {% set items = [('office_dashboard', '&#128200;', 'Dashboard', None), ('office_customers', '&#128101;', 'Customers', None),
             ('office_customer_new', '&#10133;', 'Open account', None), ('office_transactions', '&#128179;', 'Transactions', None),
+            ('office_applications', '&#128203;', 'New accounts & data', counts.pending_customers + counts.pending_profile),
+            ('office_approvals', '&#9989;', 'Approvals', counts.pending_cash),
+            ('office_loans', '&#127974;', 'Loans', counts.pending_loans),
+            ('office_payments', '&#127758;', 'Other-bank payments', counts.external_processing),
             ('office_requests', '&#128172;', 'Service requests', counts.open_requests)] %}
         {% for ep, icon, label, badge in items %}
             <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
@@ -32,7 +36,7 @@
         {% if me.role == 'admin' %}
         <div class="side-label">Administration</div>
         {% for ep, icon, label in [('office_staff', '&#129489;', 'Staff'), ('office_notices', '&#128227;', 'Notices'),
-            ('office_settings', '&#9881;', 'Bank settings'), ('office_database', '&#128451;', 'Database'), ('office_audit', '&#128220;', 'Audit log')] %}
+            ('office_settings', '&#9881;', 'Bank settings'), ('office_backups', '&#128190;', 'Backups'), ('office_database', '&#128451;', 'Database'), ('office_audit', '&#128220;', 'Audit log')] %}
             <a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
         {% endfor %}
         {% endif %}

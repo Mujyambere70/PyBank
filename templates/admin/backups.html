@@ -1,0 +1,40 @@
+{% extends "admin/layout.html" %}
+{% block title %}Backups{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Backups</h1><p class="muted small">Database: <strong>{{ database }}</strong></p></div>
+    <a class="btn btn-primary" href="{{ url_for('office_backup_now') }}">&#11015; Download a backup now</a></div>
+{% if database.startswith('SQLite') %}
+<div class="notice notice-warning"><strong>Warning:</strong> this server uses an SQLite file. On free hosting (Render) the file is deleted at every restart, so all changes are lost. Set <code>DATABASE_URL</code> to a PostgreSQL database (for example Neon free) to keep the data.</div>
+{% endif %}
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Automatic backups</h2>
+        <ul class="check-list">
+            <li>Once a day the bank saves a full copy inside the database (the last 7 are kept).</li>
+            <li>{% if backup_email and providers.email %}The daily copy is also emailed to <strong>{{ backup_email }}</strong>.{% else %}Set <code>BACKUP_EMAIL</code> (and an email provider) to also receive the daily copy by email.{% endif %}</li>
+            <li>The database company (e.g. Neon) also keeps its own restore history.</li>
+            <li>Download a copy now and then and keep it on your computer - a copy in a second place is the real safety.</li>
+        </ul>
+        <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-block">Save a backup copy now</button></form>
+    </section>
+    <form method="post" action="{{ url_for('office_restore') }}" enctype="multipart/form-data" class="panel" autocomplete="off">
+        <h2>Restore from a backup file</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <p class="small"><b>This replaces ALL data</b> with the data in the file. A copy of the current data is saved first, so you can go back.</p>
+        <label>Backup file (.json.gz)</label><input type="file" name="file" accept=".gz,application/gzip" required>
+        <label>Your password</label><input type="password" name="password" required>
+        <label>Type RESTORE to confirm</label><input name="confirm" placeholder="RESTORE" required>
+        <button class="btn btn-danger btn-block">Restore database</button>
+    </form>
+</div>
+<section class="panel">
+    <h2>Saved backup copies</h2>
+    {% if rows %}
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>#</th><th>Made</th><th>Type</th><th>By</th><th class="num">Size</th><th></th></tr></thead>
+        <tbody>{% for b in rows %}<tr><td>{{ b.id }}</td><td>{{ b.created_at|nicedate }}</td><td>{{ b.kind }}</td><td>{{ b.created_by or 'System' }}</td><td class="num">{{ '{:,.1f}'.format(b.size / 1024) }} KB</td>
+            <td><a href="{{ url_for('office_backup_download', bid=b.id) }}">Download</a></td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<p class="muted">No saved copies yet.</p>{% endif %}
+</section>
+{% endblock %}

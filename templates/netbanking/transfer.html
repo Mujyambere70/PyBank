@@ -1,7 +1,8 @@
 {% extends "netbanking/layout.html" %}
 {% block title %}Fund Transfer{% endblock %}
 {% block nb_content %}
-<div class="nb-title"><h1>Fund transfer <small class="muted">(IMPS &middot; within PyBank)</small></h1></div>
+<div class="nb-title"><h1>Fund transfer <small class="muted">(within PyBank)</small></h1>
+    <a href="{{ url_for('other_bank') }}" class="btn btn-outline">&#127758; To another bank / abroad</a></div>
 <div class="steps"><span class="active">1. Details</span><span>2. Confirm</span><span>3. Receipt</span></div>
 <div class="dash-grid">
     <form method="post" class="panel" autocomplete="off">
@@ -22,7 +23,7 @@
         <label for="to_account2">Re-enter account number</label>
         <input type="password" id="to_account2" name="to_account2" value="{{ form.get('to_account2', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="Re-enter to confirm" required>
 
-        <label for="amount">Amount (₹)</label>
+        <label for="amount">Amount ({{ CURRENCY }})</label>
         <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="1" step="0.01" required>
 
         <label for="remarks">Remarks (optional)</label>

@@ -1,0 +1,93 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Pay another bank{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Pay to another bank</h1>
+    <p class="muted small">IMPS, NEFT and UPI inside India &middot; SWIFT to any country. <span class="badge st-pending">Sandbox</span> no real payment network is used.</p></div>
+    <a href="{{ url_for('transfer') }}" class="btn btn-outline">&#8644; Within PyBank</a></div>
+<div class="steps"><span class="active">1. Details</span><span>2. Confirm</span><span>3. Status</span></div>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off" id="ext-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="step" value="details">
+        <div class="balance-line">From: <strong>{{ account.type }} A/c {{ account.number }}</strong> &middot; {{ account.balance|money }}</div>
+        <label>Send by</label>
+        <div class="choice-grid rails">
+            {% for code, r in RAILS.items() %}
+            {% set allowed = not r.currencies or account.currency in r.currencies %}
+            <label class="choice {{ 'disabled' if not allowed }}"><input type="radio" name="rail" value="{{ code }}" {% if form.get('rail') == code %}checked{% endif %} {% if not allowed %}disabled{% endif %}>
+                <span><strong>{{ code }}</strong><small>{{ r.speed }}</small></span></label>
+            {% endfor %}
+        </div>
+        {% if account.currency != 'INR' %}<p class="small muted">IMPS, NEFT and UPI work only from rupee accounts. Your account is in {{ account.currency }}: use SWIFT.</p>{% endif %}
+
+        <div data-rails="IMPS NEFT SWIFT">
+            <label for="name">Beneficiary full name</label>
+            <input id="name" name="name" value="{{ form.get('name', '') }}" maxlength="60" placeholder="As in the bank account">
+        </div>
+        <div data-rails="IMPS NEFT">
+            <div class="form-grid">
+                <div><label for="account">Account number</label>
+                    <input id="account" name="account" value="{{ form.get('account', '') }}" inputmode="numeric" maxlength="18" placeholder="9 to 18 digits"></div>
+                <div><label for="ifsc">IFSC code</label>
+                    <input id="ifsc" name="ifsc" value="{{ form.get('ifsc', '') }}" maxlength="11" placeholder="e.g. NOVA0001234" style="text-transform:uppercase"></div>
+            </div>
+        </div>
+        <div data-rails="UPI">
+            <label for="upi">UPI ID</label>
+            <input id="upi" name="upi" value="{{ form.get('upi', '') }}" maxlength="100" placeholder="name@okbank">
+        </div>
+        <div data-rails="SWIFT">
+            <div class="form-grid">
+                <div><label for="swift_account">IBAN or account number</label>
+                    <input id="swift_account" name="account" value="{{ form.get('account', '') }}" maxlength="40" placeholder="e.g. DE89 3704 0044 0532 0130 00"></div>
+                <div><label for="bic">SWIFT / BIC code</label>
+                    <input id="bic" name="bic" value="{{ form.get('bic', '') }}" maxlength="11" placeholder="e.g. RHMUDEFF" style="text-transform:uppercase"></div>
+            </div>
+            <label for="bank_name">Beneficiary bank name</label>
+            <input id="bank_name" name="bank_name" value="{{ form.get('bank_name', '') }}" maxlength="60" placeholder="Bank name">
+        </div>
+        <label for="amount">Amount ({{ CURRENCY }})</label>
+        <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="0.01" step="0.01" required>
+        <label for="remarks">Remarks (optional)</label>
+        <input id="remarks" name="remarks" value="{{ form.get('remarks', '') }}" maxlength="40" placeholder="e.g. Rent, Tuition fees">
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Continue</button>
+    </form>
+    <aside class="panel info">
+        <h2>Good to know</h2>
+        <ul class="check-list">
+            <li><b>IMPS</b>: instant, 24x7, up to {{ RAILS.IMPS.max|money('INR') }} per payment.</li>
+            <li><b>UPI</b>: instant to a UPI ID, up to {{ RAILS.UPI.max|money('INR') }} per payment.</li>
+            <li><b>NEFT</b>: no upper limit, settled in half-hourly batches.</li>
+            <li><b>SWIFT</b>: to banks in any country, in your account currency.</li>
+            <li>The daily transfer limit of {{ DAILY_TRANSFER_LIMIT|money }} counts all your transfers.</li>
+            <li>Sandbox test: an account number ending in <code>0000</code> (or a UPI ID starting with <code>fail</code>) is "closed" - the payment comes back to you.</li>
+        </ul>
+    </aside>
+</div>
+<section class="panel">
+    <h2>My recent payments to other banks</h2>
+    {% if payments %}
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Ref</th><th>Date</th><th>Via</th><th>To</th><th class="num">Amount</th><th>Status</th></tr></thead>
+        <tbody>{% for p in payments %}
+        <tr><td><a href="{{ url_for('payment_detail', ref=p.ref) }}"><code>{{ p.ref }}</code></a></td><td>{{ p.created_at|nicedate }}</td><td>{{ p.rail }}</td>
+            <td>{{ p.beneficiary_name }}<br><small class="muted">{{ p.bank_name }}</small></td><td class="num">{{ p.amount|money(p.currency) }}</td>
+            <td><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></td></tr>
+        {% endfor %}</tbody></table></div>
+    {% else %}<p class="muted">No payments yet.</p>{% endif %}
+</section>
+<script>
+(function () {
+    var form = document.getElementById('ext-form');
+    function show() {
+        var r = (form.querySelector('input[name=rail]:checked') || {}).value || '';
+        form.querySelectorAll('[data-rails]').forEach(function (box) {
+            var on = box.dataset.rails.split(' ').indexOf(r) >= 0;
+            box.hidden = !on;
+            box.querySelectorAll('input').forEach(function (i) { i.disabled = !on; });
+        });
+    }
+    form.addEventListener('change', show); show();
+})();
+</script>
+{% endblock %}

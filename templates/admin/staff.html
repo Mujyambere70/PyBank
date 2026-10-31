@@ -28,6 +28,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="password" placeholder="New password" required><button class="btn btn-outline btn-sm">Reset password</button></form>
                 <div class="btn-row">
                     <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='toggle') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">{{ 'Disable' if s.active else 'Enable' }}</button></form>
+                    {% if s.totp_enabled %}<form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='reset2fa') }}" onsubmit="return confirm('Turn off two-factor login for {{ s.full_name }}?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">Turn off 2FA</button></form>{% endif %}
                     <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='delete') }}" onsubmit="return confirm('Delete {{ s.full_name }}?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-danger btn-sm">Delete</button></form>
                 </div>
             </details>

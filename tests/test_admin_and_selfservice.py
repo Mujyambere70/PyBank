@@ -7,6 +7,8 @@ import tempfile
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from support import DRIVER, cash, target  # noqa: E402
 
 from app import create_app  # noqa: E402
 from bank import BankError  # noqa: E402
@@ -18,7 +20,7 @@ RAHUL, PRIYA, ARJUN = "PB10000001", "PB10000002", "PB10000003"
 class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.app = create_app(os.path.join(self.tmp.name, "t.db"))
+        self.app = create_app(target(os.path.join(self.tmp.name, "t.db")), driver=DRIVER)
         self.bank, self.office = self.app.bank, self.app.office
         self.c = self.app.test_client()
         with self.c.session_transaction() as s:
@@ -184,16 +186,16 @@ class TestBackOffice(Base):
         self.post(f"/admin/customers/{PRIYA}/password", password="NewPass123")
         self.assertTrue(self.bank.authenticate(PRIYA, "NewPass123"))
         self.post(f"/admin/customers/{PRIYA}/pin", pin="4826")
-        self.bank.deposit(PRIYA, 100, "4826")
+        cash(self.bank, PRIYA, 100, "4826", kind='Deposit')
 
     def test_freeze_blocks_money_movement(self):
         self.post(f"/admin/customers/{RAHUL}/freeze", reason="Lost card")
         with self.assertRaises(BankError):
-            self.bank.withdraw(RAHUL, 100 * 100, PIN)
+            cash(self.bank, RAHUL, 100 * 100, PIN, kind='Withdrawal')
         with self.assertRaises(BankError):                  # nobody can send money to a frozen account
             self.bank.transfer(PRIYA, self.bank.get_account(RAHUL).number, 100, PIN)
         self.post(f"/admin/customers/{RAHUL}/activate")
-        self.bank.withdraw(RAHUL, 100 * 100, PIN)
+        cash(self.bank, RAHUL, 100 * 100, PIN, kind='Withdrawal')
 
     def test_manual_entry_and_reversal(self):
         before = self.balance(ARJUN)
@@ -212,6 +214,11 @@ class TestBackOffice(Base):
         for f in self.bank.fixed_deposits(PRIYA):
             if f["status"] == "Active":
                 self.bank.close_fd(PRIYA, f["id"], PIN)
+        for ln in self.bank.loans(PRIYA):                   # an active loan must be paid back first
+            if ln["status"] == "Active":
+                self.post(f"/admin/customers/{PRIYA}/delete")
+                self.assertTrue(self.bank.get_customer(PRIYA))
+                self.bank.close_loan(PRIYA, ln["id"], PIN)
         self.office.manual_entry(self.me, PRIYA, "DR", self.balance(PRIYA), "Account closure payout")
         self.post(f"/admin/customers/{PRIYA}/delete")
         with self.assertRaises(BankError):
@@ -240,7 +247,7 @@ class TestBackOffice(Base):
                   fd_rate_12="7.5", fd_rate_24="7", fd_rate_36="7.25", online_account_opening="1")
         self.assertEqual(self.bank.fd_rates()[12], 7.5)
         with self.assertRaises(BankError):
-            self.bank.withdraw(RAHUL, 1500 * 100, PIN)       # over the new ₹1,000 limit
+            cash(self.bank, RAHUL, 1500 * 100, PIN, kind='Withdrawal')       # over the new ₹1,000 limit
         self.post("/admin/settings", daily_withdraw_limit="50000", daily_transfer_limit="200000", fd_rate_6="6",
                   fd_rate_12="6.8", fd_rate_24="7", fd_rate_36="7.25")
         self.assertEqual(self.c.get("/open-account").status_code, 302)   # online opening switched off

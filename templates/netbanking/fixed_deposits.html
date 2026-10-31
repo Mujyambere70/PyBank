@@ -7,7 +7,7 @@
         <h2>Open a new FD</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="balance-line">From: <strong>A/c {{ account.number }}</strong> &middot; Balance {{ account.balance|money }}</div>
-        <label for="amount">Amount (₹) <small class="muted">min {{ FD_MIN|money }}</small></label>
+        <label for="amount">Amount ({{ CURRENCY }}) <small class="muted">min {{ FD_MIN|money }}</small></label>
         <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="{{ FD_MIN // 100 }}" step="1" required>
         <label>Period</label>
         <div class="choice-grid fd-choices">

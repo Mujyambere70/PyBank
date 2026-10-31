@@ -1,0 +1,60 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Loan {{ ln.loan_number }}{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>{{ ln.product }} loan <code>{{ ln.loan_number }}</code></h1>
+    <p class="muted small">{{ ln.purpose }}</p></div>
+    <span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span></div>
+<div class="kpi-grid">
+    <div class="tile"><small>Loan amount</small><strong>{{ ln.principal|money }}</strong></div>
+    <div class="tile"><small>Interest rate</small><strong>{{ '%.2f'|format(ln.rate) }}%</strong></div>
+    <div class="tile"><small>Monthly EMI</small><strong>{{ ln.emi|money }}</strong></div>
+    <div class="tile"><small>{{ 'Outstanding' if ln.status == 'Active' else 'Tenure' }}</small><strong>{{ ln.outstanding|money if ln.status == 'Active' else ln.months ~ ' months' }}</strong></div>
+</div>
+{% if ln.status == 'Active' %}
+<div class="dash-grid">
+    <form method="post" action="{{ url_for('loan_action', loan_id=ln.id, action='pay') }}" class="panel" autocomplete="off">
+        <h2>Pay EMI {{ ln.emis_paid + 1 }} of {{ ln.months }}</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <p>Due on <strong>{{ ln.next_due }}</strong>{% if ln.overdue %} <span class="badge bad">Overdue</span>{% endif %} &middot; Amount <strong>{{ ln.plan[0].emi|money }}</strong></p>
+        {% if ln.penalty_due %}<p class="flash error">Late fee to pay with this EMI: <strong>{{ ln.penalty_due|money }}</strong></p>{% endif %}
+        <p class="small muted">Paid from A/c {{ ln.account_number }}. Available: {{ available|money }}</p>
+        <p class="small muted">Auto-debit is on: if you do not pay before {{ ln.next_due }}, the EMI is taken automatically that day.</p>
+        <label>Transaction PIN</label><input type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <button class="btn btn-primary btn-block">Pay EMI now</button>
+    </form>
+    <form method="post" action="{{ url_for('loan_action', loan_id=ln.id, action='close') }}" class="panel" autocomplete="off"
+          onsubmit="return confirm('Pay {{ ln.close_amount|money }} and close the loan?')">
+        <h2>Close the loan early</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <p>Pay <strong>{{ ln.close_amount|money }}</strong> today: {{ ln.outstanding|money }} left + {{ (ln.close_amount - ln.outstanding - ln.penalty_due)|money }} interest since the last payment{% if ln.penalty_due %} + {{ ln.penalty_due|money }} late fee{% endif %}. No extra charge.</p>
+        <label>Transaction PIN</label><input type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <button class="btn btn-outline btn-block">Close loan</button>
+    </form>
+</div>
+{% elif ln.status == 'Pending' %}
+<section class="panel"><p>Your application is waiting for a bank officer. You will get an alert when it is decided.</p>
+    <form method="post" action="{{ url_for('loan_action', loan_id=ln.id, action='cancel') }}" onsubmit="return confirm('Cancel this application?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline">Cancel application</button></form></section>
+{% elif ln.status == 'Rejected' %}
+<section class="panel"><p><strong>Reason:</strong> {{ ln.reason }}</p></section>
+{% endif %}
+{% if ln.plan %}
+<section class="panel">
+    <h2>{{ 'EMI schedule (what is left)' if ln.status == 'Active' else 'EMI schedule if approved (estimate)' }}</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>#</th><th>Due date</th><th class="num">EMI</th><th class="num">Interest</th><th class="num">Principal</th><th class="num">Balance after</th></tr></thead>
+        <tbody>{% for r in ln.plan %}<tr><td>{{ r.number }}</td><td>{{ r.due }}</td><td class="num">{{ r.emi|money }}</td><td class="num">{{ r.interest|money }}</td><td class="num">{{ r.principal|money }}</td><td class="num">{{ r.balance|money }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endif %}
+{% if ln.payments %}
+<section class="panel">
+    <h2>Payments made</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>#</th><th>Paid on</th><th>Type</th><th class="num">Amount</th><th class="num">Interest</th><th class="num">Principal</th><th class="num">Balance after</th><th>Ref</th></tr></thead>
+        <tbody>{% for p in ln.payments|reverse %}<tr><td>{{ p.number }}</td><td>{{ p.paid_at|nicedate(false) }}</td><td>{{ p.kind }}</td><td class="num">{{ p.amount|money }}</td><td class="num">{{ p.interest|money }}</td><td class="num">{{ p.principal|money }}</td><td class="num">{{ p.balance_after|money }}</td><td><a href="{{ url_for('receipt', ref=p.tx_ref) }}"><code>{{ p.tx_ref }}</code></a></td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endif %}
+<p><a href="{{ url_for('loans') }}">&larr; All loans</a></p>
+{% endblock %}

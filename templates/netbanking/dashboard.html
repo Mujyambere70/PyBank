@@ -1,19 +1,5 @@
 {% extends "netbanking/layout.html" %}
-{% block title %}Dashboard<div class="dash-grid">
-    <section class="panel">
-        <div class="panel-head"><h2>My fixed deposits</h2><a href="{{ url_for('fixed_deposits') }}" class="link-arrow">Manage &rarr;</a></div>
-        {% for f in fds %}
-        <div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} months @ {{ '%.2f'|format(f.rate) }}% &middot; matures {{ f.matures_on }}</small></div><strong>{{ f.principal|money }}</strong></div>
-        {% else %}<p class="muted">No active fixed deposit. <a href="{{ url_for('fixed_deposits') }}">Earn up to {{ '%.2f'|format(FD_RATES.values()|max) }}% &rarr;</a></p>{% endfor %}
-    </section>
-    <section class="panel">
-        <div class="panel-head"><h2>My open requests</h2><a href="{{ url_for('service_requests') }}" class="link-arrow">All requests &rarr;</a></div>
-        {% for r in requests_open %}
-        <div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.details|truncate(60) }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>
-        {% else %}<p class="muted">No open requests. Need a cheque book or a new card? <a href="{{ url_for('service_requests') }}">Ask the branch &rarr;</a></p>{% endfor %}
-    </section>
-</div>
-{% endblock %}
+{% block title %}Dashboard{% endblock %}
 {% block nb_content %}
 <div class="nb-title">
     <div>
@@ -29,6 +15,7 @@
         <div class="bc-chip" aria-hidden="true"></div>
         <div class="bc-label">Available balance</div>
         <div class="bc-balance" id="balance">{{ account.balance|money }}</div>
+        {% if rub_view is not none %}<div class="bc-label">&asymp; {{ rub_view|money('RUB') }}</div>{% endif %}
         <div class="bc-number">XXXX XXXX XXXX {{ account.card_last4 }}</div>
         <div class="bc-row bc-bottom">
             <span>{{ customer.full_name|upper }}</span>
@@ -92,6 +79,18 @@
         {% for f in fds %}
         <div class="mini-row"><div><strong>{{ f.fd_number }}</strong><small>{{ f.months }} months @ {{ '%.2f'|format(f.rate) }}% &middot; matures {{ f.matures_on }}</small></div><strong>{{ f.principal|money }}</strong></div>
         {% else %}<p class="muted">No active fixed deposit. <a href="{{ url_for('fixed_deposits') }}">Earn up to {{ '%.2f'|format(FD_RATES.values()|max) }}% &rarr;</a></p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>Waiting for approval</h2><a href="{{ url_for('deposit') }}" class="link-arrow">Deposit / withdraw &rarr;</a></div>
+        {% for r in pending_cash %}
+        <div class="mini-row"><div><strong>{{ r.kind }} {{ r.ref }}</strong><small>sent {{ r.created_at|nicedate }}</small></div><strong>{{ r.amount|money }}</strong></div>
+        {% else %}<p class="muted">Nothing waiting. Deposits and withdrawals are approved by a bank officer.</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <div class="panel-head"><h2>My loans</h2><a href="{{ url_for('loans') }}" class="link-arrow">Loans &rarr;</a></div>
+        {% for ln in loans_open %}
+        <a class="mini-row" href="{{ url_for('loan_detail', loan_id=ln.id) }}"><div><strong>{{ ln.product }} {{ ln.loan_number }}</strong><small>{% if ln.status == 'Active' %}EMI {{ ln.emi|money }} due {{ ln.next_due }}{% if ln.overdue %} &middot; overdue{% endif %}{% else %}Application waiting{% endif %}</small></div><strong>{{ ln.outstanding|money if ln.status == 'Active' else ln.principal|money }}</strong></a>
+        {% else %}<p class="muted">No loans. <a href="{{ url_for('loans') }}">See loan rates &rarr;</a></p>{% endfor %}
     </section>
     <section class="panel">
         <div class="panel-head"><h2>My open requests</h2><a href="{{ url_for('service_requests') }}" class="link-arrow">All requests &rarr;</a></div>
