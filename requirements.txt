@@ -4,3 +4,4 @@ psycopg[binary]>=3.1      # PostgreSQL driver - used only when DATABASE_URL is s
 Babel>=2.14               # money, dates and country names in every interface language
 reportlab>=4.0            # monthly PDF e-statements
 cryptography>=42          # Web Push notifications (encryption and VAPID signature)
+psycopg[binary]>=3.1
