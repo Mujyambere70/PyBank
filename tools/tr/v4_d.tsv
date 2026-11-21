@@ -1,0 +1,228 @@
+Recent staff actions	Последние действия сотрудников	Actions récentes du personnel	Acciones recientes del personal	أحدث إجراءات الموظفين	员工最近操作
+Audit log →	Журнал аудита →	Journal d'audit →	Registro de auditoría →	سجل التدقيق ←	审计日志 →
+Sent for second approval	Отправлено на второе одобрение	Envoyé pour seconde approbation	Enviado a segunda aprobación	أُرسل للموافقة الثانية	已提交第二人审批
+Website text changed	Изменён текст сайта	Texte du site modifié	Texto del sitio cambiado	تم تغيير نص الموقع	网站文本已更改
+Website banner saved	Баннер сайта сохранён	Bannière du site enregistrée	Banner del sitio guardado	تم حفظ لافتة الموقع	网站横幅已保存
+Website {0} translated ({1})	Переведено на сайте: {0} ({1})	Site : {0} traduit ({1})	Sitio: {0} traducido ({1})	تمت ترجمة {0} في الموقع ({1})	网站{0}已翻译（{1}）
+Website {0} saved	Сохранено на сайте: {0}	Site : {0} enregistré	Sitio: {0} guardado	تم حفظ {0} في الموقع	网站{0}已保存
+Website page saved	Страница сайта сохранена	Page du site enregistrée	Página del sitio guardada	تم حفظ صفحة الموقع	网站页面已保存
+My details	Мои данные	Mes informations	Mis datos	بياناتي	我的信息
+Email (used to sign in)	E-mail (для входа)	E-mail (pour se connecter)	Correo (para entrar)	البريد الإلكتروني (لتسجيل الدخول)	电子邮件（用于登录）
+Phone	Телефон	Téléphone	Teléfono	الهاتف	电话
+Designation	Должность	Fonction	Cargo	المسمى الوظيفي	职务
+Save my details	Сохранить мои данные	Enregistrer mes informations	Guardar mis datos	احفظ بياناتي	保存我的信息
+Change my password	Сменить пароль	Changer mon mot de passe	Cambiar mi contraseña	غيّر كلمة المرور	修改我的密码
+Repeat new password	Повторите новый пароль	Répétez le nouveau mot de passe	Repita la nueva contraseña	أعد كتابة كلمة المرور الجديدة	再次输入新密码
+At least 8 characters with letters and numbers. Your role can only be changed by another admin.	Не менее 8 символов, буквы и цифры. Вашу роль может изменить только другой администратор.	Au moins 8 caractères avec lettres et chiffres. Seul un autre admin peut changer votre rôle.	Al menos 8 caracteres con letras y números. Solo otro administrador puede cambiar su rol.	8 أحرف على الأقل تتضمن حروفًا وأرقامًا. لا يمكن تغيير دورك إلا بواسطة مدير آخر.	至少 8 个字符，包含字母和数字。只有其他管理员可以更改您的角色。
+Customers | PyBank	Клиенты | PyBank	Clients | PyBank	Clientes | PyBank	العملاء | PyBank	客户 | PyBank
+➕ Open new account	➕ Открыть новый счёт	➕ Ouvrir un nouveau compte	➕ Abrir cuenta nueva	➕ افتح حسابًا جديدًا	➕ 开立新账户
+Name, customer ID, email, mobile or account number	Имя, ID клиента, e-mail, телефон или номер счёта	Nom, identifiant client, e-mail, mobile ou numéro de compte	Nombre, ID de cliente, correo, móvil o número de cuenta	الاسم أو رقم العميل أو البريد أو الهاتف أو رقم الحساب	姓名、客户号、邮箱、手机号或账号
+All customers	Все клиенты	Tous les clients	Todos los clientes	كل العملاء	所有客户
+Locked logins	Заблокированные входы	Connexions verrouillées	Accesos bloqueados	عمليات دخول مقفلة	已锁定登录
+Customer	Клиент	Client	Cliente	العميل	客户
+Manage	Управлять	Gérer	Gestionar	إدارة	管理
+Dormant	Неактивный	Dormant	Inactiva	خامل	休眠
+Open account | PyBank	Открыть счёт | PyBank	Ouvrir un compte | PyBank	Abrir cuenta | PyBank	فتح حساب | PyBank	开户 | PyBank
+Open a new account	Открыть новый счёт	Ouvrir un nouveau compte	Abrir una cuenta nueva	افتح حسابًا جديدًا	开立新账户
+For a customer who visits the branch with ID proof.	Для клиента, пришедшего в отделение с документом.	Pour un client qui vient en agence avec une pièce d'identité.	Para un cliente que acude a la sucursal con su documento.	لعميل يزور الفرع ومعه إثبات الهوية.	适用于携带身份证明到网点办理的客户。
+Customer details	Данные клиента	Informations du client	Datos del cliente	بيانات العميل	客户信息
+Postal / PIN code	Почтовый индекс	Code postal	Código postal	الرمز البريدي	邮政编码
+(in the account currency; see the minimums on the Rates page)	(в валюте счёта; минимумы — на странице ставок)	(dans la devise du compte ; voir les minimums sur la page des taux)	(en la moneda de la cuenta; vea los mínimos en la página de tipos)	(بعملة الحساب؛ راجع الحدود الدنيا في صفحة الأسعار)	（以账户货币计；最低额见利率页面）
+ID proof (scan, optional at the branch)	Документ (скан, в отделении необязательно)	Pièce d'identité (scan, facultatif en agence)	Documento (escaneo, opcional en sucursal)	إثبات الهوية (مسح ضوئي، اختياري في الفرع)	身份证明（扫描件，网点办理可选）
+First password (customer changes it later)	Первый пароль (клиент сменит его позже)	Premier mot de passe (le client le change ensuite)	Primera contraseña (el cliente la cambia después)	كلمة المرور الأولى (يغيّرها العميل لاحقًا)	初始密码（客户之后修改）
+Transaction PIN (4 digits)	PIN-код операций (4 цифры)	Code PIN de transaction (4 chiffres)	PIN de transacciones (4 dígitos)	رمز PIN للمعاملات (4 أرقام)	交易 PIN（4 位数字）
+All transactions	Все операции	Toutes les opérations	Todos los movimientos	كل المعاملات	所有交易
+Name, account, ref or text	Имя, счёт, номер или текст	Nom, compte, réf. ou texte	Nombre, cuenta, ref. o texto	الاسم أو الحساب أو المرجع أو النص	姓名、账号、参考号或文本
+Credits	Зачисления	Crédits	Abonos	الإيداعات	贷记
+Debits	Списания	Débits	Cargos	الخصومات	借记
+Filter	Фильтр	Filtrer	Filtrar	تصفية	筛选
+Ref.	Номер	Réf.	Ref.	المرجع	参考号
+Reverse this entry	Сторнировать запись	Annuler cette écriture	Revertir este asiento	اعكس هذا القيد	冲正此分录
+Reason for reversal	Причина сторно	Motif de l'annulation	Motivo de la reversión	سبب العكس	冲正原因
+Reverse	Сторнировать	Annuler	Revertir	اعكس	冲正
+New accounts & data changes | PyBank	Новые счета и изменения данных | PyBank	Nouveaux comptes et modifications | PyBank	Cuentas nuevas y cambios de datos | PyBank	الحسابات الجديدة وتغييرات البيانات | PyBank	新账户与资料变更 | PyBank
+New accounts & changes of personal data	Новые счета и изменения личных данных	Nouveaux comptes et modifications des données personnelles	Cuentas nuevas y cambios de datos personales	الحسابات الجديدة وتغييرات البيانات الشخصية	新账户与个人资料变更
+Online applications open only after you approve them. Customers' changes of personal data are applied only after approval. Check the documents first.	Онлайн-заявки открываются только после вашего одобрения. Изменения личных данных клиентов применяются только после одобрения. Сначала проверьте документы.	Les demandes en ligne ne s'ouvrent qu'après votre approbation. Les modifications des données personnelles ne s'appliquent qu'après approbation. Vérifiez d'abord les documents.	Las solicitudes en línea se abren solo tras su aprobación. Los cambios de datos personales se aplican solo tras la aprobación. Revise primero los documentos.	لا تُفتح الطلبات عبر الإنترنت إلا بعد موافقتك. ولا تُطبَّق تغييرات البيانات الشخصية إلا بعد الموافقة. تحقق من المستندات أولًا.	在线申请须经您批准后才开户。客户个人资料变更须经批准后才生效。请先核对证件。
+Account applications	Заявки на счёт	Demandes d'ouverture	Solicitudes de cuenta	طلبات فتح الحسابات	开户申请
+· applied {0} · {1}	· заявка {0} · {1}	· demande du {0} · {1}	· solicitado el {0} · {1}	· تقدّم في {0} · {1}	· 申请于 {0} · {1}
+· applied {0}	· заявка {0}	· demande du {0}	· solicitado el {0}	· تقدّم في {0}	· 申请于 {0}
+Documents	Документы	Documents	Documentos	المستندات	证件
+ID proof: {0}	Документ: {0}	Pièce d'identité : {0}	Documento: {0}	إثبات الهوية: {0}	身份证明：{0}
+Address proof: {0}	Подтверждение адреса: {0}	Justificatif de domicile : {0}	Comprobante de domicilio: {0}	إثبات العنوان: {0}	地址证明：{0}
+Income proof: {0}	Подтверждение дохода: {0}	Justificatif de revenus : {0}	Comprobante de ingresos: {0}	إثبات الدخل: {0}	收入证明：{0}
+MRZ check	Проверка MRZ	Contrôle MRZ	Comprobación MRZ	فحص المنطقة المقروءة آليًا	MRZ 核验
+Correct	Верно	Correct	Correcto	صحيح	正确
+Wrong	Неверно	Incorrect	Incorrecto	خطأ	错误
+Check the MRZ lines	Проверить строки MRZ	Vérifier les lignes MRZ	Comprobar las líneas MRZ	افحص أسطر MRZ	核验 MRZ 行
+Type the 2 (passport) or 3 (ID card) lines at the bottom of the document	Введите 2 (паспорт) или 3 (ID-карта) строки внизу документа	Tapez les 2 (passeport) ou 3 (carte d'identité) lignes en bas du document	Escriba las 2 (pasaporte) o 3 (documento de identidad) líneas al pie del documento	اكتب السطرين (جواز السفر) أو الأسطر الثلاثة (بطاقة الهوية) أسفل الوثيقة	输入证件底部的 2 行（护照）或 3 行（身份证）
+The check digits are tested and the name, birth date and expiry date are compared with the application. Only the last 3 characters of the document number are saved.	Проверяются контрольные цифры, а имя, дата рождения и срок действия сравниваются с заявкой. Сохраняются только последние 3 символа номера документа.	Les chiffres de contrôle sont testés et le nom, la date de naissance et la date d'expiration sont comparés à la demande. Seuls les 3 derniers caractères du numéro du document sont enregistrés.	Se prueban los dígitos de control y se comparan el nombre, la fecha de nacimiento y la de caducidad con la solicitud. Solo se guardan los 3 últimos caracteres del número del documento.	تُختبر أرقام التحقق ويُقارن الاسم وتاريخ الميلاد وتاريخ الانتهاء بالطلب. لا تُحفظ إلا آخر 3 أحرف من رقم الوثيقة.	系统检验校验位，并将姓名、出生日期和有效期与申请比对。仅保存证件号码的后 3 位。
+✔ Approve & open account	✔ Одобрить и открыть счёт	✔ Approuver et ouvrir le compte	✔ Aprobar y abrir la cuenta	✔ وافق وافتح الحساب	✔ 批准并开户
+Reason for rejecting	Причина отказа	Motif du refus	Motivo del rechazo	سبب الرفض	拒绝原因
+Reason for rejecting (sent to the applicant)	Причина отказа (отправляется заявителю)	Motif du refus (envoyé au demandeur)	Motivo del rechazo (se envía al solicitante)	سبب الرفض (يُرسل إلى مقدم الطلب)	拒绝原因（发送给申请人）
+Reason for rejecting (shown to the customer)	Причина отказа (видна клиенту)	Motif du refus (montré au client)	Motivo del rechazo (se muestra al cliente)	سبب الرفض (يظهر للعميل)	拒绝原因（向客户显示）
+Reject	Отклонить	Refuser	Rechazar	رفض	拒绝
+Changes of personal data	Изменения личных данных	Modifications des données personnelles	Cambios de datos personales	تغييرات البيانات الشخصية	个人资料变更
+Proof	Подтверждение	Justificatif	Comprobante	الإثبات	证明
+✔ Approve change	✔ Одобрить изменение	✔ Approuver la modification	✔ Aprobar el cambio	✔ وافق على التغيير	✔ 批准变更
+Approvals | PyBank	Одобрения | PyBank	Approbations | PyBank	Aprobaciones | PyBank	الموافقات | PyBank	审批 | PyBank
+Customers send these from Net Banking. The money moves only when you approve.	Клиенты отправляют их из интернет-банка. Деньги движутся только после вашего одобрения.	Les clients les envoient depuis la banque en ligne. L'argent ne bouge qu'après votre approbation.	Los clientes las envían desde la banca en línea. El dinero solo se mueve cuando usted aprueba.	يرسلها العملاء من الخدمات المصرفية عبر الإنترنت. لا يتحرك المال إلا بعد موافقتك.	客户通过网上银行提交。只有您批准后资金才会划转。
+Balance now:	Остаток сейчас:	Solde actuel :	Saldo actual:	الرصيد الآن:	当前余额：
+· Remarks: {0}	· Примечание: {0}	· Remarques : {0}	· Observaciones: {0}	· ملاحظات: {0}	· 备注：{0}
+✔ Approve	✔ Одобрить	✔ Approuver	✔ Aprobar	✔ موافقة	✔ 批准
+Second approvals | PyBank	Второе одобрение | PyBank	Secondes approbations | PyBank	Segundas aprobaciones | PyBank	الموافقات الثانية | PyBank	第二人审批 | PyBank
+Second approvals (four-eyes rule)	Второе одобрение (принцип четырёх глаз)	Secondes approbations (règle des quatre yeux)	Segundas aprobaciones (regla de los cuatro ojos)	الموافقات الثانية (قاعدة الأعين الأربع)	第二人审批（四眼原则）
+A manual entry or a reversal at or above the checker amount waits here until another staff member approves it. Nobody can approve his own entry.	Ручная проводка или сторно на сумму от порога проверки ждёт здесь, пока её не одобрит другой сотрудник. Никто не может одобрить собственную запись.	Une écriture manuelle ou une annulation égale ou supérieure au montant de contrôle attend ici qu'un autre membre du personnel l'approuve. Personne ne peut approuver sa propre écriture.	Un asiento manual o una reversión igual o superior al importe de control espera aquí hasta que otro empleado lo apruebe. Nadie puede aprobar su propio asiento.	ينتظر القيد اليدوي أو العكس الذي يساوي مبلغ المراجعة أو يزيد عليه هنا حتى يوافق عليه موظف آخر. لا يمكن لأحد الموافقة على قيده.	达到或超过复核金额的手工分录或冲正会在此等待其他员工批准。任何人都不能批准自己的分录。
+Waiting ({0})	Ожидают ({0})	En attente ({0})	En espera ({0})	في الانتظار ({0})	等待中（{0}）
+Manual entry (credit) · {0}	Ручная проводка (зачисление) · {0}	Écriture manuelle (crédit) · {0}	Asiento manual (abono) · {0}	قيد يدوي (إيداع) · {0}	手工分录（贷记）· {0}
+Manual entry (debit) · {0}	Ручная проводка (списание) · {0}	Écriture manuelle (débit) · {0}	Asiento manual (cargo) · {0}	قيد يدوي (خصم) · {0}	手工分录（借记）· {0}
+Reversal · {0}	Сторно · {0}	Annulation · {0}	Reversión · {0}	عكس · {0}	冲正 · {0}
+Approve and post	Одобрить и провести	Approuver et comptabiliser	Aprobar y contabilizar	وافق وقيّد	批准并入账
+Reason to reject	Причина отказа	Motif du refus	Motivo del rechazo	سبب الرفض	拒绝原因
+Decided lately	Решено недавно	Décidé récemment	Decidido recientemente	قرارات حديثة	最近处理
+Nothing yet.	Пока ничего.	Rien pour l'instant.	Nada todavía.	لا شيء بعد.	暂无。
+Checker amounts	Пороги проверки	Montants de contrôle	Importes de control	مبالغ المراجعة	复核金额
+{0}: {1} or more	{0}: {1} и больше	{0} : {1} ou plus	{0}: {1} o más	{0}: {1} أو أكثر	{0}：{1} 及以上
+Approve an application and the amount is paid into the customer's account at once.	После одобрения заявки сумма сразу зачисляется на счёт клиента.	Approuvez une demande et le montant est versé tout de suite sur le compte du client.	Al aprobar una solicitud, el importe se abona de inmediato en la cuenta del cliente.	وافق على الطلب ويُدفع المبلغ فورًا إلى حساب العميل.	批准申请后，款项立即打入客户账户。
+· Purpose: {0}	· Цель: {0}	· Objet : {0}	· Finalidad: {0}	· الغرض: {0}	· 用途：{0}
+Banking history:	История в банке:	Historique bancaire :	Historial bancario:	السجل المصرفي:	银行往来记录：
+Regular income:	Регулярный доход:	Revenu régulier :	Ingresos regulares:	الدخل المنتظم:	固定收入：
+Savings:	Сбережения:	Épargne :	Ahorros:	المدخرات:	储蓄：
+Affordability:	Платёжеспособность:	Capacité de remboursement :	Capacidad de pago:	القدرة على السداد:	还款能力：
+Repayment history:	История погашений:	Historique de remboursement :	Historial de pagos:	سجل السداد:	还款记录：
+✔ Approve & pay out	✔ Одобрить и выдать	✔ Approuver et verser	✔ Aprobar y desembolsar	✔ وافق وادفع	✔ 批准并放款
+· {0} of {1} EMIs paid · next due {2}	· оплачено {0} из {1} платежей · следующий {2}	· {0} mensualités sur {1} payées · prochaine le {2}	· {0} de {1} cuotas pagadas · próxima el {2}	· تم دفع {0} من {1} أقساط · القسط التالي {2}	· 已还 {0}/{1} 期 · 下期 {2}
+Approved by {0}	Одобрил(а): {0}	Approuvé par {0}	Aprobado por {0}	وافق عليه {0}	批准人：{0}
+Other-bank payments | PyBank	Платежи в другие банки | PyBank	Paiements interbancaires | PyBank	Pagos a otros bancos | PyBank	المدفوعات إلى بنوك أخرى | PyBank	跨行付款 | PyBank
+IMPS / UPI settle at once, NEFT in half-hourly batches, SWIFT and SEPA after about an hour or with ISO 20022 files (	IMPS / UPI проходят сразу, NEFT — пакетами каждые полчаса, SWIFT и SEPA — примерно через час или по файлам ISO 20022 (	IMPS / UPI sont réglés tout de suite, NEFT par lots toutes les demi-heures, SWIFT et SEPA après environ une heure ou avec des fichiers ISO 20022 (	IMPS / UPI se liquidan al instante, NEFT en lotes cada media hora, SWIFT y SEPA tras una hora aprox. o con archivos ISO 20022 (	تتم تسوية IMPS / UPI فورًا، وNEFT على دفعات كل نصف ساعة، وSWIFT وSEPA بعد نحو ساعة أو بملفات ISO 20022 (	IMPS / UPI 即时结算，NEFT 每半小时批量处理，SWIFT 和 SEPA 约一小时后或通过 ISO 20022 文件结算（
+). Sandbox: no real network.	). Песочница: реальной сети нет.	). Bac à sable : pas de vrai réseau.	). Entorno de pruebas: sin red real.	). بيئة تجريبية: لا توجد شبكة حقيقية.	）。沙盒：不连接真实网络。
+UTR / reason	UTR / причина	UTR / motif	UTR / motivo	UTR / السبب	UTR / 原因
+SWIFT and SEPA payments go to the payment partner in a	Платежи SWIFT и SEPA уходят платёжному партнёру в файле	Les paiements SWIFT et SEPA partent chez le partenaire de paiement dans un fichier	Los pagos SWIFT y SEPA van al socio de pagos en un archivo	تذهب مدفوعات SWIFT وSEPA إلى شريك الدفع في ملف	SWIFT 和 SEPA 付款以以下文件发送给支付合作方：
+file; the partner answers with a	; партнёр отвечает отчётом о статусе	; le partenaire répond avec un rapport de statut	; el socio responde con un informe de estado	؛ ويرد الشريك بتقرير حالة	文件；合作方以以下状态报告答复：
+status report.	.	.	.	.	。
+Test partner	Тестовый партнёр	Partenaire de test	Socio de prueba	شريك تجريبي	测试合作方
+no real network.	реальной сети нет.	pas de vrai réseau.	sin red real.	لا توجد شبكة حقيقية.	不连接真实网络。
+All other-bank payments	Все платежи в другие банки	Tous les paiements interbancaires	Todos los pagos a otros bancos	كل المدفوعات إلى بنوك أخرى	全部跨行付款
+Mode now:	Текущий режим:	Mode actuel :	Modo actual:	الوضع الحالي:	当前模式：
+Sandbox - the test partner answers by itself after one hour (files are optional)	Песочница — тестовый партнёр отвечает сам через час (файлы необязательны)	Bac à sable - le partenaire de test répond seul après une heure (fichiers facultatifs)	Pruebas: el socio de prueba responde solo tras una hora (archivos opcionales)	تجريبي - يرد الشريك التجريبي تلقائيًا بعد ساعة (الملفات اختيارية)	沙盒——测试合作方一小时后自动答复（文件可选）
+Files - every SWIFT / SEPA payment waits for a pain.001 file and a pain.002 answer	Файлы — каждый платёж SWIFT / SEPA ждёт файла pain.001 и ответа pain.002	Fichiers - chaque paiement SWIFT / SEPA attend un fichier pain.001 et une réponse pain.002	Archivos: cada pago SWIFT / SEPA espera un archivo pain.001 y una respuesta pain.002	ملفات - تنتظر كل دفعة SWIFT / SEPA ملف pain.001 وردًا pain.002	文件——每笔 SWIFT / SEPA 付款等待 pain.001 文件和 pain.002 答复
+change	изменить	modifier	cambiar	تغيير	更改
+Waiting for a file ({0})	Ожидают файла ({0})	En attente d'un fichier ({0})	Esperando un archivo ({0})	بانتظار ملف ({0})	等待文件（{0}）
+No SWIFT or SEPA payment is waiting for a file.	Нет платежей SWIFT или SEPA, ожидающих файла.	Aucun paiement SWIFT ou SEPA n'attend de fichier.	Ningún pago SWIFT o SEPA espera un archivo.	لا توجد دفعة SWIFT أو SEPA بانتظار ملف.	没有等待文件的 SWIFT 或 SEPA 付款。
+XML file from the payment partner	XML-файл от платёжного партнёра	Fichier XML du partenaire de paiement	Archivo XML del socio de pagos	ملف XML من شريك الدفع	支付合作方的 XML 文件
+… or paste the XML	… или вставьте XML	… ou collez le XML	… o pegue el XML	… أو الصق XML	……或粘贴 XML
+Read the report	Прочитать отчёт	Lire le rapport	Leer el informe	اقرأ التقرير	读取报告
+Accepted:	Принято:	Accepté :	Aceptado:	مقبول:	接受：
+Settled,	Расчёт выполнен,	Réglé,	Liquidado,	تمت التسوية،	已结算，
+Accepted,	Принято,	Accepté,	Aceptado,	مقبول،	已接受，
+Accepted, settlement in process,	Принято, расчёт идёт,	Accepté, règlement en cours,	Aceptado, liquidación en curso,	مقبول، التسوية جارية،	已接受，结算中，
+Accepted (technical). Rejected:	Принято (технически). Отклонено:	Accepté (technique). Refusé :	Aceptado (técnico). Rechazado:	مقبول (تقنيًا). مرفوض:	已接受（技术层面）。拒绝：
+with a reason, e.g.	с причиной, напр.	avec un motif, p. ex.	con un motivo, p. ej.	مع سبب، مثل	并附原因，例如
+Wrong account number,	Неверный номер счёта,	Numéro de compte erroné,	Número de cuenta erróneo,	رقم حساب خاطئ،	账号错误，
+Account closed,	Счёт закрыт,	Compte fermé,	Cuenta cerrada,	الحساب مغلق،	账户已关闭，
+Account blocked — the money goes back to the customer.	Счёт заблокирован — деньги возвращаются клиенту.	Compte bloqué — l'argent revient au client.	Cuenta bloqueada: el dinero vuelve al cliente.	الحساب محظور — يعود المال إلى العميل.	账户被冻结——资金退回客户。
+Files	Файлы	Fichiers	Archivos	الملفات	文件
+Message ID	ID сообщения	ID du message	ID del mensaje	معرّف الرسالة	报文 ID
+Made	Создан	Créé	Creado	أُنشئ	生成时间
+Total	Итого	Total	Total	الإجمالي	合计
+Read	Прочитан	Lu	Leído	قُرئ	已读取
+Answered	Отвечен	Répondu	Respondido	تم الرد	已答复
+Customers send these from Net Banking. Your reply is shown to them.	Клиенты отправляют их из интернет-банка. Ваш ответ им виден.	Les clients les envoient depuis la banque en ligne. Votre réponse leur est montrée.	Los clientes las envían desde la banca en línea. Su respuesta se les muestra.	يرسلها العملاء من الخدمات المصرفية عبر الإنترنت. ويظهر لهم ردك.	客户通过网上银行提交。您的回复会显示给客户。
+Reply to the customer	Ответ клиенту	Réponse au client	Respuesta al cliente	الرد على العميل	回复客户
+Last reply by {0} · {1}	Последний ответ: {0} · {1}	Dernière réponse de {0} · {1}	Última respuesta de {0} · {1}	آخر رد من {0} · {1}	最后回复：{0} · {1}
+Suspicious activity | PyBank	Подозрительные операции | PyBank	Activité suspecte | PyBank	Actividad sospechosa | PyBank	النشاط المشبوه | PyBank	可疑活动 | PyBank
+Suspicious activity	Подозрительные операции	Activité suspecte	Actividad sospechosa	النشاط المشبوه	可疑活动
+Flags made by simple rules after every transaction. Look at the account, then clear the flag or report it. The rules are examples for a study project.	Отметки ставятся простыми правилами после каждой операции. Посмотрите счёт, затем снимите отметку или сообщите о ней. Правила — примеры для учебного проекта.	Alertes créées par des règles simples après chaque opération. Regardez le compte, puis levez l'alerte ou déclarez-la. Les règles sont des exemples pour un projet d'étude.	Alertas creadas por reglas sencillas tras cada movimiento. Revise la cuenta y luego cierre la alerta o repórtela. Las reglas son ejemplos de un proyecto de estudio.	تنبيهات تنشئها قواعد بسيطة بعد كل معاملة. افحص الحساب ثم أغلق التنبيه أو أبلغ عنه. القواعد أمثلة لمشروع دراسي.	每笔交易后按简单规则生成标记。查看账户后清除标记或上报。规则仅为学习项目示例。
+Open	Открыта	Ouverte	Abierta	مفتوح	待处理
+Cleared	Снята	Levée	Cerrada	مغلق	已清除
+Reported	Сообщено	Déclarée	Reportada	تم الإبلاغ	已上报
+Rule	Правило	Règle	Regla	القاعدة	规则
+What happened	Что произошло	Ce qui s'est passé	Qué pasó	ما الذي حدث	发生了什么
+Large cash transaction	Крупная операция с наличными	Grosse opération en espèces	Operación grande en efectivo	معاملة نقدية كبيرة	大额现金交易
+Review	Проверить	Examiner	Revisar	مراجعة	审查
+The rules	Правила	Les règles	Las reglas	القواعد	规则
+: one cash deposit or withdrawal at or above the reporting amount ({0}, {1}, {2}, {3} ...).	: один взнос или снятие наличных на сумму от порога отчётности ({0}, {1}, {2}, {3} ...).	: un dépôt ou retrait en espèces égal ou supérieur au montant de déclaration ({0}, {1}, {2}, {3} ...).	: un depósito o retiro en efectivo igual o superior al importe de reporte ({0}, {1}, {2}, {3} ...).	: إيداع أو سحب نقدي واحد يساوي مبلغ الإبلاغ أو يزيد عليه ({0}، {1}، {2}، {3} ...).	：单笔现金存取达到或超过申报金额（{0}、{1}、{2}、{3} ……）。
+Cash split into smaller amounts	Наличные, разбитые на мелкие суммы	Espèces fractionnées en petits montants	Efectivo dividido en importes menores	نقد مقسّم إلى مبالغ أصغر	现金拆分为小额
+: 3 or more cash deposits in 7 days, each below that amount, together above it.	: 3 и более взноса наличных за 7 дней, каждый ниже порога, а вместе — выше.	: 3 dépôts en espèces ou plus en 7 jours, chacun en dessous de ce montant, ensemble au-dessus.	: 3 o más depósitos en efectivo en 7 días, cada uno por debajo de ese importe y juntos por encima.	: 3 إيداعات نقدية أو أكثر خلال 7 أيام، كل منها أقل من ذلك المبلغ ومجموعها أعلى منه.	：7 天内 3 笔及以上现金存款，每笔低于该金额，合计超过该金额。
+Money in and out again within 24 hours	Деньги пришли и ушли в течение 24 часов	Argent entré et ressorti en 24 heures	Dinero que entra y sale en 24 horas	مال دخل وخرج خلال 24 ساعة	资金 24 小时内快进快出
+: at least half of the reporting amount came in, and 90 % of it went out again within 24 hours.	: поступило не менее половины порога, и 90 % ушло обратно в течение 24 часов.	: au moins la moitié du montant de déclaration est entrée et 90 % est ressorti dans les 24 heures.	: entró al menos la mitad del importe de reporte y el 90 % volvió a salir en 24 horas.	: دخل نصف مبلغ الإبلاغ على الأقل، وخرج 90٪ منه خلال 24 ساعة.	：至少流入申报金额的一半，且其中 90% 在 24 小时内转出。
+Many transfers to different accounts in one hour	Много переводов на разные счета за час	Beaucoup de virements vers des comptes différents en une heure	Muchas transferencias a cuentas distintas en una hora	تحويلات كثيرة إلى حسابات مختلفة خلال ساعة	一小时内向多个不同账户转账
+: transfers to 5 or more different accounts within one hour.	: переводы на 5 и более разных счетов в течение часа.	: virements vers 5 comptes différents ou plus en une heure.	: transferencias a 5 o más cuentas distintas en una hora.	: تحويلات إلى 5 حسابات مختلفة أو أكثر خلال ساعة.	：一小时内向 5 个及以上不同账户转账。
+Dormant accounts | PyBank	Неактивные счета | PyBank	Comptes dormants | PyBank	Cuentas inactivas | PyBank	الحسابات الخاملة | PyBank	休眠账户 | PyBank
+Dormant accounts	Неактивные счета	Comptes dormants	Cuentas inactivas	الحسابات الخاملة	休眠账户
+An account that the customer did not use for 24 months becomes dormant: money cannot move until an officer checks the customer and activates it. Interest is still paid.	Счёт, которым клиент не пользовался 24 месяца, становится неактивным: деньги не двигаются, пока сотрудник не проверит клиента и не активирует счёт. Проценты продолжают начисляться.	Un compte non utilisé pendant 24 mois devient dormant : l'argent ne peut plus bouger tant qu'un conseiller n'a pas vérifié le client et réactivé le compte. Les intérêts sont toujours versés.	Una cuenta que el cliente no usa durante 24 meses queda inactiva: el dinero no puede moverse hasta que un empleado compruebe al cliente y la active. Se siguen pagando intereses.	يصبح الحساب الذي لم يستخدمه العميل 24 شهرًا خاملًا: لا يمكن تحريك المال حتى يتحقق موظف من العميل ويفعّل الحساب. وتظل الفائدة تُدفع.	客户 24 个月未使用的账户会变为休眠：在职员核实客户并激活前资金无法变动。利息照常支付。
+Dormant now ({0})	Неактивны сейчас ({0})	Dormants actuellement ({0})	Inactivas ahora ({0})	خاملة الآن ({0})	当前休眠（{0}）
+Last transaction	Последняя операция	Dernière opération	Último movimiento	آخر معاملة	最后一笔交易
+Activate	Активировать	Réactiver	Activar	تفعيل	激活
+How was the customer checked?	Как проверен клиент?	Comment le client a-t-il été vérifié ?	¿Cómo se comprobó al cliente?	كيف تم التحقق من العميل؟	如何核实客户？
+Will become dormant at the next daily job ({0})	Станут неактивными при следующей ежедневной задаче ({0})	Deviendront dormants à la prochaine tâche quotidienne ({0})	Quedarán inactivas en la próxima tarea diaria ({0})	ستصبح خاملة في المهمة اليومية التالية ({0})	下次每日任务时将变为休眠（{0}）
+None.	Нет.	Aucun.	Ninguna.	لا يوجد.	无。
+Website content | PyBank	Содержимое сайта | PyBank	Contenu du site | PyBank	Contenido del sitio | PyBank	محتوى الموقع | PyBank	网站内容 | PyBank
+Everything a visitor reads on the public website. Changes show at once; the old text is kept in the history. 🌐 = translated into that language.	Всё, что посетитель читает на сайте. Изменения видны сразу; старый текст сохраняется в истории. 🌐 = переведено на этот язык.	Tout ce qu'un visiteur lit sur le site public. Les modifications s'affichent tout de suite ; l'ancien texte est conservé dans l'historique. 🌐 = traduit dans cette langue.	Todo lo que un visitante lee en el sitio público. Los cambios se ven al momento; el texto anterior se guarda en el historial. 🌐 = traducido a ese idioma.	كل ما يقرؤه الزائر على الموقع العام. تظهر التغييرات فورًا؛ ويُحفظ النص القديم في السجل. 🌐 = مترجم إلى تلك اللغة.	访客在公开网站上看到的全部内容。修改立即生效；旧文本保存在历史记录中。🌐 = 已译成该语言。
+Open the website ↗	Открыть сайт ↗	Ouvrir le site ↗	Abrir el sitio ↗	افتح الموقع ↗	打开网站 ↗
+Parts of the website	Разделы сайта	Parties du site	Partes del sitio	أجزاء الموقع	网站各部分
+Contacts & texts	Контакты и тексты	Contacts et textes	Contactos y textos	جهات الاتصال والنصوص	联系方式与文本
+Pages	Страницы	Pages	Páginas	الصفحات	页面
+Lists	Списки	Listes	Listas	القوائم	列表
+Billers	Получатели платежей	Facturiers	Emisores	جهات الفوترة	收费单位
+Pictures ({0})	Картинки ({0})	Images ({0})	Imágenes ({0})	الصور ({0})	图片（{0}）
+Contacts & short texts	Контакты и короткие тексты	Contacts et textes courts	Contactos y textos cortos	جهات الاتصال والنصوص القصيرة	联系方式与短文本
+Contacts	Контакты	Contacts	Contactos	جهات الاتصال	联系方式
+Customer care phone (top bar, contact page)	Телефон поддержки (верхняя строка, страница контактов)	Téléphone du service client (barre du haut, page contact)	Teléfono de atención al cliente (barra superior, página de contacto)	هاتف خدمة العملاء (الشريط العلوي، صفحة الاتصال)	客服电话（顶栏、联系页面）
+Translate	Перевести	Traduire	Traducir	ترجمة	翻译
+History	История	Historique	Historial	السجل	历史记录
+Customer care hours	Часы работы поддержки	Horaires du service client	Horario de atención al cliente	ساعات خدمة العملاء	客服时间
+Phone to report fraud / block a card	Телефон для сообщения о мошенничестве / блокировки карты	Téléphone pour signaler une fraude / bloquer une carte	Teléfono para reportar fraude / bloquear una tarjeta	هاتف الإبلاغ عن الاحتيال / حظر البطاقة	举报欺诈 / 冻结卡片电话
+Customer care email	E-mail поддержки	E-mail du service client	Correo de atención al cliente	بريد خدمة العملاء	客服邮箱
+Under the email on the contact page	Под e-mail на странице контактов	Sous l'e-mail sur la page contact	Bajo el correo en la página de contacto	تحت البريد في صفحة الاتصال	联系页面邮箱下方
+Head office hours (footer)	Часы работы головного офиса (подвал)	Horaires du siège (pied de page)	Horario de la oficina central (pie)	ساعات عمل المكتب الرئيسي (التذييل)	总部营业时间（页脚）
+Branch hours (contact page)	Часы работы отделений (страница контактов)	Horaires des agences (page contact)	Horario de sucursales (página de contacto)	ساعات عمل الفروع (صفحة الاتصال)	网点营业时间（联系页面）
+Website lines	Строки сайта	Lignes du site	Líneas del sitio	أسطر الموقع	网站文案
+Small line under the logo	Строка под логотипом	Petite ligne sous le logo	Línea bajo el logotipo	سطر صغير تحت الشعار	标志下方小字
+Text in the footer	Текст в подвале	Texte du pied de page	Texto del pie de página	نص التذييل	页脚文本
+Line under the title of the contact page	Строка под заголовком страницы контактов	Ligne sous le titre de la page contact	Línea bajo el título de la página de contacto	سطر تحت عنوان صفحة الاتصال	联系页面标题下方的文字
+Line under the title of the rates page	Строка под заголовком страницы ставок	Ligne sous le titre de la page des taux	Línea bajo el título de la página de tipos	سطر تحت عنوان صفحة الأسعار	利率页面标题下方的文字
+Security warning on the home page	Предупреждение о безопасности на главной	Avertissement de sécurité sur l'accueil	Aviso de seguridad en la página de inicio	تحذير أمني في الصفحة الرئيسية	首页安全提示
+Save the texts	Сохранить тексты	Enregistrer les textes	Guardar los textos	احفظ النصوص	保存文本
+History of “{0}”	История «{0}»	Historique de « {0} »	Historial de «{0}»	سجل «{0}»	“{0}”的历史记录
+This text was never changed.	Этот текст ни разу не менялся.	Ce texte n'a jamais été modifié.	Este texto nunca se ha cambiado.	لم يتغير هذا النص أبدًا.	此文本从未修改过。
+Pages ({0})	Страницы ({0})	Pages ({0})	Páginas ({0})	الصفحات ({0})	页面（{0}）
++ New page	+ Новая страница	+ Nouvelle page	+ Nueva página	+ صفحة جديدة	+ 新建页面
+Shown	Показана	Affichée	Mostrada	معروضة	显示
+Changed	Изменена	Modifiée	Cambiada	تغيّرت	修改时间
+Translations	Переводы	Traductions	Traducciones	الترجمات	翻译
+Visible	Видна	Visible	Visible	ظاهرة	可见
+Hidden	Скрыта	Masquée	Oculta	مخفية	隐藏
+none	нет	aucune	ninguna	لا شيء	无
+Edit	Изменить	Modifier	Editar	تعديل	编辑
+Preview	Просмотр	Aperçu	Vista previa	معاينة	预览
+footer	подвал	pied de page	pie de página	التذييل	页脚
+Lists on the website	Списки на сайте	Listes sur le site	Listas del sitio	القوائم على الموقع	网站上的列表
+Help & FAQ page	Страница «Помощь и FAQ»	Page Aide et FAQ	Página de ayuda y preguntas frecuentes	صفحة المساعدة والأسئلة الشائعة	帮助与常见问题页面
+cards on the home page	карточки на главной	cartes de la page d'accueil	tarjetas de la página de inicio	بطاقات الصفحة الرئيسية	首页卡片
+contact page	страница контактов	page contact	página de contacto	صفحة الاتصال	联系页面
+Banners	Баннеры	Bannières	Banners	اللافتات	横幅
+top of the home page	верх главной страницы	haut de la page d'accueil	parte superior de la página de inicio	أعلى الصفحة الرئيسية	首页顶部
+rates page	страница ставок	page des taux	página de tipos	صفحة الأسعار	利率页面
+Billers ({0})	Получатели платежей ({0})	Facturiers ({0})	Emisores ({0})	جهات الفوترة ({0})	收费单位（{0}）
+Manage billers	Управлять получателями	Gérer les facturiers	Gestionar emisores	إدارة جهات الفوترة	管理收费单位
+Companies whose bills customers can pay in Net Banking → Bills & Autopay.	Компании, счета которых клиенты могут оплачивать в разделе «Интернет-банк → Счета и автоплатежи».	Entreprises dont les clients peuvent payer les factures dans Banque en ligne → Factures et paiements auto.	Empresas cuyas facturas pueden pagar los clientes en Banca en línea → Facturas y pagos automáticos.	الشركات التي يمكن للعملاء دفع فواتيرها في الخدمات المصرفية → الفواتير والدفع التلقائي.	客户可在“网上银行 → 账单与自动付款”中缴费的公司。
+Pictures | PyBank	Картинки | PyBank	Images | PyBank	Imágenes | PyBank	الصور | PyBank	图片 | PyBank
+Upload a PNG, JPG or WEBP picture (max 1 MB), then choose it for a product card or a banner.	Загрузите картинку PNG, JPG или WEBP (до 1 МБ), затем выберите её для карточки продукта или баннера.	Envoyez une image PNG, JPG ou WEBP (1 Mo max), puis choisissez-la pour une carte produit ou une bannière.	Suba una imagen PNG, JPG o WEBP (máx. 1 MB) y elíjala para una tarjeta de producto o un banner.	ارفع صورة PNG أو JPG أو WEBP (بحد أقصى 1 ميغابايت)، ثم اخترها لبطاقة منتج أو لافتة.	上传 PNG、JPG 或 WEBP 图片（最大 1 MB），然后用于产品卡片或横幅。
+Upload a picture	Загрузить картинку	Envoyer une image	Subir una imagen	ارفع صورة	上传图片
+Picture	Картинка	Image	Imagen	الصورة	图片
+What the picture shows (for blind visitors)	Что на картинке (для незрячих посетителей)	Ce que montre l'image (pour les visiteurs aveugles)	Qué muestra la imagen (para visitantes ciegos)	ماذا تُظهر الصورة (للزوار المكفوفين)	图片内容说明（供视障访客使用）
+Upload	Загрузить	Envoyer	Subir	رفع	上传
+The type is checked from the first bytes of the file, not from its name.	Тип проверяется по первым байтам файла, а не по имени.	Le type est vérifié d'après les premiers octets du fichier, pas son nom.	El tipo se comprueba por los primeros bytes del archivo, no por su nombre.	يُفحص النوع من أول بايتات الملف، لا من اسمه.	文件类型根据文件开头字节判断，而非文件名。
+Uploaded pictures ({0})	Загруженные картинки ({0})	Images envoyées ({0})	Imágenes subidas ({0})	الصور المرفوعة ({0})	已上传图片（{0}）
+No uploaded pictures. The website uses the pictures that come with PyBank.	Загруженных картинок нет. Сайт использует картинки, входящие в PyBank.	Aucune image envoyée. Le site utilise les images fournies avec PyBank.	No hay imágenes subidas. El sitio usa las imágenes incluidas en PyBank.	لا توجد صور مرفوعة. يستخدم الموقع الصور المرفقة مع PyBank.	暂无上传的图片。网站使用 PyBank 自带的图片。
+Notices | PyBank	Объявления | PyBank	Avis | PyBank	Avisos | PyBank	الإشعارات | PyBank	公告 | PyBank
+Active notices appear on the website home page and on every customer's dashboard.	Активные объявления показываются на главной странице сайта и на панели каждого клиента.	Les avis actifs apparaissent sur la page d'accueil et sur le tableau de bord de chaque client.	Los avisos activos aparecen en la página de inicio y en el panel de cada cliente.	تظهر الإشعارات النشطة في الصفحة الرئيسية للموقع وفي لوحة كل عميل.	有效公告会显示在网站首页和每位客户的主页上。
+Publish a notice	Опубликовать объявление	Publier un avis	Publicar un aviso	انشر إشعارًا	发布公告
+Title	Заголовок	Titre	Título	العنوان	标题
+Text	Текст	Texte	Texto	النص	正文
+Style	Стиль	Style	Estilo	النمط	样式
+info	инфо	info	info	معلومات	信息
+warning	предупреждение	avertissement	advertencia	تحذير	警告
+offer	предложение	offre	oferta	عرض	优惠
+Show to customers	Показывать клиентам	Montrer aux clients	Mostrar a los clientes	اعرض للعملاء	向客户显示
+Save notice	Сохранить объявление	Enregistrer l'avis	Guardar aviso	احفظ الإشعار	保存公告

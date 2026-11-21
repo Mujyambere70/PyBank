@@ -1,0 +1,32 @@
+{% extends "admin/layout.html" %}
+{% block title %}Second approvals{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Second approvals (four-eyes rule)</h1><p class="muted small">A manual entry or a reversal at or above the checker amount waits here until another staff member approves it. Nobody can approve his own entry.</p></div></div>
+<section class="panel">
+    <h2>Waiting ({{ rows|length }})</h2>
+    {% for p in rows %}
+    <div class="approval">
+        <div><strong>{{ p.kind }}{% if p.entry_type %} ({{ 'credit' if p.entry_type == 'CR' else 'debit' }}){% endif %} &middot; {{ p.amount|money(p.currency) }}</strong>
+            <small>{{ p.full_name or '' }} {{ p.customer_id }} &middot; {{ p.description }} &middot; made by {{ p.made_by }} {{ p.made_at|nicedate }}</small></div>
+        {% if p.made_by == me.staff_id %}<span class="badge st-pending">Your entry - another person must approve</span>
+        {% else %}
+        <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ p.id }}">
+            <button name="action" value="approve" class="btn btn-primary btn-sm">Approve and post</button>
+            <label for="r-{{ p.id }}" class="sr-only">Reason to reject</label><input id="r-{{ p.id }}" name="reason" placeholder="Reason to reject" maxlength="200">
+            <button name="action" value="reject" class="btn btn-danger btn-sm">Reject</button></form>
+        {% endif %}
+    </div>
+    {% else %}<p class="muted">Nothing is waiting.</p>{% endfor %}
+</section>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Decided lately</h2>
+        {% for p in log %}<div class="mini-row"><div><strong>{{ p.kind }} &middot; {{ p.amount|money(p.currency) }}</strong><small>{{ p.status }} by {{ p.checked_by }} {{ p.checked_at|nicedate }} &middot; made by {{ p.made_by }}{% if p.tx_ref %} &middot; ref {{ p.tx_ref }}{% endif %}{% if p.reason %} &middot; {{ p.reason }}{% endif %}</small></div></div>
+        {% else %}<p class="muted small">Nothing yet.</p>{% endfor %}
+    </section>
+    <section class="panel info">
+        <h2>Checker amounts</h2>
+        <ul class="check-list small">{% for c, v in limits.items() %}<li>{{ c }}: {{ v|money(c) }} or more</li>{% endfor %}</ul>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+<details class="own-tools"><summary class="btn btn-outline btn-sm">Check the MRZ lines</summary>
+<form method="post" action="{{ url_for('office_mrz', cid=c.customer_id if c is defined and c else r.customer_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ mrz_next or request.path }}">
+    <label for="mrz-{{ (c.customer_id if c is defined and c else r.customer_id) }}">Type the 2 (passport) or 3 (ID card) lines at the bottom of the document</label>
+    <textarea id="mrz-{{ (c.customer_id if c is defined and c else r.customer_id) }}" name="mrz" rows="3" class="mono" spellcheck="false" translate="no" placeholder="P&lt;UTOERIKSSON&lt;&lt;ANNA&lt;MARIA&lt;&lt;&lt;..."></textarea>
+    <button class="btn btn-primary btn-sm">Check</button>
+    <p class="small muted">The check digits are tested and the name, birth date and expiry date are compared with the application. Only the last 3 characters of the document number are saved.</p>
+</form></details>

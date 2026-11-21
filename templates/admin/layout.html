@@ -11,7 +11,7 @@
             <a href="{{ url_for('office_profile') }}" class="avatar" title="My profile">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</a>
             <div class="hide-sm">
                 <strong>{{ me.full_name }}</strong>
-                <small>{{ me.staff_id }} &middot; {{ me.designation or me.role|capitalize }}</small>
+                <small>{{ me.staff_id }} &middot; {{ me.designation or me.role|capitalize }} &middot; {{ job_label }}</small>
             </div>
             <span class="role-badge {{ me.role }}">{{ me.role|upper }}</span>
             <a href="{{ url_for('staff_logout') }}" class="btn btn-ghost btn-sm">Sign out</a>
@@ -22,26 +22,46 @@
 {% block content %}
 <div class="nb-layout">
     <aside class="nb-side">
-        <div class="side-label">Operations</div>
-        {% set items = [('office_dashboard', '&#128200;', 'Dashboard', None), ('office_customers', '&#128101;', 'Customers', None),
-            ('office_customer_new', '&#10133;', 'Open account', None), ('office_transactions', '&#128179;', 'Transactions', None),
-            ('office_applications', '&#128203;', 'New accounts & data', counts.pending_customers + counts.pending_profile),
-            ('office_approvals', '&#9989;', 'Approvals', counts.pending_cash),
-            ('office_loans', '&#127974;', 'Loans', counts.pending_loans),
-            ('office_payments', '&#127758;', 'Other-bank payments', counts.external_processing),
-            ('office_requests', '&#128172;', 'Service requests', counts.open_requests)] %}
-        {% for ep, icon, label, badge in items %}
-            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
-        {% endfor %}
-        {% if me.role == 'admin' %}
-        <div class="side-label">Administration</div>
-        {% for ep, icon, label in [('office_staff', '&#129489;', 'Staff'), ('office_notices', '&#128227;', 'Notices'),
-            ('office_settings', '&#9881;', 'Bank settings'), ('office_backups', '&#128190;', 'Backups'), ('office_database', '&#128451;', 'Database'), ('office_audit', '&#128220;', 'Audit log')] %}
-            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep %}class="active"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
-        {% endfor %}
+        {% set groups = [
+            ('Operations', [('office_dashboard', '&#128200;', 'Dashboard', None, None),
+                ('office_customers', '&#128101;', 'Customers', None, 'customers.view'),
+                ('office_customer_new', '&#10133;', 'Open account', None, 'customers.edit'),
+                ('office_transactions', '&#128179;', 'Transactions', None, 'transactions.view'),
+                ('office_applications', '&#128203;', 'New accounts & data', counts.pending_customers + counts.pending_profile, 'applications'),
+                ('office_approvals', '&#9989;', 'Cash approvals', counts.pending_cash, 'cash.approve'),
+                ('office_checker', '&#128064;', 'Second approvals', counts.checker_waiting, 'checker'),
+                ('office_loans', '&#127974;', 'Loans', counts.pending_loans, 'loans.decide'),
+                ('office_payments', '&#127758;', 'Other-bank payments', counts.external_processing, 'payments.view'),
+                ('office_iso', '&#128228;', 'ISO 20022 files', counts.iso_waiting, 'payments.view'),
+                ('office_requests', '&#128172;', 'Service requests', counts.open_requests, 'requests.answer')]),
+            ('Compliance', [('office_compliance', '&#128681;', 'Suspicious activity', counts.aml_open, 'compliance'),
+                ('office_dormant', '&#128164;', 'Dormant accounts', counts.dormant, 'compliance')]),
+            ('Website', [('office_content', '&#128221;', 'Website content', None, 'content.manage'),
+                ('office_media', '&#128444;', 'Pictures', None, 'content.manage'),
+                ('office_notices', '&#128227;', 'Notices', None, 'notices.manage')]),
+            ('Administration', [('office_staff', '&#129489;', 'Staff & roles', None, 'staff.manage'),
+                ('office_settings', '&#9881;', 'Bank settings', None, 'settings.manage'),
+                ('office_health', '&#129658;', 'System health', None, 'reports.view'),
+                ('office_backups', '&#128190;', 'Backups', None, 'backups'),
+                ('office_database', '&#128451;', 'Database', None, 'database'),
+                ('office_audit', '&#128220;', 'Audit log', None, 'audit.view')])] %}
+        {% for label, items in groups %}
+        {% set ns = namespace(any=false) %}{% for it in items %}{% if it[4] is none or can(it[4]) %}{% set ns.any = true %}{% endif %}{% endfor %}
+        {% if ns.any %}
+        <div class="side-label">{{ label }}</div>
+        {% for ep, icon, text, badge, ability in items %}{% if ability is none or can(ability) %}
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') or (ep == 'office_content' and request.endpoint and request.endpoint.startswith(('office_page', 'office_item', 'office_translate', 'office_billers'))) or (ep == 'office_compliance' and request.endpoint == 'office_flag') %}class="active" aria-current="page"{% endif %}><span>{{ icon|safe }}</span>{{ text }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
+        {% endif %}{% endfor %}
         {% endif %}
+        {% endfor %}
         <div class="side-label">Me</div>
         <a href="{{ url_for('office_profile') }}" {% if request.endpoint == 'office_profile' %}class="active"{% endif %}><span>&#128100;</span>My profile</a>
+        <details class="lang-menu side-lang" translate="no">
+            <summary>&#127760; {{ LANGUAGES[LANG] }}</summary>
+            <div class="lang-list">{% for code, name in LANGUAGES.items() %}
+                <form method="post" action="{{ url_for('office_lang', code=code) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.path }}"><button lang="{{ code }}" class="{{ 'active' if code == LANG }}">{{ name }}</button></form>
+            {% endfor %}</div>
+        </details>
         <a href="{{ url_for('staff_logout') }}" class="logout"><span>&#9211;</span>Sign out</a>
     </aside>
     <main class="nb-main">

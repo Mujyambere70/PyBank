@@ -18,12 +18,21 @@
         <tr><th>Type</th><td>{{ t.category }} ({{ 'Credit' if t.is_credit else 'Debit' }})</td></tr>
         <tr><th>Description</th><td>{{ t.description }}</td></tr>
         <tr><th>Account</th><td>{{ customer.full_name }} &middot; {{ account.number }}</td></tr>
-        <tr><th>Balance after</th><td>{{ t.balance_after|money }}</td></tr>
+        <tr><th>Balance after</th><td>{{ t.balance_after|money(account.currency) }}</td></tr>
     </table>
     <div class="btn-row no-print">
         <button type="button" class="btn btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>
         <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to dashboard</a>
     </div>
+    <details class="own-tools no-print" style="margin-top:10px"><summary class="btn btn-outline btn-sm">&#9888; Report a problem with this transaction</summary>
+        <form method="post" action="{{ url_for('dispute', ref=t.ref) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="d-details" class="sr-only">What is wrong?</label>
+            <input id="d-details" name="details" maxlength="300" placeholder="What is wrong? e.g. I did not make this payment" required>
+            <button class="btn btn-danger btn-sm">Send to the bank</button>
+        </form>
+        <p class="small muted">If someone else used your card, block it first in My Card.</p>
+    </details>
     <p class="small muted center">This is a computer-generated receipt and does not need a signature.</p>
 </div>
 {% endblock %}

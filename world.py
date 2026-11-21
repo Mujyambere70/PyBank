@@ -34,22 +34,26 @@ BABEL_LOCALE = {"en": "en", "ru": "ru", "fr": "fr", "es": "es", "ar": "ar", "zh"
 CURRENCIES = {
     #       min opening deposit      daily limits             fixed deposit  loan amount           one payment
     "INR": dict(savings=500, current=5_000, withdraw=50_000, transfer=200_000, fd_min=1_000,
-                loan_min=10_000, loan_max=1_000_000, max_tx=10_000_000),
+                loan_min=10_000, loan_max=1_000_000, max_tx=10_000_000, slab=100_000, aml=1_000_000, checker=50_000),
     "RUB": dict(savings=1_000, current=10_000, withdraw=200_000, transfer=1_000_000, fd_min=10_000,
-                loan_min=50_000, loan_max=5_000_000, max_tx=50_000_000),
+                loan_min=50_000, loan_max=5_000_000, max_tx=50_000_000, slab=500_000, aml=1_000_000, checker=100_000),
     "USD": dict(savings=10, current=100, withdraw=2_000, transfer=10_000, fd_min=100,
-                loan_min=500, loan_max=50_000, max_tx=1_000_000),
+                loan_min=500, loan_max=50_000, max_tx=1_000_000, slab=2_000, aml=10_000, checker=1_000),
     "EUR": dict(savings=10, current=100, withdraw=2_000, transfer=10_000, fd_min=100,
-                loan_min=500, loan_max=50_000, max_tx=1_000_000),
+                loan_min=500, loan_max=50_000, max_tx=1_000_000, slab=2_000, aml=10_000, checker=1_000),
     "GBP": dict(savings=10, current=100, withdraw=2_000, transfer=10_000, fd_min=100,
-                loan_min=500, loan_max=50_000, max_tx=1_000_000),
+                loan_min=500, loan_max=50_000, max_tx=1_000_000, slab=2_000, aml=10_000, checker=1_000),
     "CNY": dict(savings=100, current=1_000, withdraw=20_000, transfer=100_000, fd_min=1_000,
-                loan_min=5_000, loan_max=500_000, max_tx=10_000_000),
+                loan_min=5_000, loan_max=500_000, max_tx=10_000_000, slab=10_000, aml=70_000, checker=5_000),
     "AED": dict(savings=50, current=500, withdraw=10_000, transfer=50_000, fd_min=500,
-                loan_min=2_000, loan_max=200_000, max_tx=5_000_000),
+                loan_min=2_000, loan_max=200_000, max_tx=5_000_000, slab=5_000, aml=40_000, checker=3_000),
     "RWF": dict(savings=5_000, current=50_000, withdraw=2_000_000, transfer=10_000_000, fd_min=50_000,
-                loan_min=500_000, loan_max=50_000_000, max_tx=1_000_000_000),
+                loan_min=500_000, loan_max=50_000_000, max_tx=1_000_000_000, slab=2_000_000, aml=10_000_000,
+                checker=1_000_000),
 }
+# slab:    savings interest - balance up to this amount earns the normal rate, above it the higher rate (v4)
+# aml:     a cash transaction at or above this amount is flagged for the compliance officer (v4)
+# checker: a manual entry or reversal at or above this amount needs a second staff member (v4)
 DEFAULT_CURRENCY = "INR"
 
 

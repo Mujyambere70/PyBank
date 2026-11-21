@@ -1,0 +1,230 @@
+fees-2027	fees-2027	fees-2027	fees-2027	fees-2027	fees-2027
+Write normal text. A line starting with	Пишите обычный текст. Строка, начинающаяся с	Écrivez du texte normal. Une ligne qui commence par	Escriba texto normal. Una línea que empieza por	اكتب نصًا عاديًا. السطر الذي يبدأ بـ	请输入普通文本。以
+is a heading,	, — заголовок,	est un titre,	es un título,	عنوان،	开头的行是标题，
+a list item;	— пункт списка;	un élément de liste ;	un elemento de lista;	عنصر قائمة؛	是列表项；
+or	или	ou	o	أو	或
+is a link. HTML is not allowed (it is shown as text).	— ссылка. HTML не допускается (показывается как текст).	est un lien. Le HTML n'est pas permis (il s'affiche comme du texte).	es un enlace. No se permite HTML (se muestra como texto).	رابط. لا يُسمح بـ HTML (يُعرض كنص).	是链接。不允许使用 HTML（会显示为文本）。
+Visible on the website	Видна на сайте	Visible sur le site	Visible en el sitio	ظاهرة على الموقع	在网站上显示
+Link in the footer	Ссылка в подвале	Lien dans le pied de page	Enlace en el pie de página	رابط في التذييل	页脚链接
+Save page	Сохранить страницу	Enregistrer la page	Guardar página	احفظ الصفحة	保存页面
+No older versions yet.	Старых версий пока нет.	Pas encore d'anciennes versions.	Aún no hay versiones anteriores.	لا توجد نسخ أقدم بعد.	暂无旧版本。
+Edit page: {0}	Изменить страницу: {0}	Modifier la page : {0}	Editar página: {0}	تعديل الصفحة: {0}	编辑页面：{0}
+Preview as a customer ↗	Посмотреть как клиент ↗	Aperçu comme un client ↗	Vista previa como cliente ↗	معاينة كعميل ↗	以客户身份预览 ↗
+How it looks	Как это выглядит	Rendu	Cómo se ve	كيف يبدو	显示效果
+· page	· страница	· page	· página	· صفحة	· 页面
+Title ({0})	Заголовок ({0})	Titre ({0})	Título ({0})	العنوان ({0})	标题（{0}）
+· items are shown in the order of the number "Order" (small first).	· элементы показываются по полю «Порядок» (сначала меньшие).	· les éléments sont affichés selon le numéro « Ordre » (le plus petit d'abord).	· los elementos se muestran según el número «Orden» (menor primero).	· تُعرض العناصر حسب رقم «الترتيب» (الأصغر أولًا).	· 按“顺序”数字显示（小的在前）。
+Add	Добавить	Ajouter	Añadir	إضافة	添加
+Question	Вопрос	Question	Pregunta	السؤال	问题
+Answer	Ответ	Réponse	Respuesta	الإجابة	答案
+Order	Порядок	Ordre	Orden	الترتيب	顺序
+Show on the website	Показывать на сайте	Afficher sur le site	Mostrar en el sitio	اعرض على الموقع	在网站上显示
+FAQ ({0})	FAQ ({0})	FAQ ({0})	Preguntas frecuentes ({0})	الأسئلة الشائعة ({0})	常见问题（{0}）
+{0} · not translated	{0} · не переведено	{0} · non traduit	{0} · sin traducir	{0} · غير مترجم	{0} · 未翻译
+Highlight	Выделение	Mise en avant	Destacado	إبراز	亮点
+(optional)	(необязательно)	(facultatif)	(opcional)	(اختياري)	（可选）
+No picture	Без картинки	Pas d'image	Sin imagen	بلا صورة	无图片
+Button	Кнопка	Bouton	Botón	الزر	按钮
+Link	Ссылка	Lien	Enlace	الرابط	链接
+Products ({0})	Продукты ({0})	Produits ({0})	Productos ({0})	المنتجات ({0})	产品（{0}）
+Opening hours	Часы работы	Horaires	Horario	ساعات العمل	营业时间
+Latitude (map)	Широта (карта)	Latitude (carte)	Latitud (mapa)	خط العرض (الخريطة)	纬度（地图）
+Longitude (map)	Долгота (карта)	Longitude (carte)	Longitud (mapa)	خط الطول (الخريطة)	经度（地图）
+Branches & ATMs ({0})	Отделения и банкоматы ({0})	Agences et DAB ({0})	Sucursales y cajeros ({0})	الفروع والصرافات ({0})	网点与 ATM（{0}）
+Banners | PyBank	Баннеры | PyBank	Bannières | PyBank	Banners | PyBank	اللافتات | PyBank	横幅 | PyBank
+Small line above	Строка сверху	Petite ligne au-dessus	Línea pequeña encima	سطر صغير في الأعلى	上方小字
+Show from	Показывать с	Afficher à partir du	Mostrar desde	اعرض من	显示开始
+Show until	Показывать до	Afficher jusqu'au	Mostrar hasta	اعرض حتى	显示截止
+Banners ({0})	Баннеры ({0})	Bannières ({0})	Banners ({0})	اللافتات ({0})	横幅（{0}）
+Service charges ({0})	Тарифы на услуги ({0})	Frais de service ({0})	Cargos por servicio ({0})	رسوم الخدمات ({0})	服务收费（{0}）
+Billers | PyBank	Получатели платежей | PyBank	Facturiers | PyBank	Emisores | PyBank	جهات الفوترة | PyBank	收费单位 | PyBank
+· companies whose bills customers pay in Net Banking (sandbox).	· компании, счета которых клиенты оплачивают в интернет-банке (песочница).	· entreprises dont les clients paient les factures en ligne (bac à sable).	· empresas cuyas facturas pagan los clientes en la banca en línea (pruebas).	· شركات يدفع العملاء فواتيرها عبر الإنترنت (تجريبي).	· 客户在网上银行缴费的公司（沙盒）。
+Add a biller	Добавить получателя	Ajouter un facturier	Añadir un emisor	أضف جهة فوترة	添加收费单位
+Insurance	Страхование	Assurance	Seguro	التأمين	保险
+Credit card	Кредитная карта	Carte de crédit	Tarjeta de crédito	بطاقة ائتمان	信用卡
+Name of the customer's number	Название номера клиента	Nom du numéro du client	Nombre del número del cliente	اسم رقم العميل	客户编号名称
+Number pattern (regular expression)	Шаблон номера (регулярное выражение)	Modèle du numéro (expression régulière)	Patrón del número (expresión regular)	نمط الرقم (تعبير نمطي)	编号格式（正则表达式）
+Customers can pay this biller	Клиенты могут платить этому получателю	Les clients peuvent payer ce facturier	Los clientes pueden pagar a este emisor	يمكن للعملاء الدفع لهذه الجهة	客户可向该单位缴费
+All billers ({0})	Все получатели ({0})	Tous les facturiers ({0})	Todos los emisores ({0})	كل جهات الفوترة ({0})	全部收费单位（{0}）
+Consumer number	Номер абонента	Numéro client	Número de cliente	رقم المشترك	用户号
+Customer ID	ID клиента	Identifiant client	ID de cliente	رقم العميل	客户号
+Account ID	ID аккаунта	Identifiant de compte	ID de cuenta	معرّف الحساب	账户 ID
+Connection ID	ID подключения	Identifiant de raccordement	ID de conexión	معرّف التوصيل	接入编号
+Exchange rate history | PyBank	История курсов | PyBank	Historique des taux | PyBank	Historial de tipos de cambio | PyBank	سجل أسعار الصرف | PyBank	汇率历史 | PyBank
+Exchange rates: last 30 days	Курсы валют: последние 30 дней	Taux de change : 30 derniers jours	Tipos de cambio: últimos 30 días	أسعار الصرف: آخر 30 يومًا	汇率：近 30 天
+Units of each currency for 1 US dollar (middle rates).	Единиц каждой валюты за 1 доллар США (средние курсы).	Unités de chaque devise pour 1 dollar américain (taux moyens).	Unidades de cada moneda por 1 dólar estadounidense (tipos medios).	وحدات كل عملة مقابل دولار أمريكي واحد (أسعار وسطية).	每 1 美元对应的各货币单位（中间价）。
+← Bank settings	← Настройки банка	← Paramètres de la banque	← Ajustes del banco	→ إعدادات البنك	← 银行设置
+Day	День	Jour	Día	اليوم	日期
+No history yet: it starts with the first download of rates.	Истории пока нет: она начнётся с первой загрузки курсов.	Pas encore d'historique : il commence au premier téléchargement des taux.	Aún no hay historial: empieza con la primera descarga de tipos.	لا يوجد سجل بعد: يبدأ مع أول تنزيل للأسعار.	暂无历史：首次下载汇率后开始记录。
+Reviewed	Проверено	Examiné	Revisado	تمت المراجعة	已审查
+Change	Изменить	Modifier	Cambiar	تغيير	更改
+Banners · edit #{0}	Баннеры · правка №{0}	Bannières · modification n° {0}	Banners · edición n.º {0}	اللافتات · تعديل رقم {0}	横幅 · 编辑 #{0}
+· faq	· FAQ	· FAQ	· pregunta frecuente	· سؤال شائع	· 常见问题
+· product	· продукт	· produit	· producto	· منتج	· 产品
+· branch	· отделение	· agence	· sucursal	· فرع	· 网点
+· banner	· баннер	· bannière	· banner	· لافتة	· 横幅
+· charge	· тариф	· frais	· cargo	· رسم	· 收费
+Question ({0})	Вопрос ({0})	Question ({0})	Pregunta ({0})	السؤال ({0})	问题（{0}）
+Answer ({0})	Ответ ({0})	Réponse ({0})	Respuesta ({0})	الإجابة ({0})	答案（{0}）
+Category ({0})	Категория ({0})	Catégorie ({0})	Categoría ({0})	الفئة ({0})	类别（{0}）
+Highlight ({0})	Выделение ({0})	Mise en avant ({0})	Destacado ({0})	إبراز ({0})	亮点（{0}）
+Button ({0})	Кнопка ({0})	Bouton ({0})	Botón ({0})	الزر ({0})	按钮（{0}）
+Name ({0})	Название ({0})	Nom ({0})	Nombre ({0})	الاسم ({0})	名称（{0}）
+Address ({0})	Адрес ({0})	Adresse ({0})	Dirección ({0})	العنوان ({0})	地址（{0}）
+Opening hours ({0})	Часы работы ({0})	Horaires ({0})	Horario ({0})	ساعات العمل ({0})	营业时间（{0}）
+Small line above ({0})	Строка сверху ({0})	Petite ligne au-dessus ({0})	Línea pequeña encima ({0})	سطر صغير في الأعلى ({0})	上方小字（{0}）
+Service ({0})	Услуга ({0})	Service ({0})	Servicio ({0})	الخدمة ({0})	服务（{0}）
+Savings account ({0})	Сберегательный счёт ({0})	Compte d'épargne ({0})	Cuenta de ahorro ({0})	حساب التوفير ({0})	储蓄账户（{0}）
+Current account ({0})	Текущий счёт ({0})	Compte courant ({0})	Cuenta corriente ({0})	الحساب الجاري ({0})	活期账户（{0}）
+Text ({0})	Текст ({0})	Texte ({0})	Texto ({0})	النص ({0})	文本（{0}）
+Sandbox card network answered: {0}	Тестовая карточная сеть ответила: {0}	Le réseau carte de test a répondu : {0}	La red de tarjetas de prueba respondió: {0}	ردت شبكة البطاقات التجريبية: {0}	沙盒卡组织答复：{0}
+APPROVED	ОДОБРЕНО	APPROUVÉ	APROBADO	تمت الموافقة	已批准
+DECLINED: {0}	ОТКЛОНЕНО: {0}	REFUSÉ : {0}	RECHAZADO: {0}	مرفوض: {0}	已拒绝：{0}
+Please choose a picture.	Выберите картинку.	Veuillez choisir une image.	Elija una imagen.	يرجى اختيار صورة.	请选择图片。
+The picture is too big (maximum 1 MB).	Картинка слишком большая (максимум 1 МБ).	L'image est trop grande (1 Mo maximum).	La imagen es demasiado grande (máximo 1 MB).	الصورة كبيرة جدًا (الحد الأقصى 1 ميغابايت).	图片过大（最大 1 MB）。
+Only PNG, JPG or WEBP pictures can be uploaded.	Можно загружать только картинки PNG, JPG или WEBP.	Seules les images PNG, JPG ou WEBP peuvent être envoyées.	Solo se pueden subir imágenes PNG, JPG o WEBP.	لا يمكن رفع إلا صور PNG أو JPG أو WEBP.	只能上传 PNG、JPG 或 WEBP 图片。
+Page not found.	Страница не найдена.	Page introuvable.	Página no encontrada.	الصفحة غير موجودة.	未找到页面。
+Picture not found.	Картинка не найдена.	Image introuvable.	Imagen no encontrada.	الصورة غير موجودة.	未找到图片。
+Please fill in: {0}.	Заполните: {0}.	Veuillez remplir : {0}.	Rellene: {0}.	يرجى تعبئة: {0}.	请填写：{0}。
+{0} is too long (maximum {1} characters).	{0}: слишком длинно (максимум {1} символов).	{0} est trop long ({1} caractères maximum).	{0} es demasiado largo (máximo {1} caracteres).	{0} طويل جدًا (الحد الأقصى {1} حرفًا).	{0}过长（最多 {1} 个字符）。
+The link must start with / (a page of this site) or https://.	Ссылка должна начинаться с / (страница этого сайта) или https://.	Le lien doit commencer par / (une page de ce site) ou https://.	El enlace debe empezar por / (una página de este sitio) o https://.	يجب أن يبدأ الرابط بـ / (صفحة من هذا الموقع) أو https://.	链接必须以 /（本站页面）或 https:// 开头。
+Please choose one of the pictures.	Выберите одну из картинок.	Veuillez choisir l'une des images.	Elija una de las imágenes.	يرجى اختيار إحدى الصور.	请选择其中一张图片。
+Dates must look like 2026-12-31.	Даты должны выглядеть так: 2026-12-31.	Les dates doivent ressembler à 2026-12-31.	Las fechas deben tener la forma 2026-12-31.	يجب أن تكون التواريخ بالشكل 2026-12-31.	日期格式须为 2026-12-31。
+The end date is before the start date.	Дата окончания раньше даты начала.	La date de fin est avant la date de début.	La fecha final es anterior a la inicial.	تاريخ الانتهاء قبل تاريخ البدء.	结束日期早于开始日期。
+Please choose the country.	Выберите страну.	Veuillez choisir le pays.	Elija el país.	يرجى اختيار الدولة.	请选择国家。
+Please choose the type (branch, ATM or both).	Выберите тип (отделение, банкомат или оба).	Veuillez choisir le type (agence, DAB ou les deux).	Elija el tipo (sucursal, cajero o ambos).	يرجى اختيار النوع (فرع أو صراف آلي أو كلاهما).	请选择类型（网点、ATM 或两者）。
+Unknown text.	Неизвестный текст.	Texte inconnu.	Texto desconocido.	نص غير معروف.	未知文本。
+The address of the page may have small letters, numbers and - (e.g. fees-2027).	Адрес страницы может содержать строчные буквы, цифры и - (напр. fees-2027).	L'adresse de la page peut contenir des minuscules, des chiffres et - (p. ex. fees-2027).	La dirección de la página puede tener minúsculas, números y - (p. ej. fees-2027).	يمكن أن يحتوي عنوان الصفحة على أحرف صغيرة وأرقام و- (مثل fees-2027).	页面地址只能包含小写字母、数字和 -（例如 fees-2027）。
+A page with this address already exists.	Страница с таким адресом уже есть.	Une page avec cette adresse existe déjà.	Ya existe una página con esta dirección.	توجد صفحة بهذا العنوان بالفعل.	该地址的页面已存在。
+The About page is needed by the website. Hide it instead of deleting it.	Страница «О банке» нужна сайту. Скройте её вместо удаления.	La page À propos est nécessaire au site. Masquez-la au lieu de la supprimer.	El sitio necesita la página Acerca de. Ocúltela en lugar de borrarla.	صفحة «من نحن» ضرورية للموقع. أخفها بدلًا من حذفها.	网站需要“关于”页面。请隐藏而不是删除。
+Unknown kind of content.	Неизвестный тип содержимого.	Type de contenu inconnu.	Tipo de contenido desconocido.	نوع محتوى غير معروف.	未知的内容类型。
+The order must be a number.	Порядок должен быть числом.	L'ordre doit être un nombre.	El orden debe ser un número.	يجب أن يكون الترتيب رقمًا.	顺序必须是数字。
+Latitude and longitude must be numbers, e.g. 30.3336 and 76.8382.	Широта и долгота должны быть числами, напр. 30.3336 и 76.8382.	La latitude et la longitude doivent être des nombres, p. ex. 30.3336 et 76.8382.	La latitud y la longitud deben ser números, p. ej. 30.3336 y 76.8382.	يجب أن يكون خطا العرض والطول أرقامًا، مثل 30.3336 و76.8382.	纬度和经度必须是数字，例如 30.3336 和 76.8382。
+This place is not on the Earth. Please check latitude and longitude.	Такого места на Земле нет. Проверьте широту и долготу.	Ce lieu n'est pas sur la Terre. Vérifiez la latitude et la longitude.	Este lugar no está en la Tierra. Revise la latitud y la longitud.	هذا المكان ليس على الأرض. تحقق من خطي العرض والطول.	该位置不在地球上。请检查纬度和经度。
+Item not found.	Элемент не найден.	Élément introuvable.	Elemento no encontrado.	العنصر غير موجود.	未找到该项目。
+This version cannot be restored.	Эту версию нельзя восстановить.	Cette version ne peut pas être restaurée.	Esta versión no se puede restaurar.	لا يمكن استعادة هذه النسخة.	此版本无法恢复。
+Please choose what to translate and a language other than English.	Выберите, что переводить, и язык, отличный от английского.	Choisissez quoi traduire et une langue autre que l'anglais.	Elija qué traducir y un idioma distinto del inglés.	اختر ما تريد ترجمته ولغة غير الإنجليزية.	请选择要翻译的内容和英语以外的语言。
+This picture is used by a product or a banner. Choose another picture there first.	Эта картинка используется продуктом или баннером. Сначала выберите там другую.	Cette image est utilisée par un produit ou une bannière. Choisissez d'abord une autre image.	Esta imagen la usa un producto o un banner. Elija primero otra imagen allí.	هذه الصورة مستخدمة في منتج أو لافتة. اختر صورة أخرى هناك أولًا.	此图片正被产品或横幅使用。请先在那里选择其他图片。
+Flag not found.	Отметка не найдена.	Alerte introuvable.	Alerta no encontrada.	التنبيه غير موجود.	未找到该标记。
+Please write a short note on what you checked.	Кратко напишите, что вы проверили.	Écrivez une courte note sur ce que vous avez vérifié.	Escriba una nota breve sobre lo que comprobó.	اكتب ملاحظة قصيرة عمّا تحققت منه.	请简要写明您核查的内容。
+Unknown action.	Неизвестное действие.	Action inconnue.	Acción desconocida.	إجراء غير معروف.	未知操作。
+This flag was already reviewed.	Эта отметка уже проверена.	Cette alerte a déjà été examinée.	Esta alerta ya fue revisada.	تمت مراجعة هذا التنبيه بالفعل.	该标记已审查过。
+Please write how the customer was checked (e.g. passport seen at the branch).	Напишите, как проверен клиент (напр. паспорт предъявлен в отделении).	Écrivez comment le client a été vérifié (p. ex. passeport vu en agence).	Escriba cómo se comprobó al cliente (p. ej. pasaporte visto en la sucursal).	اكتب كيف تم التحقق من العميل (مثل الاطلاع على جواز السفر في الفرع).	请写明如何核实客户（例如在网点查验护照）。
+This account is not dormant.	Этот счёт не является неактивным.	Ce compte n'est pas dormant.	Esta cuenta no está inactiva.	هذا الحساب ليس خاملًا.	该账户未处于休眠状态。
+Choose credit or debit.	Выберите зачисление или списание.	Choisissez crédit ou débit.	Elija abono o cargo.	اختر إيداعًا أو خصمًا.	请选择贷记或借记。
+Please write a clear reason (at least 5 characters).	Напишите понятную причину (не менее 5 символов).	Écrivez un motif clair (au moins 5 caractères).	Escriba un motivo claro (al menos 5 caracteres).	اكتب سببًا واضحًا (5 أحرف على الأقل).	请写明清楚的原因（至少 5 个字符）。
+Please write the reason for the reversal.	Напишите причину сторно.	Écrivez le motif de l'annulation.	Escriba el motivo de la reversión.	اكتب سبب العكس.	请写明冲正原因。
+Entry not found.	Запись не найдена.	Écriture introuvable.	Asiento no encontrado.	القيد غير موجود.	未找到该分录。
+This entry was already decided.	По этой записи уже принято решение.	Cette écriture a déjà été traitée.	Este asiento ya fue decidido.	تم البت في هذا القيد بالفعل.	该分录已处理。
+The four-eyes rule: another staff member must approve your entry.	Принцип четырёх глаз: вашу запись должен одобрить другой сотрудник.	Règle des quatre yeux : un autre membre du personnel doit approuver votre écriture.	Regla de los cuatro ojos: otro empleado debe aprobar su asiento.	قاعدة الأعين الأربع: يجب أن يوافق موظف آخر على قيدك.	四眼原则：您的分录必须由其他员工批准。
+Please write why you reject the entry.	Напишите, почему вы отклоняете запись.	Écrivez pourquoi vous refusez l'écriture.	Escriba por qué rechaza el asiento.	اكتب سبب رفضك للقيد.	请写明拒绝该分录的原因。
+{0} does not know this {1}.	{0}: такой {1} неизвестен.	{0} ne connaît pas ce {1}.	{0} no conoce este {1}.	{0} لا تعرف هذا {1}.	{0}不认识此{1}。
+Biller not found.	Получатель не найден.	Facturier introuvable.	Emisor no encontrado.	جهة الفوترة غير موجودة.	未找到收费单位。
+Please write the name of the biller.	Напишите название получателя.	Écrivez le nom du facturier.	Escriba el nombre del emisor.	اكتب اسم جهة الفوترة.	请填写收费单位名称。
+Please choose a category.	Выберите категорию.	Veuillez choisir une catégorie.	Elija una categoría.	يرجى اختيار فئة.	请选择类别。
+Please choose the country and the currency.	Выберите страну и валюту.	Veuillez choisir le pays et la devise.	Elija el país y la moneda.	يرجى اختيار الدولة والعملة.	请选择国家和币种。
+Please write what the customer's number is called (e.g. Consumer number).	Напишите, как называется номер клиента (напр. номер абонента).	Écrivez le nom du numéro du client (p. ex. numéro client).	Escriba cómo se llama el número del cliente (p. ej. número de cliente).	اكتب اسم رقم العميل (مثل رقم المشترك).	请写明客户编号的名称（例如用户号）。
+The number pattern is not a valid regular expression.	Шаблон номера — неверное регулярное выражение.	Le modèle du numéro n'est pas une expression régulière valide.	El patrón del número no es una expresión regular válida.	نمط الرقم ليس تعبيرًا نمطيًا صحيحًا.	编号格式不是有效的正则表达式。
+Please check the {0}.	Проверьте: {0}.	Veuillez vérifier le {0}.	Revise el {0}.	يرجى التحقق من {0}.	请检查{0}。
+This biller is not available now.	Этот получатель сейчас недоступен.	Ce facturier n'est pas disponible pour le moment.	Este emisor no está disponible ahora.	جهة الفوترة هذه غير متاحة الآن.	该收费单位暂不可用。
+{0} takes payments in {1}. Please pay from a {2} account.	{0} принимает платежи в {1}. Платите со счёта в {2}.	{0} accepte les paiements en {1}. Payez depuis un compte en {2}.	{0} acepta pagos en {1}. Pague desde una cuenta en {2}.	تقبل {0} المدفوعات بعملة {1}. يرجى الدفع من حساب بعملة {2}.	{0}只接受 {1} 付款。请从 {2} 账户付款。
+{0} takes payments in {1}. Please choose a {2} account.	{0} принимает платежи в {1}. Выберите счёт в {2}.	{0} accepte les paiements en {1}. Choisissez un compte en {2}.	{0} acepta pagos en {1}. Elija una cuenta en {2}.	تقبل {0} المدفوعات بعملة {1}. يرجى اختيار حساب بعملة {2}.	{0}只接受 {1} 付款。请选择 {2} 账户。
+Please choose how often to pay.	Выберите, как часто платить.	Choisissez la fréquence de paiement.	Elija con qué frecuencia pagar.	اختر عدد مرات الدفع.	请选择付款频率。
+Please choose the date of the first payment.	Выберите дату первого платежа.	Choisissez la date du premier paiement.	Elija la fecha del primer pago.	اختر تاريخ الدفعة الأولى.	请选择首次付款日期。
+The first payment must be between today and one year from now.	Первый платёж должен быть между сегодняшним днём и датой через год.	Le premier paiement doit avoir lieu entre aujourd'hui et dans un an.	El primer pago debe estar entre hoy y dentro de un año.	يجب أن تكون الدفعة الأولى بين اليوم وبعد سنة من الآن.	首次付款须在今天至一年之内。
+The last date is before the first payment.	Последняя дата раньше первого платежа.	La dernière date est avant le premier paiement.	La última fecha es anterior al primer pago.	آخر تاريخ قبل الدفعة الأولى.	截止日期早于首次付款。
+Please check the last date.	Проверьте последнюю дату.	Vérifiez la dernière date.	Revise la última fecha.	تحقق من آخر تاريخ.	请检查截止日期。
+You cannot pay into the same account.	Нельзя платить на тот же счёт.	Vous ne pouvez pas payer vers le même compte.	No puede pagar a la misma cuenta.	لا يمكنك الدفع إلى الحساب نفسه.	不能向同一账户付款。
+Please choose what to pay.	Выберите, что оплачивать.	Choisissez quoi payer.	Elija qué pagar.	اختر ما تريد دفعه.	请选择付款内容。
+You can have at most 10 active standing instructions.	Можно иметь не больше 10 активных регулярных платежей.	Vous pouvez avoir au plus 10 ordres permanents actifs.	Puede tener como máximo 10 órdenes permanentes activas.	يمكنك امتلاك 10 أوامر دائمة نشطة كحد أقصى.	最多可有 10 个有效的定期付款指令。
+Standing instruction not found.	Регулярный платёж не найден.	Ordre permanent introuvable.	Orden permanente no encontrada.	الأمر الدائم غير موجود.	未找到定期付款指令。
+This standing instruction has ended.	Этот регулярный платёж завершён.	Cet ordre permanent est terminé.	Esta orden permanente ha terminado.	انتهى هذا الأمر الدائم.	该定期付款指令已结束。
+Please choose how to send the money (IMPS, NEFT, UPI, SWIFT or SEPA).	Выберите способ отправки (IMPS, NEFT, UPI, SWIFT или SEPA).	Choisissez comment envoyer l'argent (IMPS, NEFT, UPI, SWIFT ou SEPA).	Elija cómo enviar el dinero (IMPS, NEFT, UPI, SWIFT o SEPA).	اختر طريقة إرسال المال (IMPS أو NEFT أو UPI أو SWIFT أو SEPA).	请选择汇款方式（IMPS、NEFT、UPI、SWIFT 或 SEPA）。
+SEPA works only from euro (EUR) accounts. Use SWIFT for other currencies.	SEPA работает только со счетов в евро (EUR). Для других валют используйте SWIFT.	SEPA ne fonctionne qu'à partir de comptes en euros (EUR). Utilisez SWIFT pour les autres devises.	SEPA solo funciona desde cuentas en euros (EUR). Use SWIFT para otras monedas.	يعمل SEPA من حسابات اليورو (EUR) فقط. استخدم SWIFT للعملات الأخرى.	SEPA 仅适用于欧元（EUR）账户。其他货币请使用 SWIFT。
+Please enter a valid IBAN (SEPA payments need an IBAN).	Введите правильный IBAN (для платежей SEPA нужен IBAN).	Saisissez un IBAN valide (les paiements SEPA exigent un IBAN).	Escriba un IBAN válido (los pagos SEPA necesitan un IBAN).	أدخل رقم IBAN صحيحًا (تحتاج مدفوعات SEPA إلى IBAN).	请输入有效的 IBAN（SEPA 付款需要 IBAN）。
+This IBAN is not in a SEPA country. Use SWIFT instead.	Этот IBAN не из страны SEPA. Используйте SWIFT.	Cet IBAN n'est pas dans un pays SEPA. Utilisez SWIFT.	Este IBAN no es de un país SEPA. Use SWIFT.	رقم IBAN هذا ليس في دولة SEPA. استخدم SWIFT بدلًا منه.	该 IBAN 不属于 SEPA 国家。请改用 SWIFT。
+Please enter a valid SWIFT/BIC code (8 or 11 characters) or leave it empty.	Введите правильный код SWIFT/BIC (8 или 11 символов) или оставьте поле пустым.	Saisissez un code SWIFT/BIC valide (8 ou 11 caractères) ou laissez vide.	Escriba un código SWIFT/BIC válido (8 u 11 caracteres) o déjelo vacío.	أدخل رمز SWIFT/BIC صحيحًا (8 أو 11 حرفًا) أو اتركه فارغًا.	请输入有效的 SWIFT/BIC 代码（8 或 11 位）或留空。
+You already have 5 signed-in apps. Sign one out in Net Banking > Security first.	У вас уже 5 приложений с входом. Сначала завершите сеанс одного в разделе «Интернет-банк > Безопасность».	Vous avez déjà 5 applications connectées. Déconnectez-en une dans Banque en ligne > Sécurité d'abord.	Ya tiene 5 aplicaciones conectadas. Cierre primero una en Banca en línea > Seguridad.	لديك بالفعل 5 تطبيقات مسجّلة. سجّل خروج أحدها من الخدمات المصرفية > الأمان أولًا.	您已有 5 个已登录的应用。请先在“网上银行 > 安全”中让其中一个退出登录。
+Please enter the full name (first and last name).	Введите полное имя (имя и фамилию).	Saisissez le nom complet (prénom et nom).	Escriba el nombre completo (nombre y apellido).	أدخل الاسم الكامل (الاسم الأول واسم العائلة).	请输入全名（名和姓）。
+Please enter a valid phone number.	Введите правильный номер телефона.	Saisissez un numéro de téléphone valide.	Escriba un número de teléfono válido.	أدخل رقم هاتف صحيحًا.	请输入有效的电话号码。
+Unknown role.	Неизвестная роль.	Rôle inconnu.	Rol desconocido.	دور غير معروف.	未知角色。
+A staff member with this email already exists.	Сотрудник с таким e-mail уже есть.	Un membre du personnel avec cet e-mail existe déjà.	Ya existe un empleado con este correo.	يوجد موظف بهذا البريد بالفعل.	已有使用此邮箱的员工。
+Invalid staff ID or password.	Неверный ID сотрудника или пароль.	Identifiant employé ou mot de passe invalide.	ID de empleado o contraseña no válidos.	رقم الموظف أو كلمة المرور غير صحيحة.	员工号或密码错误。
+This staff account is disabled.	Эта учётная запись сотрудника отключена.	Ce compte employé est désactivé.	Esta cuenta de empleado está desactivada.	حساب الموظف هذا معطّل.	该员工账户已停用。
+This email is used by another staff member.	Этот e-mail использует другой сотрудник.	Cet e-mail est utilisé par un autre membre du personnel.	Otro empleado usa este correo.	يستخدم موظف آخر هذا البريد.	此邮箱已被其他员工使用。
+You cannot disable your own account.	Нельзя отключить собственную учётную запись.	Vous ne pouvez pas désactiver votre propre compte.	No puede desactivar su propia cuenta.	لا يمكنك تعطيل حسابك.	不能停用自己的账户。
+You cannot delete your own account.	Нельзя удалить собственную учётную запись.	Vous ne pouvez pas supprimer votre propre compte.	No puede eliminar su propia cuenta.	لا يمكنك حذف حسابك.	不能删除自己的账户。
+Customer must be at least 18 years old.	Клиенту должно быть не меньше 18 лет.	Le client doit avoir au moins 18 ans.	El cliente debe tener al menos 18 años.	يجب ألا يقل عمر العميل عن 18 عامًا.	客户须年满 18 岁。
+Please select the gender.	Выберите пол.	Veuillez choisir le genre.	Seleccione el género.	يرجى اختيار الجنس.	请选择性别。
+Please fill in the full address and occupation.	Заполните полный адрес и род занятий.	Veuillez remplir l'adresse complète et la profession.	Rellene la dirección completa y la ocupación.	يرجى تعبئة العنوان الكامل والمهنة.	请填写完整地址和职业。
+Unknown status.	Неизвестный статус.	Statut inconnu.	Estado desconocido.	حالة غير معروفة.	未知状态。
+Unknown account type.	Неизвестный тип счёта.	Type de compte inconnu.	Tipo de cuenta desconocido.	نوع حساب غير معروف.	未知账户类型。
+The customer still has an active fixed deposit.	У клиента ещё есть действующий вклад.	Le client a encore un dépôt à terme actif.	El cliente aún tiene un depósito a plazo activo.	لا يزال لدى العميل وديعة ثابتة نشطة.	该客户仍有未到期的定期存款。
+The customer still has an active loan.	У клиента ещё есть действующий кредит.	Le client a encore un prêt actif.	El cliente aún tiene un préstamo activo.	لا يزال لدى العميل قرض نشط.	该客户仍有未结清的贷款。
+This transaction was already reversed (or is itself a reversal).	Эта операция уже сторнирована (или сама является сторно).	Cette opération a déjà été annulée (ou est elle-même une annulation).	Este movimiento ya fue revertido (o es una reversión).	تم عكس هذه المعاملة بالفعل (أو هي نفسها عكس).	该交易已冲正（或本身就是冲正）。
+Transfers and fixed deposits involve two records - correct them with a manual entry.	Переводы и вклады затрагивают две записи — исправляйте их ручной проводкой.	Les virements et dépôts à terme concernent deux écritures - corrigez-les avec une écriture manuelle.	Las transferencias y depósitos tienen dos registros: corríjalos con un asiento manual.	تتضمن التحويلات والودائع الثابتة سجلين - صحّحها بقيد يدوي.	转账和定期存款涉及两条记录——请用手工分录更正。
+Notice needs a title (3-80) and a text (5-400 characters).	Объявлению нужен заголовок (3–80) и текст (5–400 символов).	L'avis doit avoir un titre (3-80) et un texte (5-400 caractères).	El aviso necesita un título (3-80) y un texto (5-400 caracteres).	يحتاج الإشعار إلى عنوان (3-80) ونص (5-400 حرف).	公告需要标题（3-80 个字符）和正文（5-400 个字符）。
+Unknown table.	Неизвестная таблица.	Table inconnue.	Tabla desconocida.	جدول غير معروف.	未知数据表。
+Please write the reason for rejecting the loan.	Напишите причину отказа в кредите.	Écrivez le motif du refus du prêt.	Escriba el motivo del rechazo del préstamo.	اكتب سبب رفض القرض.	请写明拒绝贷款的原因。
+This loan application was already handled ({0}).	Эта заявка на кредит уже обработана ({0}).	Cette demande de prêt a déjà été traitée ({0}).	Esta solicitud de préstamo ya se tramitó ({0}).	تمت معالجة طلب القرض هذا بالفعل ({0}).	该贷款申请已处理（{0}）。
+Your password is wrong - nothing was restored.	Пароль неверный — ничего не восстановлено.	Votre mot de passe est erroné - rien n'a été restauré.	Su contraseña es incorrecta: no se restauró nada.	كلمة المرور خاطئة - لم يُستعد شيء.	密码错误——未恢复任何内容。
+Exchange rate for {0} must be a number.	Курс {0} должен быть числом.	Le taux de {0} doit être un nombre.	El tipo de {0} debe ser un número.	يجب أن يكون سعر صرف {0} رقمًا.	{0} 的汇率必须是数字。
+Exchange rate for {0} must be greater than 0.	Курс {0} должен быть больше 0.	Le taux de {0} doit être supérieur à 0.	El tipo de {0} debe ser mayor que 0.	يجب أن يكون سعر صرف {0} أكبر من 0.	{0} 的汇率必须大于 0。
+Type at least one exchange rate.	Введите хотя бы один курс.	Saisissez au moins un taux de change.	Escriba al menos un tipo de cambio.	اكتب سعر صرف واحدًا على الأقل.	请至少输入一个汇率。
+Daily limits must be whole numbers.	Дневные лимиты должны быть целыми числами.	Les limites quotidiennes doivent être des nombres entiers.	Los límites diarios deben ser números enteros.	يجب أن تكون الحدود اليومية أعدادًا صحيحة.	每日限额必须是整数。
+Daily limits must be greater than 0.	Дневные лимиты должны быть больше 0.	Les limites quotidiennes doivent être supérieures à 0.	Los límites diarios deben ser mayores que 0.	يجب أن تكون الحدود اليومية أكبر من 0.	每日限额必须大于 0。
+The file is too big for a status report.	Файл слишком большой для отчёта о статусе.	Le fichier est trop gros pour un rapport de statut.	El archivo es demasiado grande para un informe de estado.	الملف كبير جدًا لتقرير حالة.	文件过大，不是状态报告。
+This file is not accepted (it contains a DOCTYPE).	Файл не принят (в нём есть DOCTYPE).	Ce fichier n'est pas accepté (il contient un DOCTYPE).	Este archivo no se acepta (contiene un DOCTYPE).	لا يُقبل هذا الملف (يحتوي على DOCTYPE).	不接受此文件（包含 DOCTYPE）。
+This is not an XML file.	Это не XML-файл.	Ce n'est pas un fichier XML.	No es un archivo XML.	هذا ليس ملف XML.	这不是 XML 文件。
+The status report has no payments in it.	В отчёте о статусе нет платежей.	Le rapport de statut ne contient aucun paiement.	El informe de estado no contiene pagos.	لا يحتوي تقرير الحالة على مدفوعات.	状态报告中没有付款。
+File not found.	Файл не найден.	Fichier introuvable.	Archivo no encontrado.	الملف غير موجود.	未找到文件。
+There are no SWIFT or SEPA payments waiting for a file.	Нет платежей SWIFT или SEPA, ожидающих файла.	Aucun paiement SWIFT ou SEPA n'attend de fichier.	No hay pagos SWIFT o SEPA esperando un archivo.	لا توجد مدفوعات SWIFT أو SEPA بانتظار ملف.	没有等待文件的 SWIFT 或 SEPA 付款。
+Only a payment file can be answered.	Ответить можно только на платёжный файл.	Seul un fichier de paiement peut recevoir une réponse.	Solo se puede responder a un archivo de pagos.	لا يمكن الرد إلا على ملف مدفوعات.	只能答复付款文件。
+PyBank did not send a payment file with the number {0}.	PyBank не отправлял платёжный файл с номером {0}.	PyBank n'a pas envoyé de fichier de paiement portant le numéro {0}.	PyBank no envió un archivo de pagos con el número {0}.	لم يرسل PyBank ملف مدفوعات بالرقم {0}.	PyBank 未发送编号为 {0} 的付款文件。
+Please choose a spending category.	Выберите категорию расходов.	Choisissez une catégorie de dépenses.	Elija una categoría de gasto.	اختر فئة إنفاق.	请选择支出类别。
+This device was signed out. Please log in again.	На этом устройстве выполнен выход. Войдите снова.	Cet appareil a été déconnecté. Veuillez vous reconnecter.	Este dispositivo cerró la sesión. Vuelva a iniciar sesión.	تم تسجيل خروج هذا الجهاز. يرجى تسجيل الدخول مجددًا.	该设备已退出登录。请重新登录。
+Back-office session expired. Please sign in again.	Сеанс бэк-офиса истёк. Войдите снова.	La session back-office a expiré. Veuillez vous reconnecter.	La sesión del back office caducó. Vuelva a entrar.	انتهت جلسة المكتب الخلفي. يرجى تسجيل الدخول مجددًا.	后台会话已过期。请重新登录。
+Too many applications from this network. Please try again in an hour.	Слишком много заявок с этой сети. Попробуйте через час.	Trop de demandes depuis ce réseau. Réessayez dans une heure.	Demasiadas solicitudes desde esta red. Inténtelo de nuevo en una hora.	طلبات كثيرة جدًا من هذه الشبكة. حاول مجددًا بعد ساعة.	来自该网络的申请过多。请一小时后再试。
+Please check the MRZ lines of your document: {0}	Проверьте строки MRZ вашего документа: {0}	Vérifiez les lignes MRZ de votre document : {0}	Revise las líneas MRZ de su documento: {0}	تحقق من أسطر MRZ في وثيقتك: {0}	请检查证件的 MRZ 行：{0}
+MRZ check found problems: {0}	Проверка MRZ нашла проблемы: {0}	Le contrôle MRZ a trouvé des problèmes : {0}	La comprobación MRZ encontró problemas: {0}	وجد فحص MRZ مشكلات: {0}	MRZ 核验发现问题：{0}
+Too many login attempts from this network. Please wait 10 minutes.	Слишком много попыток входа с этой сети. Подождите 10 минут.	Trop de tentatives de connexion depuis ce réseau. Attendez 10 minutes.	Demasiados intentos de acceso desde esta red. Espere 10 minutos.	محاولات دخول كثيرة جدًا من هذه الشبكة. يرجى الانتظار 10 دقائق.	来自该网络的登录尝试过多。请等待 10 分钟。
+Too many sign-in attempts from this network. Please wait 10 minutes.	Слишком много попыток входа с этой сети. Подождите 10 минут.	Trop de tentatives de connexion depuis ce réseau. Attendez 10 minutes.	Demasiados intentos de inicio de sesión desde esta red. Espere 10 minutos.	محاولات تسجيل دخول كثيرة جدًا من هذه الشبكة. يرجى الانتظار 10 دقائق.	来自该网络的登录尝试过多。请等待 10 分钟。
+Please sign in to the back office.	Войдите в бэк-офис.	Veuillez vous connecter au back-office.	Inicie sesión en el back office.	يرجى تسجيل الدخول إلى المكتب الخلفي.	请登录后台。
+Account of {0} opened.	Счёт клиента {0} открыт.	Compte de {0} ouvert.	Cuenta de {0} abierta.	تم فتح حساب {0}.	已为 {0} 开户。
+Change approved - the customer's details are updated.	Изменение одобрено — данные клиента обновлены.	Modification approuvée - les données du client sont mises à jour.	Cambio aprobado: los datos del cliente están actualizados.	تمت الموافقة على التغيير - تم تحديث بيانات العميل.	变更已批准——客户信息已更新。
+Too many wrong codes. Please sign in again.	Слишком много неверных кодов. Войдите снова.	Trop de codes erronés. Veuillez vous reconnecter.	Demasiados códigos erróneos. Vuelva a iniciar sesión.	رموز خاطئة كثيرة جدًا. يرجى تسجيل الدخول مجددًا.	错误验证码次数过多。请重新登录。
+You have signed out of the back office.	Вы вышли из бэк-офиса.	Vous êtes déconnecté du back-office.	Ha cerrado la sesión del back office.	لقد سجّلت الخروج من المكتب الخلفي.	您已退出后台。
+Account opened. Customer ID {0}. Give the customer the password and PIN you entered.	Счёт открыт. ID клиента {0}. Передайте клиенту введённые пароль и PIN-код.	Compte ouvert. Identifiant client {0}. Donnez au client le mot de passe et le code PIN saisis.	Cuenta abierta. ID de cliente {0}. Entregue al cliente la contraseña y el PIN que escribió.	تم فتح الحساب. رقم العميل {0}. أعطِ العميل كلمة المرور ورمز PIN اللذين أدخلتهما.	已开户。客户号 {0}。请将您输入的密码和 PIN 交给客户。
+Customer details saved.	Данные клиента сохранены.	Informations du client enregistrées.	Datos del cliente guardados.	تم حفظ بيانات العميل.	客户信息已保存。
+Login unlocked.	Вход разблокирован.	Connexion déverrouillée.	Acceso desbloqueado.	تم فك قفل الدخول.	登录已解锁。
+Two-factor login turned off. The customer can log in with the password and set it up again.	Двухфакторный вход отключён. Клиент может войти по паролю и настроить его снова.	Double authentification désactivée. Le client peut se connecter avec le mot de passe et la reconfigurer.	Inicio en dos pasos desactivado. El cliente puede entrar con la contraseña y configurarlo de nuevo.	تم إيقاف الدخول الثنائي. يمكن للعميل الدخول بكلمة المرور وإعداده مجددًا.	双重验证登录已关闭。客户可用密码登录后重新设置。
+New password set. Tell the customer to change it after login.	Новый пароль задан. Попросите клиента сменить его после входа.	Nouveau mot de passe défini. Dites au client de le changer après connexion.	Nueva contraseña establecida. Pida al cliente que la cambie tras entrar.	تم تعيين كلمة مرور جديدة. أخبر العميل بتغييرها بعد الدخول.	已设置新密码。请告知客户登录后修改。
+New transaction PIN set.	Новый PIN-код операций задан.	Nouveau code PIN de transaction défini.	Nuevo PIN de transacciones establecido.	تم تعيين رمز PIN جديد للمعاملات.	已设置新的交易 PIN。
+Account frozen - no money can move.	Счёт заморожен — деньги не двигаются.	Compte gelé - aucun argent ne peut bouger.	Cuenta congelada: no se puede mover dinero.	تم تجميد الحساب - لا يمكن تحريك المال.	账户已冻结——资金无法变动。
+Account type changed.	Тип счёта изменён.	Type de compte modifié.	Tipo de cuenta cambiado.	تم تغيير نوع الحساب.	账户类型已更改。
+This is a large entry: it was sent to a second staff member for approval (Second approvals).	Это крупная проводка: она отправлена другому сотруднику на одобрение («Второе одобрение»).	C'est une grosse écriture : elle a été envoyée à un second membre du personnel pour approbation (Secondes approbations).	Es un asiento grande: se envió a un segundo empleado para su aprobación (Segundas aprobaciones).	هذا قيد كبير: أُرسل إلى موظف ثانٍ للموافقة (الموافقات الثانية).	这是一笔大额分录：已提交第二位员工审批（第二人审批）。
+Entry posted (ref {0}). New balance {1}.	Проводка выполнена (номер {0}). Новый остаток {1}.	Écriture comptabilisée (réf. {0}). Nouveau solde {1}.	Asiento contabilizado (ref. {0}). Nuevo saldo {1}.	تم تسجيل القيد (المرجع {0}). الرصيد الجديد {1}.	分录已入账（参考号 {0}）。新余额 {1}。
+Customer {0} and all their records were deleted.	Клиент {0} и все его записи удалены.	Le client {0} et toutes ses données ont été supprimés.	El cliente {0} y todos sus registros se eliminaron.	تم حذف العميل {0} وكل سجلاته.	客户 {0} 及其全部记录已删除。
+This is a large amount: the reversal was sent to a second staff member for approval.	Это крупная сумма: сторно отправлено другому сотруднику на одобрение.	C'est un gros montant : l'annulation a été envoyée à un second membre du personnel pour approbation.	Es un importe grande: la reversión se envió a un segundo empleado para su aprobación.	هذا مبلغ كبير: أُرسل العكس إلى موظف ثانٍ للموافقة.	金额较大：冲正已提交第二位员工审批。
+Transaction reversed (new ref {0}).	Операция сторнирована (новый номер {0}).	Opération annulée (nouvelle réf. {0}).	Movimiento revertido (nueva ref. {0}).	تم عكس المعاملة (مرجع جديد {0}).	交易已冲正（新参考号 {0}）。
+Reply saved - the customer can see it in Net Banking.	Ответ сохранён — клиент видит его в интернет-банке.	Réponse enregistrée - le client peut la voir en ligne.	Respuesta guardada: el cliente la ve en la banca en línea.	تم حفظ الرد - يمكن للعميل رؤيته عبر الإنترنت.	回复已保存——客户可在网上银行查看。
+Request deleted.	Заявка удалена.	Demande supprimée.	Solicitud eliminada.	تم حذف الطلب.	申请已删除。
+Notice saved.	Объявление сохранено.	Avis enregistré.	Aviso guardado.	تم حفظ الإشعار.	公告已保存。
+Notice deleted.	Объявление удалено.	Avis supprimé.	Aviso eliminado.	تم حذف الإشعار.	公告已删除。
+Staff member added with ID {0}.	Сотрудник добавлен с ID {0}.	Membre du personnel ajouté avec l'identifiant {0}.	Empleado añadido con ID {0}.	تمت إضافة الموظف بالرقم {0}.	已添加员工，员工号 {0}。
+Staff details saved.	Данные сотрудника сохранены.	Informations de l'employé enregistrées.	Datos del empleado guardados.	تم حفظ بيانات الموظف.	员工信息已保存。
+Password reset.	Пароль сброшен.	Mot de passe réinitialisé.	Contraseña restablecida.	تمت إعادة تعيين كلمة المرور.	密码已重置。
+Staff account updated.	Учётная запись сотрудника обновлена.	Compte employé mis à jour.	Cuenta de empleado actualizada.	تم تحديث حساب الموظف.	员工账户已更新。
+Staff member deleted.	Сотрудник удалён.	Membre du personnel supprimé.	Empleado eliminado.	تم حذف الموظف.	员工已删除。
+Two-factor login of this staff member was turned off.	Двухфакторный вход этого сотрудника отключён.	La double authentification de ce membre du personnel a été désactivée.	Se desactivó el inicio en dos pasos de este empleado.	تم إيقاف الدخول الثنائي لهذا الموظف.	已关闭该员工的双重验证登录。
+Bank settings saved. New limits and FD rates apply immediately.	Настройки банка сохранены. Новые лимиты и ставки по вкладам действуют сразу.	Paramètres enregistrés. Les nouvelles limites et les taux des dépôts s'appliquent immédiatement.	Ajustes guardados. Los nuevos límites y tipos de depósito se aplican al instante.	تم حفظ إعدادات البنك. تسري الحدود وأسعار الودائع الجديدة فورًا.	银行设置已保存。新限额和定期存款利率立即生效。
+Exchange rates downloaded for {0} currencies.	Курсы загружены для {0} валют.	Taux de change téléchargés pour {0} devises.	Tipos de cambio descargados para {0} monedas.	تم تنزيل أسعار الصرف لـ {0} عملات.	已下载 {0} 种货币的汇率。
+Exchange rates saved ({0} currencies).	Курсы сохранены ({0} валют).	Taux de change enregistrés ({0} devises).	Tipos de cambio guardados ({0} monedas).	تم حفظ أسعار الصرف ({0} عملات).	汇率已保存（{0} 种货币）。
+Daily limits saved.	Дневные лимиты сохранены.	Limites quotidiennes enregistrées.	Límites diarios guardados.	تم حفظ الحدود اليومية.	每日限额已保存。
+Could not download exchange rates ({0}). You can type them by hand.	Не удалось загрузить курсы ({0}). Можно ввести их вручную.	Impossible de télécharger les taux ({0}). Vous pouvez les saisir à la main.	No se pudieron descargar los tipos ({0}). Puede escribirlos a mano.	تعذر تنزيل أسعار الصرف ({0}). يمكنك كتابتها يدويًا.	无法下载汇率（{0}）。您可以手动输入。
+Interest for {0}: {1} credited to {2} savings accounts.	Проценты за {0}: {1} зачислено на {2} сберегательных счетов.	Intérêts de {0} : {1} versés sur {2} comptes d'épargne.	Intereses de {0}: {1} abonados en {2} cuentas de ahorro.	فائدة {0}: أُضيف {1} إلى {2} حسابات توفير.	{0} 利息：{1} 已计入 {2} 个储蓄账户。
+No quarter is waiting for interest. It is paid automatically after each quarter ends.	Нет кварталов, ожидающих процентов. Они выплачиваются автоматически после окончания квартала.	Aucun trimestre n'attend d'intérêts. Ils sont versés automatiquement à la fin de chaque trimestre.	Ningún trimestre espera intereses. Se pagan automáticamente al terminar cada trimestre.	لا يوجد ربع سنة بانتظار الفائدة. تُدفع تلقائيًا بعد نهاية كل ربع.	没有待付息的季度。每季度结束后自动支付。
+Backup #{0} created. Download it and keep it safe on your computer.	Резервная копия №{0} создана. Скачайте её и храните на компьютере.	Sauvegarde n° {0} créée. Téléchargez-la et gardez-la sur votre ordinateur.	Copia n.º {0} creada. Descárguela y guárdela en su ordenador.	تم إنشاء النسخة الاحتياطية رقم {0}. نزّلها واحفظها على حاسوبك.	已创建备份 #{0}。请下载并妥善保存在电脑上。
+Choose a backup file (.json.gz).	Выберите файл резервной копии (.json.gz).	Choisissez un fichier de sauvegarde (.json.gz).	Elija un archivo de copia (.json.gz).	اختر ملف نسخة احتياطية (.json.gz).	请选择备份文件（.json.gz）。
+Two-factor login is ON for your staff account.	Для вашей учётной записи сотрудника включён двухфакторный вход.	La double authentification est ACTIVE pour votre compte employé.	El inicio en dos pasos está ACTIVADO en su cuenta de empleado.	الدخول الثنائي مفعّل لحساب الموظف الخاص بك.	您的员工账户已开启双重验证登录。
+Your details were saved.	Ваши данные сохранены.	Vos informations ont été enregistrées.	Sus datos se guardaron.	تم حفظ بياناتك.	您的信息已保存。

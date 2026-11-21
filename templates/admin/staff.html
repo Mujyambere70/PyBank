@@ -1,7 +1,7 @@
 {% extends "admin/layout.html" %}
 {% block title %}Staff{% endblock %}
 {% block office_content %}
-<div class="nb-title"><div><h1>Staff</h1><p class="muted small">Admins can do everything. Staff can serve customers but cannot change staff, settings or the database.</p></div></div>
+<div class="nb-title"><div><h1>Staff &amp; roles</h1><p class="muted small">An administrator can do everything. Every other staff member has a job role; the role decides which back-office pages he can open.</p></div></div>
 <div class="dash-grid">
     <section class="panel">
         <h2>Team ({{ rows|length }})</h2>
@@ -10,22 +10,29 @@
             <div class="mini-row"><div><strong>{{ s.full_name }}{% if s.staff_id == me.staff_id %} (you){% endif %}</strong>
                 <small>{{ s.staff_id }} &middot; {{ s.designation or '—' }} &middot; {{ s.email }}{% if s.phone %} &middot; {{ s.phone }}{% endif %}</small>
                 <small>Last sign-in: {{ s.last_login|nicedate if s.last_login else 'never' }}</small></div>
-                <span class="role-badge {{ s.role }}">{{ s.role|upper }}</span>{% if not s.active %}<span class="badge bad">Disabled</span>{% endif %}</div>
+                <span class="role-badge {{ s.role }}">{{ role_label(s) }}</span>{% if not s.active %}<span class="badge bad">Disabled</span>{% endif %}</div>
             {% if s.staff_id != me.staff_id %}
             <details class="own-tools"><summary class="btn btn-outline btn-sm">Manage</summary>
+                {% if s.role != 'admin' %}
+                <form method="post" action="{{ url_for('office_staff_job', sid=s.staff_id) }}" class="inline-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="job-{{ s.staff_id }}">Job role</label>
+                    <select id="job-{{ s.staff_id }}" name="job_role">{% for k in JOB_ROLES %}<option value="{{ k }}" {{ 'selected' if (s.job_role or 'officer') == k }}>{{ ROLES[k].label }}</option>{% endfor %}</select>
+                    <button class="btn btn-outline btn-sm">Change role</button></form>
+                {% endif %}
                 <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='edit') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-grid">
-                        <div><label>Full name</label><input name="full_name" value="{{ s.full_name }}" required></div>
-                        <div><label>Email</label><input type="email" name="email" value="{{ s.email }}" required></div>
-                        <div><label>Phone</label><input name="phone" value="{{ s.phone }}"></div>
-                        <div><label>Designation</label><input name="designation" value="{{ s.designation }}"></div>
-                        <div><label>Role</label><select name="role">{% for r in ['staff', 'admin'] %}<option value="{{ r }}" {{ 'selected' if s.role == r }}>{{ r|capitalize }}</option>{% endfor %}</select></div>
+                        <div><label for="n-{{ s.staff_id }}">Full name</label><input id="n-{{ s.staff_id }}" name="full_name" value="{{ s.full_name }}" required></div>
+                        <div><label for="e-{{ s.staff_id }}">Email</label><input id="e-{{ s.staff_id }}" type="email" name="email" value="{{ s.email }}" required></div>
+                        <div><label for="p-{{ s.staff_id }}">Phone</label><input id="p-{{ s.staff_id }}" name="phone" value="{{ s.phone }}"></div>
+                        <div><label for="d-{{ s.staff_id }}">Designation</label><input id="d-{{ s.staff_id }}" name="designation" value="{{ s.designation }}"></div>
+                        <div><label for="r-{{ s.staff_id }}">Access</label><select id="r-{{ s.staff_id }}" name="role">{% for r in ['staff', 'admin'] %}<option value="{{ r }}" {{ 'selected' if s.role == r }}>{{ 'Administrator (everything)' if r == 'admin' else 'Staff (by job role)' }}</option>{% endfor %}</select></div>
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-top:10px">Save</button>
                 </form>
                 <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='password') }}" class="inline-form">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="password" placeholder="New password" required><button class="btn btn-outline btn-sm">Reset password</button></form>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="password" placeholder="New password" aria-label="New password for {{ s.full_name }}" required><button class="btn btn-outline btn-sm">Reset password</button></form>
                 <div class="btn-row">
                     <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='toggle') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">{{ 'Disable' if s.active else 'Enable' }}</button></form>
                     {% if s.totp_enabled %}<form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='reset2fa') }}" onsubmit="return confirm('Turn off two-factor login for {{ s.full_name }}?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">Turn off 2FA</button></form>{% endif %}
@@ -39,15 +46,27 @@
     <form method="post" class="panel" autocomplete="off">
         <h2>Add staff member</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <label>Full name</label><input name="full_name" required>
-        <label>Email</label><input type="email" name="email" required>
+        <label for="new-name">Full name</label><input id="new-name" name="full_name" required>
+        <label for="new-email">Email</label><input id="new-email" type="email" name="email" required>
         <div class="form-grid">
-            <div><label>Phone</label><input name="phone"></div>
-            <div><label>Designation</label><input name="designation" placeholder="e.g. Cashier"></div>
-            <div><label>Role</label><select name="role"><option value="staff">Staff</option><option value="admin">Admin</option></select></div>
-            <div><label>First password</label><input name="password" required></div>
+            <div><label for="new-phone">Phone</label><input id="new-phone" name="phone"></div>
+            <div><label for="new-desig">Designation</label><input id="new-desig" name="designation" placeholder="e.g. Cashier"></div>
+            <div><label for="new-role">Access</label><select id="new-role" name="role"><option value="staff">Staff (by job role)</option><option value="admin">Administrator (everything)</option></select></div>
+            <div><label for="new-job">Job role</label><select id="new-job" name="job_role">{% for k in JOB_ROLES %}<option value="{{ k }}">{{ ROLES[k].label }}</option>{% endfor %}</select></div>
+            <div><label for="new-pw">First password</label><input id="new-pw" name="password" required></div>
         </div>
         <button class="btn btn-primary btn-block">Add staff member</button>
     </form>
 </div>
+<section class="panel">
+    <h2>What each job role can do</h2>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="What each job role can do"><table class="data compact roles-table">
+        <thead><tr><th>Ability</th>{% for k in JOB_ROLES %}<th class="center">{{ ROLES[k].label }}</th>{% endfor %}<th class="center">Administrator</th></tr></thead>
+        <tbody>
+        {% for a, text in ABILITIES.items() %}
+        <tr><td class="small">{{ text }}</td>{% for k in JOB_ROLES %}<td class="center">{{ '✓' if a in ROLES[k].abilities else '' }}</td>{% endfor %}<td class="center">✓</td></tr>
+        {% endfor %}
+        </tbody>
+    </table></div>
+</section>
 {% endblock %}

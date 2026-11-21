@@ -1,6 +1,8 @@
 Flask>=3.0
-gunicorn>=22.0            # web server for online hosting (Render); not needed on Windows
-psycopg[binary]>=3.1      # PostgreSQL driver - used only when DATABASE_URL is set
+gunicorn>=22.0            # web server for online hosting (Fly.io); not needed on Windows
+psycopg[binary]>=3.1      # PostgreSQL driver - used only when DATABASE_URL is set (Neon)
 Babel>=2.14               # money, dates and country names in every interface language
-reportlab>=4.0            # monthly PDF e-statements
+reportlab>=4.0            # monthly PDF e-statements and the interest certificate
 cryptography>=42          # Web Push notifications (encryption and VAPID signature)
+arabic-reshaper>=3.0      # Arabic letters joined correctly in PDF statements (version 4)
+python-bidi>=0.4          # right-to-left order of Arabic text in PDF statements (version 4)

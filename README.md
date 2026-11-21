@@ -3,10 +3,21 @@
 A complete **international** online banking web application built with **Python, Flask, HTML and CSS**
 (BCA project, Mujyambere Jean Michel, MMDU Mullana).
 
+**Version 4 (November 2026):** the whole public website is managed by bank staff (contacts, pages, FAQ, products,
+branches & ATMs, banners, charges, pictures - with history and translations in 6 languages); one customer can keep
+**accounts in several currencies** and move money between them at the bank's buy / sell rates; **card controls**;
+**bills & standing instructions**; **insights & budgets**; **ISO 20022** payment files (pain.001 / pain.002) and SEPA;
+**passport MRZ check** (ICAO 9303); **job roles** for staff and the **four-eyes rule**; **suspicious-activity flags**
+and **dormant accounts**; signed-in **devices**, rate limits and a **status page**; **download my data** and an
+**interest certificate**; a **JSON API** for a mobile app; Arabic PDF statements; savings **interest slabs**,
+**compound FD interest** and a **senior-citizen rate**; the back office in all 6 languages.
+
 **Version 3:** customers from any country, accounts in 8 currencies (₹ ₽ $ € £ ¥ AED RWF), the interface in the
 6 UN languages (English, Русский, Français, Español, العربية, 中文), staff approval of new accounts and of
 changes of personal data, payments to other banks (IMPS / NEFT / UPI / SWIFT sandbox), credit score and loan
 documents, EMI auto-debit with late fee, monthly PDF e-statements and push notifications on the phone.
+
+Live demo: **https://michel-pybank.fly.dev/** (Fly.io + Neon PostgreSQL).
 
 > PyBank is a **fictional bank** made for an academic project. It is not a real bank and no real money is used.
 > Designed and developed by **Jean Michel Mujyambere** — BCA (AI & ML), Maharishi Markandeshwar University (2022–2025);
@@ -31,43 +42,54 @@ with demo customers and 6 months of transactions.
 | PB10000003 | Arjun Malhotra | Current (business) | Demo@1234 | 2580 |
 | PB10000004 | Anna Smirnova (Russia, Russian interface) | Savings, **RUB** | Demo@1234 | 2580 |
 | PB10000005 | Amani Uwase (Rwanda, French interface) | Savings, **RWF** | Demo@1234 | 2580 |
+| PB10000007 | Kofi Mensah (Ghana) | Savings, **USD** - *dormant* (not used for 2 years) | Demo@1234 | 2580 |
 
-Lucia Fernandez (Spain, EUR) has applied online and waits in Back office → *New accounts & data*.
+Lucia Fernandez (Spain, EUR) has applied online (with her passport MRZ) and waits in Back office → *New accounts & data*.
+Rahul also has a **USD account**, card controls, a paid bill, 2 standing instructions, 2 budgets and a signed-in app;
+Anna also has a **EUR account** with a SEPA payment (when exchange rates are available).
 
 **Back office (bank staff)** — open **http://127.0.0.1:5000/admin** (or the *Staff login* link in the footer):
 
 | Login | Password | Who | Role |
 |---|---|---|---|
 | `admin@pybank.demo` (EMP001) | `Admin@1234` | **Jean Michel Mujyambere** – Branch Manager & System Administrator | Admin (everything) |
-| `neha.sharma@pybank.demo` (EMP002) | `Staff@1234` | Neha Sharma – Customer Service Officer | Staff |
+| `neha.sharma@pybank.demo` (EMP002) | `Staff@1234` | Neha Sharma – Customer Service Officer | Staff · officer |
+| EMP003 | `Staff@1234` | Ravi Kumar – Cashier | Staff · teller (cash counter) |
+| EMP004 | `Staff@1234` | Meera Joshi – Loan Officer | Staff · loan officer |
+| EMP005 | `Staff@1234` | Sergey Volkov – Compliance Officer | Staff · compliance |
+| EMP006 | `Staff@1234` | Aisha Khan – Website Editor | Staff · website editor |
+| EMP007 | `Staff@1234` | Vikram Singh – Deputy Branch Manager | Staff · branch manager |
+
+Each job role sees only its own pages (see *Staff & roles* → "What each job role can do").
 
 To start again with fresh demo data, delete `bank.db` and run `python app.py` again.
 
 ### Tests / Тесты
 ```bash
-python -m unittest discover -s tests -v      # 101 tests, SQLite
+python -m unittest discover -s tests -v      # 143 tests, SQLite
 # the same tests on PostgreSQL (the database is emptied - use a test database only!)
 TEST_DATABASE_URL=postgresql://user:pass@localhost/pybank_test python -m unittest discover -s tests
+python tools/release_check.py               # opens every page as 11 kinds of users and in 6 languages
+python tools/a11y_check.py path/to/axe.min.js   # WCAG 2.1 AA check with axe-core (49 pages)
+python tools/collect_strings.py --lang=ru   # texts that still have no translation
 ```
 
-## Put it online without losing data / Онлайн без потери данных
+## Put it online (Fly.io + Neon) / Онлайн (Fly.io + Neon)
 
-**Why the data was resetting / Почему данные сбрасывались:** on Render's free plan the server's disk is
-deleted at every restart, redeploy and after 15 minutes without visitors. The SQLite file `bank.db` was
-on that disk, so every change disappeared and the demo data was created again.
-На бесплатном Render диск стирается при каждом перезапуске, поэтому файл `bank.db` и все изменения пропадали.
+The app runs on **Fly.io** from the `Dockerfile`; the data lives in a free **Neon** PostgreSQL database, so
+nothing is lost when the machine stops or a new version is deployed. Locally, SQLite (`bank.db`) is used.
 
-**Fix / Решение:** keep the data in a PostgreSQL database outside Render. The app uses PostgreSQL
-automatically when the `DATABASE_URL` environment variable is set (SQLite is still used on your computer).
+1. Install `flyctl` and sign in: `fly auth login`.
+2. First time only: `fly launch --no-deploy` (or keep the `fly.toml` in this folder: app `michel-pybank`).
+3. Create a free database at **neon.com** and copy its connection string. Put it in Fly **as a secret** -
+   type it in your own terminal, never in a chat, an e-mail or a file in the repository:
+   `fly secrets set DATABASE_URL="postgresql://..." SECRET_KEY="any-long-random-text" --app michel-pybank`
+4. `fly deploy` - the tables and demo data are created once; later deploys keep the data.
+5. Check `https://michel-pybank.fly.dev/status` (or `/health` for machines).
 
-1. Create a free PostgreSQL database at **neon.com** → copy the *connection string*
-   (`postgresql://USER:PASSWORD@HOST/neondb?sslmode=require`).
-2. Render → your web service → **Environment** → add `DATABASE_URL` = that string,
-   and `SECRET_KEY` = any long random text. Start command: `gunicorn app:app --workers 1 --threads 4`.
-3. **Manual Deploy → Deploy latest commit.** On the first start the tables and demo data are created in
-   PostgreSQL once; after that nothing is reset. Check it in Back office → Bank settings → *System status*.
-
-`render.yaml` (Render Blueprint) contains the same settings.
+If a database password was ever shown somewhere, reset it in Neon (*Roles → Reset password*) and run step 3 again.
+`.github/workflows/fly-deploy.yml` runs the tests on every push and deploys when the repository has the secret
+`FLY_API_TOKEN` (`fly tokens create deploy`).
 
 **Backups / Резервные копии:** every day the app saves a full copy inside the database (the last 7 are kept)
 and can email it to `BACKUP_EMAIL`. In Back office → **Backups** the admin can download a copy (`.json.gz`)
@@ -78,7 +100,7 @@ restore history.
 
 | Variable | For |
 |---|---|
-| `BREVO_API_KEY`, `ALERT_EMAIL_FROM` | email alerts through the Brevo API (works on Render free; normal SMTP ports are blocked there) |
+| `BREVO_API_KEY`, `ALERT_EMAIL_FROM` | email alerts through the Brevo API (an HTTPS API, works on any host) |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `ALERT_EMAIL_FROM` | email through any SMTP server (on your own computer) |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | SMS alerts through Twilio |
 | `BACKUP_EMAIL` | where the daily backup is emailed |
@@ -86,12 +108,48 @@ restore history.
 Without them, alerts are still saved and shown on the customer's **Alerts** page.
 The demo customers have made-up example.com addresses: the app never emails or texts customers on example domains.
 
+## Version 4 / Версия 4
+
+**Website managed by staff / Сайт управляется сотрудниками.** Back office → **Website content**: contacts and
+short texts (phones, e-mail, hours, footer), pages (About, Terms, Privacy, Safe banking tips + new pages with a
+safe mini-markdown), FAQ, product cards, branches & ATMs (with map links), banners with start / end dates, the
+schedule of charges, billers and pictures (PNG / JPG / WEBP, type checked from the bytes, max 1 MB). Every change
+keeps the old version in a **history** (one click puts it back) and can be **translated** into the 5 other
+languages; the audit log records who changed what.
+
+**Old future scope, now done / Бывшие планы, теперь сделано:**
+- **ISO 20022** - SWIFT and SEPA payments can go out in a `pain.001.001.09` file and come back with a
+  `pain.002.001.10` status report (accepted / rejected with a reason such as AC04 - the money returns). XML with
+  a DOCTYPE is refused. **SEPA** works from EUR accounts to IBANs of the 41 SEPA countries.
+- **Passport MRZ check** - the 2 lines of a passport (TD3) or 3 lines of an ID card (TD1) are read with the
+  ICAO 9303 check digits (7-3-1) and compared with the application; only the last 3 characters are saved.
+- **Several currency accounts** - one main account (with the card) and up to 4 more, one per currency; the
+  dashboard can switch between them; money moves between own accounts at the bank's rate.
+- **Arabic PDF statements** - Arabic letters are joined and ordered right to left (`arabic-reshaper`, `python-bidi`).
+- **Back office in 6 languages** - each staff member chooses his language.
+- **JSON API** for a mobile app - `/api/v1` with tokens (stored as SHA-256), limits per minute and an
+  OpenAPI 3.0 description at `/api/v1/openapi.json` (see `/developers`).
+
+**Old limitations, now solved / Бывшие ограничения, теперь решены:** compound FD interest (quarterly) and a
+senior-citizen rate (+0.50 %, age 60+); savings **interest slabs** (higher rate above a limit per currency);
+the bank's **exchange margin** (buy / sell rates, shown before the customer confirms, 30-day history);
+**card controls** (block / unblock, lost card → new number, online / abroad / contactless on-off, daily ATM and
+shop limits, a sandbox card network); a public **status page**.
+
+**New / Новое:** bills & **standing instructions** (autopay, paused / stopped by the customer), **insights &
+budgets** (alerts at 80 % and 100 %), **signed-in devices** (new-device alert, sign out others), **rate limits**
+on login, registration, API and MRZ checks (HTTP 429), **job roles** (officer, teller, loan officer, compliance,
+website editor, branch manager), the **four-eyes rule** (large manual entries and reversals wait for a second
+person), **suspicious-activity flags** (large cash, structuring, pass-through, many new payees), **dormant
+accounts** (24 months without a customer transaction), **download my data** (JSON), an **interest certificate**
+(PDF, financial year), report a problem on a receipt (dispute) and a health page for staff.
+
 ## International bank (version 3) / Международный банк (версия 3)
 
 **Languages / Языки.** The globe menu at the top switches the whole site and Net Banking between the six
 official UN languages; Arabic is shown right to left. The choice is remembered for the customer, and alerts,
 emails and PDF statements use it too. Translations are in `translations/<lang>.json` (about 1,000 texts each);
-`i18n.py` translates every finished page. Bank-staff pages stay in English.
+`i18n.py` translates every finished page. Since version 4 the back office is translated too (about 2,280 texts each).
 
 **Currencies / Валюты.** Every account has its own currency, chosen when it is opened. Anyone who opens an
 account with the **Russian** interface gets a **ruble (RUB)** account. Money and dates are written in the
@@ -195,18 +253,35 @@ banking_system/
 ├── db.py             one database layer for SQLite (computer) and PostgreSQL (online, DATABASE_URL)
 ├── otp.py            two-factor login codes (TOTP / HOTP, RFC 6238 / 4226) and the QR-code link
 ├── notify.py         email (Brevo API or SMTP) and SMS (Twilio) alerts, sent in the background
-├── demo_data.py      3 demo customers + 6 months of transactions, FDs, a loan with EMIs, payees, requests, 2 staff
+├── demo_data.py      demo customers + 6 months of transactions, FDs, a loan with EMIs, payees, requests, 2 staff
+├── demo_v4.py        version 4 demo: 5 staff with job roles, translations, USD / EUR accounts, card, bills, flags ...
+├── roles.py          job roles and the pages each role may open (v4)
+├── sitecontent.py    website content managed by staff: texts, pages, FAQ, products, branches, banners, charges (v4)
+├── wallets.py        accounts in several currencies, buy / sell rates, exchange between own accounts (v4)
+├── cards.py          debit-card controls and the sandbox card network (v4)
+├── iso20022.py       pain.001 payment files and pain.002 status reports (v4)
+├── mrz.py            passport / ID-card MRZ reading with ICAO 9303 check digits (v4)
+├── autopay.py        billers, bill payments and standing instructions (v4)
+├── insights.py       spending by category and monthly budgets (v4)
+├── compliance.py     suspicious-activity rules, dormant accounts, four-eyes rule (v4)
+├── devices.py        signed-in devices, rate limits, error log, health checks (v4)
+├── privacy.py        download my data, interest certificate (v4)
+├── api.py            JSON API /api/v1 with tokens and the OpenAPI description (v4)
+├── v4_views.py       the web pages of version 4 (public, Net Banking and back office)
 ├── requirements.txt
-├── render.yaml       Render settings (free web service + DATABASE_URL)
+├── Dockerfile, fly.toml, .github/workflows/fly-deploy.yml   Fly.io deployment
 ├── templates/
 │   ├── base.html             header, menu, footer
-│   ├── public/               index, about, rates, contact, faq, login, register, registered, error
+│   ├── public/               index, about, rates, contact, faq, login, register, registered, error,
+│   │                         site_page, status, developers (v4)
 │   ├── netbanking/           layout (sidebar), dashboard, account, money (deposit/withdraw),
 │   │                         transfer, transfer_confirm, receipt, statement, profile, security,
-│   │                         payees, fixed_deposits, requests, loans, loan, alerts
+│   │                         payees, fixed_deposits, requests, loans, loan, alerts,
+│   │                         accounts, card, bills, insights (v4)
 │   └── admin/                back office: layout, login, dashboard, customers, customer, customer_new,
 │                             transactions, approvals, loans, requests, notices, staff, settings,
-│                             backups, database, audit, profile
+│                             backups, database, audit, profile; v4: content*, media, billers, iso,
+│                             compliance, flag, dormant, checker, health, fx_history
 ├── static/
 │   ├── style.css
 │   └── images/       all PNG / JPG (logo, hero, products, card, branch, security)
@@ -217,6 +292,8 @@ banking_system/
     ├── test_new_features.py   approvals, 2FA, loans/EMI, alerts, interest, backups
     ├── test_international.py  languages, currencies, FX, account and data approval, other banks,
     │                          credit score, auto-debit, PDF statements, Web Push
+    ├── test_v4.py    website content, roles, currencies, cards, ISO 20022, MRZ, Arabic PDF, autopay,
+    │                 budgets, compliance, four-eyes, devices & limits, API, privacy, health (42 tests)
     ├── support.py    test helpers (SQLite or TEST_DATABASE_URL)
     └── pgmini.py     tiny PostgreSQL client used only by the tests when psycopg is not installed
 ```
@@ -238,4 +315,11 @@ banking_system/
 | `Bank.post_quarterly_interest()` | Savings interest = Σ(balance of each day) × rate / 365, credited once per quarter. |
 | `otp.verify()` | Checks a 6-digit TOTP code (±30 s clock drift) and refuses a code that was already used. |
 | `Bank.export_data()` / `import_data()` | Full backup as JSON (gzip) and restore in one database transaction. |
+| `Bank.quote(src, dst, amount)` | Customer rate = middle rate × (1 − margin); the amount is rounded half-up with `Decimal`. |
+| `Bank.card_payment()` | Sandbox card network: checks card status, channel switches, country, daily limits and balance in that order. |
+| `mrz.parse()` / `check_digit()` | ICAO 9303: weights 7-3-1, `<` = 0, letters A=10…Z=35; the sum mod 10 must equal the check digit. |
+| `iso20022.build_pain001()` | One payment file with a group header, number of payments and control sum. |
+| `Bank._check_aml()` | After every transaction: the four rules; one flag per rule, customer and day. |
+| `CheckerOffice.manual_entry()` | Below the checker amount the entry is posted; above it waits for another staff member. |
+| `Bank.rate_ok(kind, key)` | Counts requests per minute window in the database (works with several workers). |
 | `create_app()` | Builds the Flask app (used by `app.py` and the tests); uses `DATABASE_URL` when it is set. |

@@ -6,9 +6,10 @@ last month for every customer, keeps it in the database (the customer can downlo
 and emails it when an email service is configured. Statements can also be made for any month on demand.
 
 The PDF is drawn with reportlab and the DejaVu Sans font (it has ₹, ₽ and Cyrillic letters).
-Labels are in the customer's language. Chinese text uses the WenQuanYi Zen Hei font (only the characters PyBank needs);
-for Arabic the labels stay in English, because Arabic letters must be joined and written right to left,
-which this simple PDF drawing cannot do.
+Labels are in the customer's language. Chinese text uses the WenQuanYi Zen Hei font (only the characters PyBank needs).
+Arabic (version 4): Arabic letters change their shape by their place in the word and are written right to left.
+`shape()` joins the letters (arabic-reshaper) and puts them in the order of the screen (python-bidi), so the
+PDF shows real Arabic words (the layout of the page stays the same as in the other languages).
 """
 
 import base64
@@ -22,7 +23,7 @@ from core import BankError, now
 from world import format_money
 
 FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "fonts")
-PDF_LANGS = {"en", "ru", "fr", "es", "zh"}
+PDF_LANGS = {"en", "ru", "fr", "es", "zh", "ar"}
 _fonts_ready = False
 
 
@@ -36,6 +37,18 @@ def _fonts():
         # Chinese: WenQuanYi Zen Hei, cut down to the characters PyBank uses (made with fontTools)
         pdfmetrics.registerFont(TTFont("ZenHei", os.path.join(FONT_DIR, "WenQuanYiZenHei-subset.ttf")))
         _fonts_ready = True
+
+
+def shape(text, lang):
+    """Arabic text -> joined letters in visual order (for reportlab, which draws characters left to right)."""
+    if lang != "ar" or not text:
+        return text
+    try:
+        import arabic_reshaper
+        from bidi.algorithm import get_display
+    except ImportError:                                   # pragma: no cover - the libraries are in requirements.txt
+        return text
+    return get_display(arabic_reshaper.reshape(str(text).replace("\u200f", "").replace("\u061c", "")))
 
 
 def month_bounds(year, month):
@@ -53,8 +66,8 @@ def build_pdf(customer, account, rows, opening, closing, year, month, lang="en")
 
     _fonts()
     lang = lang if lang in PDF_LANGS else "en"
-    T = lambda text: i18n.translate_text(text, lang)                     # noqa: E731
-    M = lambda amount: format_money(amount, account.currency, lang)      # noqa: E731
+    T = lambda text: shape(i18n.translate_text(text, lang), lang)                     # noqa: E731
+    M = lambda amount: format_money(amount, account.currency, "en" if lang == "ar" else lang)      # noqa: E731
     F, FB = ("ZenHei", "ZenHei") if lang == "zh" else ("DejaVu", "DejaVu-Bold")
     buf = io.BytesIO()
     pdf = canvas.Canvas(buf, pagesize=A4)
@@ -91,7 +104,7 @@ def build_pdf(customer, account, rows, opening, closing, year, month, lang="en")
     pdf.drawString(18 * mm, y, customer.full_name)
     pdf.setFont(F, 9)
     lines = [customer.address, f"{customer.city} {customer.pincode}".strip(),
-             world.country_name(customer.country, lang if lang in world.LANGUAGES else "en")]
+             shape(world.country_name(customer.country, lang if lang in world.LANGUAGES else "en"), lang)]
     for i, line in enumerate(lines):
         pdf.drawString(18 * mm, y - (5 + 4.5 * i) * mm, line)
     info = [(T("Customer ID"), customer.customer_id), (T("Account number"), account.number),
@@ -167,15 +180,16 @@ def build_pdf(customer, account, rows, opening, closing, year, month, lang="en")
 
 class StatementsMixin:
 
-    def statement_pdf(self, cid, year, month, lang=None):
-        """PDF statement of one month for one customer (made on demand)."""
+    def statement_pdf(self, cid, year, month, lang=None, number=None):
+        """PDF statement of one month for one customer (made on demand); any of his accounts (v4)."""
         if not (1 <= int(month) <= 12) or not (2000 <= int(year) <= date.today().year):
             raise BankError("Please choose a valid month.")
         year, month = int(year), int(month)
         start, end = month_bounds(year, month)
         if start > date.today():
             raise BankError("Please choose a valid month.")
-        customer, account = self.get_customer(cid), self.get_account(cid)
+        customer = self.get_customer(cid)
+        account = self.account_of(cid, number) if number else self.get_account(cid)
         with self._connect() as conn:
             before = conn.execute("SELECT balance_after FROM transactions WHERE account_number = ? AND created_at < ? "
                                   "ORDER BY created_at DESC, id DESC LIMIT 1",
@@ -196,8 +210,9 @@ class StatementsMixin:
         with self._connect() as conn:
             self.save_setting(conn, "last_estatement_month", key)
             people = [dict(r) for r in conn.execute(
-                "SELECT c.customer_id, c.email, c.full_name, c.lang FROM customers c JOIN accounts a USING (customer_id) "
-                "WHERE c.status = 'Active' AND c.estatement = 1 AND a.opened_at < ?", (today.replace(day=1).isoformat(),))]
+                "SELECT c.customer_id, c.email, c.full_name, c.lang FROM customers c WHERE c.status = 'Active' AND "
+                "c.estatement = 1 AND EXISTS (SELECT 1 FROM accounts a WHERE a.customer_id = c.customer_id AND "
+                "a.opened_at < ?)", (today.replace(day=1).isoformat(),))]
         made = 0
         for p in people:
             blob = self.statement_pdf(p["customer_id"], last.year, last.month)

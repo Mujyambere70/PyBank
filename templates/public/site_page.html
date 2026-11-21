@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>{{ page.title }}</h1></div></section>
+{% if preview %}<div class="wrap"><div class="flash info">Preview: this is how customers see the page{{ '' if page.published else ' (the page is hidden now)' }}.</div></div>{% endif %}
+<section class="section">
+    <div class="wrap narrow page-body">
+        {{ page.html|safe }}
+        <p class="small muted">Last updated: {{ page.updated_at|nicedate(false) if page.updated_at else '' }}</p>
+    </div>
+</section>
+{% endblock %}

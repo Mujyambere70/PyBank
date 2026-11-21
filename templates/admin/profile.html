@@ -7,20 +7,20 @@
     <form method="post" class="panel">
         <h2>My details</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="details">
-        <label>Full name</label><input name="full_name" value="{{ me.full_name }}" required>
-        <label>Email (used to sign in)</label><input type="email" name="email" value="{{ me.email }}" required>
+        <label for="profile-fullname">Full name</label><input id="profile-fullname" name="full_name" value="{{ me.full_name }}" required>
+        <label for="profile-email">Email (used to sign in)</label><input id="profile-email" type="email" name="email" value="{{ me.email }}" required>
         <div class="form-grid">
-            <div><label>Phone</label><input name="phone" value="{{ me.phone }}"></div>
-            <div><label>Designation</label><input name="designation" value="{{ me.designation }}"></div>
+            <div><label for="profile-phone">Phone</label><input id="profile-phone" name="phone" value="{{ me.phone }}"></div>
+            <div><label for="profile-designation">Designation</label><input id="profile-designation" name="designation" value="{{ me.designation }}"></div>
         </div>
         <button class="btn btn-primary btn-block">Save my details</button>
     </form>
     <form method="post" class="panel">
         <h2>Change my password</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="password">
-        <label>Current password</label><input type="password" name="old" required>
-        <label>New password</label><input type="password" name="new" required>
-        <label>Repeat new password</label><input type="password" name="new2" required>
+        <label for="profile-old">Current password</label><input id="profile-old" type="password" name="old" required>
+        <label for="profile-new">New password</label><input id="profile-new" type="password" name="new" required>
+        <label for="profile-new2">Repeat new password</label><input id="profile-new2" type="password" name="new2" required>
         <button class="btn btn-primary btn-block">Change password</button>
         <p class="small muted">At least 8 characters with letters and numbers. Your role can only be changed by another admin.</p>
     </form>

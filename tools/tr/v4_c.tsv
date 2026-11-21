@@ -1,0 +1,144 @@
+MRZ lines of the document	Строки MRZ документа	Lignes MRZ du document	Líneas MRZ del documento	أسطر المنطقة المقروءة آليًا في الوثيقة	证件的 MRZ 行
+(optional - the lines with <<< at the bottom of the photo page; typing them makes the check faster)	(необязательно — строки с <<< внизу страницы с фото; так проверка пройдёт быстрее)	(facultatif - les lignes avec <<< en bas de la page photo ; les saisir accélère la vérification)	(opcional: las líneas con <<< al pie de la página de la foto; escribirlas acelera la comprobación)	(اختياري - الأسطر التي تحتوي على <<< أسفل صفحة الصورة؛ كتابتها تسرّع التحقق)	（可选——照片页底部带 <<< 的几行；填写可加快审核）
+Safe Banking Tips | PyBank	Советы по безопасности | PyBank	Conseils de sécurité | PyBank	Consejos de seguridad | PyBank	نصائح الأمان | PyBank	安全提示 | PyBank
+Protect your account	Защитите свой счёт	Protégez votre compte	Proteja su cuenta	احمِ حسابك	保护您的账户
+Turn on two-factor login in Net Banking -> Security.	Включите двухфакторный вход в разделе «Интернет-банк -> Безопасность».	Activez la double authentification dans Banque en ligne -> Sécurité.	Active el inicio en dos pasos en Banca en línea -> Seguridad.	فعّل الدخول الثنائي في الخدمات المصرفية -> الأمان.	在“网上银行 -> 安全”中开启双重验证登录。
+Check the list of signed-in devices from time to time and sign out the ones you do not know.	Время от времени проверяйте список устройств и завершайте сеансы незнакомых.	Vérifiez de temps en temps la liste des appareils connectés et déconnectez ceux que vous ne connaissez pas.	Revise de vez en cuando la lista de dispositivos conectados y cierre la sesión de los que no conozca.	راجع قائمة الأجهزة المسجّلة من حين لآخر وسجّل خروج ما لا تعرفه منها.	不时查看已登录设备列表，让不认识的设备退出登录。
+Use the card controls: switch off online or international payments when you do not need them.	Пользуйтесь настройками карты: отключайте онлайн- и зарубежные платежи, когда они не нужны.	Utilisez les réglages de la carte : coupez les paiements en ligne ou internationaux quand vous n'en avez pas besoin.	Use los controles de la tarjeta: desactive los pagos en línea o internacionales cuando no los necesite.	استخدم إعدادات البطاقة: أوقف الدفع عبر الإنترنت أو الدولي عندما لا تحتاج إليه.	使用卡片设置：不需要时关闭网上或国际付款。
+If something looks wrong	Если что-то не так	Si quelque chose semble anormal	Si algo parece raro	إذا بدا شيء غير طبيعي	如果发现异常
+Call the fraud line, block your card in Net Banking -> My Card and report the payment with "Report a problem" on the receipt.	Позвоните на линию по мошенничеству, заблокируйте карту в разделе «Интернет-банк -> Моя карта» и сообщите о платеже кнопкой «Сообщить о проблеме» на квитанции.	Appelez la ligne anti-fraude, bloquez votre carte dans Banque en ligne -> Ma carte et signalez le paiement avec « Signaler un problème » sur le reçu.	Llame a la línea de fraude, bloquee su tarjeta en Banca en línea -> Mi tarjeta y reporte el pago con «Reportar un problema» en el recibo.	اتصل بخط الاحتيال، واحظر بطاقتك من الخدمات المصرفية -> بطاقتي، وأبلغ عن الدفعة عبر «الإبلاغ عن مشكلة» في الإيصال.	拨打反欺诈热线，在“网上银行 -> 我的卡”中冻结卡片，并在回单上用“报告问题”上报该笔付款。
+Last updated: {0}	Последнее обновление: {0}	Dernière mise à jour : {0}	Última actualización: {0}	آخر تحديث: {0}	最后更新：{0}
+Privacy Notice | PyBank	Уведомление о конфиденциальности | PyBank	Avis de confidentialité | PyBank	Aviso de privacidad | PyBank	إشعار الخصوصية | PyBank	隐私声明 | PyBank
+What we keep	Что мы храним	Ce que nous conservons	Qué guardamos	ما الذي نحتفظ به	我们保存什么
+Your name, date of birth, contact details, address, the documents you upload and the record of your transactions.	Ваше имя, дату рождения, контакты, адрес, загруженные документы и историю операций.	Votre nom, date de naissance, coordonnées, adresse, les documents que vous envoyez et l'historique de vos opérations.	Su nombre, fecha de nacimiento, datos de contacto, dirección, los documentos que sube y el registro de sus movimientos.	اسمك وتاريخ ميلادك وبيانات الاتصال والعنوان والمستندات التي ترفعها وسجل معاملاتك.	您的姓名、出生日期、联系方式、地址、上传的证件及交易记录。
+Why	Зачем	Pourquoi	Por qué	لماذا	为什么
+To open and run your account, to protect it against fraud and to follow banking law.	Чтобы открыть и вести ваш счёт, защищать его от мошенничества и соблюдать банковское законодательство.	Pour ouvrir et gérer votre compte, le protéger contre la fraude et respecter la loi bancaire.	Para abrir y gestionar su cuenta, protegerla contra el fraude y cumplir la ley bancaria.	لفتح حسابك وإدارته وحمايته من الاحتيال والالتزام بالقانون المصرفي.	为开立和管理您的账户、防范欺诈并遵守银行法规。
+Your rights	Ваши права	Vos droits	Sus derechos	حقوقك	您的权利
+In Net Banking -> Security you can download all the data the bank keeps about you (a JSON file).	В разделе «Интернет-банк -> Безопасность» можно скачать все данные, которые банк хранит о вас (файл JSON).	Dans Banque en ligne -> Sécurité, vous pouvez télécharger toutes les données que la banque conserve sur vous (un fichier JSON).	En Banca en línea -> Seguridad puede descargar todos los datos que el banco guarda sobre usted (un archivo JSON).	في الخدمات المصرفية -> الأمان يمكنك تنزيل كل البيانات التي يحتفظ بها البنك عنك (ملف JSON).	在“网上银行 -> 安全”中可下载银行保存的关于您的全部数据（JSON 文件）。
+Passport and ID photos are seen only by bank officers who check your application.	Фото паспорта и удостоверения видят только сотрудники, проверяющие вашу заявку.	Les photos du passeport et de la pièce d'identité ne sont vues que par les conseillers qui vérifient votre demande.	Las fotos del pasaporte y del documento solo las ven los empleados que revisan su solicitud.	لا يرى صور جواز السفر والهوية إلا موظفو البنك الذين يراجعون طلبك.	护照和身份证照片仅由审核您申请的银行职员查看。
+You can ask the branch to correct wrong data at any time.	Вы можете в любой момент попросить отделение исправить неверные данные.	Vous pouvez demander à l'agence de corriger des données erronées à tout moment.	Puede pedir a la sucursal que corrija datos erróneos en cualquier momento.	يمكنك أن تطلب من الفرع تصحيح البيانات الخاطئة في أي وقت.	您可随时要求网点更正错误信息。
+Terms and Conditions | PyBank	Условия обслуживания | PyBank	Conditions générales | PyBank	Términos y condiciones | PyBank	الشروط والأحكام | PyBank	条款和条件 | PyBank
+About these terms	Об этих условиях	À propos de ces conditions	Sobre estos términos	حول هذه الشروط	关于这些条款
+PyBank is a fictional bank made for an academic project. These terms show what a real bank would publish; they are not a contract.	PyBank — вымышленный банк, созданный для учебного проекта. Эти условия показывают, что опубликовал бы настоящий банк; это не договор.	PyBank est une banque fictive créée pour un projet universitaire. Ces conditions montrent ce qu'une vraie banque publierait ; elles ne sont pas un contrat.	PyBank es un banco ficticio creado para un proyecto académico. Estos términos muestran lo que publicaría un banco real; no son un contrato.	PyBank بنك خيالي أُنشئ لمشروع أكاديمي. تُظهر هذه الشروط ما قد ينشره بنك حقيقي؛ وهي ليست عقدًا.	PyBank 是为学术项目而建的虚构银行。这些条款展示真实银行会公布的内容，并非合同。
+Your account	Ваш счёт	Votre compte	Su cuenta	حسابك	您的账户
+Keep your password, transaction PIN and one-time codes secret. The bank never asks for them.	Храните пароль, PIN-код операций и одноразовые коды в тайне. Банк никогда их не спрашивает.	Gardez secrets votre mot de passe, votre code PIN de transaction et vos codes à usage unique. La banque ne les demande jamais.	Mantenga en secreto su contraseña, PIN de transacciones y códigos de un solo uso. El banco nunca los pide.	احتفظ بكلمة المرور ورمز PIN للمعاملات والرموز المؤقتة سرًا. البنك لا يطلبها أبدًا.	请对密码、交易 PIN 和一次性验证码保密。银行绝不会索要。
+Tell the bank at once if your card or phone is lost. You can block your card yourself in Net Banking.	Сразу сообщите банку о потере карты или телефона. Заблокировать карту можно самостоятельно в интернет-банке.	Prévenez la banque tout de suite si votre carte ou votre téléphone est perdu. Vous pouvez bloquer votre carte vous-même en ligne.	Avise al banco enseguida si pierde su tarjeta o su teléfono. Puede bloquear la tarjeta usted mismo en la banca en línea.	أبلغ البنك فورًا إذا فقدت بطاقتك أو هاتفك. يمكنك حظر بطاقتك بنفسك عبر الإنترنت.	卡片或手机丢失请立即告知银行。您可以在网上银行自行冻结卡片。
+The bank may freeze an account when the law requires it or when fraud is suspected.	Банк может заморозить счёт, если этого требует закон или есть подозрение на мошенничество.	La banque peut geler un compte si la loi l'exige ou en cas de soupçon de fraude.	El banco puede congelar una cuenta cuando la ley lo exija o se sospeche fraude.	يجوز للبنك تجميد الحساب عندما يقتضي القانون ذلك أو عند الاشتباه في احتيال.	依法要求或怀疑存在欺诈时，银行可冻结账户。
+Charges and interest	Тарифы и проценты	Frais et intérêts	Cargos e intereses	الرسوم والفائدة	收费与利息
+The current rates and charges are on the	Действующие ставки и тарифы указаны на странице	Les taux et frais en vigueur sont sur la page	Los tipos y cargos vigentes están en la página	الأسعار والرسوم الحالية موجودة في صفحة	现行利率和收费见
+Interest rates and charges	Ставки и тарифы	Taux d'intérêt et frais	Tipos de interés y cargos	أسعار الفائدة والرسوم	利率和收费
+page. The bank tells customers about a change at least 30 days before it starts.	. Банк сообщает клиентам об изменениях минимум за 30 дней.	. La banque informe les clients d'un changement au moins 30 jours avant.	. El banco avisa a los clientes de un cambio al menos 30 días antes.	. يُبلغ البنك العملاء بأي تغيير قبل 30 يومًا على الأقل من بدئه.	页面。银行至少提前 30 天通知客户变更。
+Back Office Sign in | PyBank	Вход в бэк-офис | PyBank	Connexion back-office | PyBank	Acceso al back office | PyBank	تسجيل دخول المكتب الخلفي | PyBank	后台登录 | PyBank
+For PyBank staff only. Customers please use	Только для сотрудников PyBank. Клиентам —	Réservé au personnel de PyBank. Les clients utilisent	Solo para empleados de PyBank. Los clientes deben usar	لموظفي PyBank فقط. العملاء يرجى استخدام	仅限 PyBank 员工。客户请使用
+Staff ID or email	ID сотрудника или e-mail	Identifiant employé ou e-mail	ID de empleado o correo	رقم الموظف أو البريد الإلكتروني	员工号或电子邮件
+e.g. EMP001	напр. EMP001	p. ex. EMP001	p. ej. EMP001	مثل EMP001	例如 EMP001
+🔒 Sign in	🔒 Войти	🔒 Se connecter	🔒 Entrar	🔒 تسجيل الدخول	🔒 登录
+Demo staff	Демо-сотрудники	Personnel de démonstration	Empleados de prueba	موظفون تجريبيون	演示员工
+Admin:	Администратор:	Admin :	Administrador:	المدير:	管理员：
+Staff (password	Сотрудники (пароль	Personnel (mot de passe	Empleados (contraseña	الموظفون (كلمة المرور	员工（密码
+officer	специалист	conseiller	empleado	موظف	专员
+teller	кассир	guichetier	cajero	أمين صندوق	柜员
+loan officer	кредитный специалист	chargé de prêts	oficial de préstamos	موظف قروض	信贷专员
+compliance	комплаенс	conformité	cumplimiento	الامتثال	合规
+website editor	редактор сайта	éditeur du site	editor del sitio	محرر الموقع	网站编辑
+branch manager	управляющий отделением	directeur d'agence	director de sucursal	مدير الفرع	网点经理
+Branch operations	Операции отделения	Opérations d'agence	Operaciones de sucursal	عمليات الفرع	网点业务
+Open accounts, update KYC details and reset passwords or PINs.	Открывайте счета, обновляйте данные KYC и сбрасывайте пароли и PIN-коды.	Ouvrez des comptes, mettez à jour les données KYC et réinitialisez mots de passe et codes PIN.	Abra cuentas, actualice los datos KYC y restablezca contraseñas o PIN.	افتح الحسابات وحدّث بيانات اعرف عميلك وأعد تعيين كلمات المرور ورموز PIN.	开户、更新 KYC 信息并重置密码或 PIN。
+Freeze accounts, post corrections and reverse wrong entries.	Замораживайте счета, проводите исправления и сторнируйте ошибочные записи.	Gelez des comptes, passez des corrections et annulez les écritures erronées.	Congele cuentas, registre correcciones y revierta asientos erróneos.	جمّد الحسابات وأدخل التصحيحات واعكس القيود الخاطئة.	冻结账户、录入更正并冲正错误分录。
+Answer customer service requests.	Отвечайте на заявки клиентов.	Répondez aux demandes de service des clients.	Responda las solicitudes de servicio de los clientes.	أجب عن طلبات خدمة العملاء.	答复客户服务申请。
+Check passports (MRZ), suspicious payments and large entries with a second person.	Проверяйте паспорта (MRZ), подозрительные платежи и крупные проводки вдвоём.	Vérifiez les passeports (MRZ), les paiements suspects et les grosses écritures avec une deuxième personne.	Compruebe pasaportes (MRZ), pagos sospechosos y asientos grandes con una segunda persona.	تحقق من جوازات السفر (MRZ) والمدفوعات المشبوهة والقيود الكبيرة مع شخص ثانٍ.	核验护照（MRZ）、可疑付款，大额分录需第二人复核。
+Keep the website up to date: contacts, pages, FAQ, branches, banners and charges.	Поддерживайте сайт в актуальном состоянии: контакты, страницы, FAQ, отделения, баннеры и тарифы.	Tenez le site à jour : contacts, pages, FAQ, agences, bannières et frais.	Mantenga el sitio al día: contactos, páginas, preguntas frecuentes, sucursales, banners y cargos.	حافظ على تحديث الموقع: جهات الاتصال والصفحات والأسئلة الشائعة والفروع واللافتات والرسوم.	保持网站更新：联系方式、页面、常见问题、网点、横幅和收费。
+Each person sees only the pages of his job role; admins manage staff, limits and rates.	Каждый видит только страницы своей роли; администраторы управляют сотрудниками, лимитами и ставками.	Chacun ne voit que les pages de son rôle ; les admins gèrent le personnel, les limites et les taux.	Cada persona ve solo las páginas de su puesto; los administradores gestionan empleados, límites y tipos.	يرى كل شخص صفحات دوره فقط؛ ويدير المديرون الموظفين والحدود والأسعار.	每人只能看到自己岗位的页面；管理员管理员工、限额和利率。
+Bills & Autopay	Счета и автоплатежи	Factures et paiements auto	Facturas y pagos automáticos	الفواتير والدفع التلقائي	账单与自动付款
+Insights & Budgets	Аналитика и бюджеты	Analyses et budgets	Análisis y presupuestos	التحليلات والميزانيات	分析与预算
+Exchange	Обмен	Change	Cambio	صرف	兑换
+⇄ Move money	⇄ Перевести	⇄ Déplacer de l'argent	⇄ Mover dinero	⇄ نقل المال	⇄ 转账
+Card controls	Настройки карты	Réglages de la carte	Controles de la tarjeta	إعدادات البطاقة	卡片设置
+Budgets this month	Бюджеты в этом месяце	Budgets ce mois-ci	Presupuestos este mes	الميزانيات هذا الشهر	本月预算
+Insights →	Аналитика →	Analyses →	Análisis →	التحليلات ←	分析 →
+© {0} PyBank · Never share your password, PIN or OTP with anyone · Fraud line	© {0} PyBank · Никому не сообщайте пароль, PIN-код или одноразовый код · Линия по мошенничеству	© {0} PyBank · Ne partagez jamais votre mot de passe, code PIN ou OTP · Ligne anti-fraude	© {0} PyBank · Nunca comparta su contraseña, PIN u OTP · Línea de fraude	© {0} PyBank · لا تشارك كلمة المرور أو PIN أو OTP مع أي أحد · خط الاحتيال	© {0} PyBank · 切勿向任何人透露密码、PIN 或验证码 · 反欺诈热线
+My Accounts | PyBank	Мои счета | PyBank	Mes comptes | PyBank	Mis cuentas | PyBank	حساباتي | PyBank	我的账户 | PyBank
+My accounts	Мои счета	Mes comptes	Mis cuentas	حساباتي	我的账户
+My Accounts	Мои счета	Mes comptes	Mis cuentas	حساباتي	我的账户
+Keep money in several currencies and move it between your accounts at the bank's rate.	Храните деньги в нескольких валютах и переводите их между своими счетами по курсу банка.	Gardez de l'argent en plusieurs devises et déplacez-le entre vos comptes au taux de la banque.	Guarde dinero en varias monedas y muévalo entre sus cuentas al tipo del banco.	احتفظ بالمال بعدة عملات وانقله بين حساباتك بسعر البنك.	以多种货币存款，并按银行汇率在账户间转账。
+Accounts ({0})	Счета ({0})	Comptes ({0})	Cuentas ({0})	الحسابات ({0})	账户（{0}）
+Main · card	Основной · карта	Principal · carte	Principal · tarjeta	رئيسي · بطاقة	主账户 · 卡
+Only an empty account can be closed.	Закрыть можно только пустой счёт.	Seul un compte vide peut être fermé.	Solo se puede cerrar una cuenta vacía.	لا يمكن إغلاق إلا حساب فارغ.	只有余额为零的账户才能关闭。
+Close account	Закрыть счёт	Fermer le compte	Cerrar cuenta	إغلاق الحساب	关闭账户
+Move money between my accounts	Перевод между моими счетами	Déplacer de l'argent entre mes comptes	Mover dinero entre mis cuentas	نقل المال بين حساباتي	在我的账户之间转账
+See the rate	Узнать курс	Voir le taux	Ver el tipo	اعرض السعر	查看汇率
+You see the exact amount and the bank's margin before you confirm.	Точную сумму и маржу банка вы увидите до подтверждения.	Vous voyez le montant exact et la marge de la banque avant de confirmer.	Verá el importe exacto y el margen del banco antes de confirmar.	ترى المبلغ الدقيق وهامش البنك قبل التأكيد.	确认前您会看到准确金额和银行差价。
+Open an account in another currency	Открыть счёт в другой валюте	Ouvrir un compte dans une autre devise	Abrir una cuenta en otra moneda	افتح حسابًا بعملة أخرى	开立其他货币账户
+Open the account	Открыть счёт	Ouvrir le compte	Abrir la cuenta	افتح الحساب	开立账户
+No minimum deposit and no fee for a currency account.	Без минимального взноса и без платы за валютный счёт.	Pas de dépôt minimum ni de frais pour un compte en devises.	Sin depósito mínimo ni comisión por una cuenta en divisas.	لا حد أدنى للإيداع ولا رسوم على حساب العملة.	外币账户无最低存款，无费用。
+It earns savings interest like your main account.	На него начисляются проценты, как на основной счёт.	Il rapporte des intérêts d'épargne comme votre compte principal.	Gana intereses de ahorro como su cuenta principal.	يكسب فائدة ادخار مثل حسابك الرئيسي.	与主账户一样享受储蓄利息。
+Other PyBank customers can send money to it, and you can pay abroad from it with SWIFT or SEPA.	Другие клиенты PyBank могут переводить на него деньги, а вы можете платить с него за границу через SWIFT или SEPA.	D'autres clients PyBank peuvent y envoyer de l'argent, et vous pouvez payer à l'étranger depuis ce compte par SWIFT ou SEPA.	Otros clientes de PyBank pueden enviarle dinero, y usted puede pagar al extranjero desde ella con SWIFT o SEPA.	يمكن لعملاء PyBank الآخرين إرسال المال إليه، ويمكنك الدفع منه إلى الخارج عبر SWIFT أو SEPA.	其他 PyBank 客户可以向其转账，您也可以通过 SWIFT 或 SEPA 从中向境外付款。
+The debit card stays on your main account.	Дебетовая карта остаётся привязанной к основному счёту.	La carte de débit reste sur votre compte principal.	La tarjeta de débito sigue en su cuenta principal.	تبقى بطاقة الخصم على حسابك الرئيسي.	借记卡仍绑定在主账户上。
+same day (SEPA)	в тот же день (SEPA)	le jour même (SEPA)	el mismo día (SEPA)	في اليوم نفسه (SEPA)	当日（SEPA）
+e.g. FR76 3000 6000 0112 3456 7890 189	напр. FR76 3000 6000 0112 3456 7890 189	p. ex. FR76 3000 6000 0112 3456 7890 189	p. ej. FR76 3000 6000 0112 3456 7890 189	مثل FR76 3000 6000 0112 3456 7890 189	例如 FR76 3000 6000 0112 3456 7890 189
+BIC (optional)	BIC (необязательно)	BIC (facultatif)	BIC (opcional)	BIC (اختياري)	BIC（可选）
+e.g. AGRIFRPP	напр. AGRIFRPP	p. ex. AGRIFRPP	p. ej. AGRIFRPP	مثل AGRIFRPP	例如 AGRIFRPP
+Beneficiary bank name (optional)	Банк получателя (необязательно)	Banque du bénéficiaire (facultatif)	Banco del beneficiario (opcional)	اسم بنك المستفيد (اختياري)	收款银行名称（可选）
+: euro payments from a EUR account to an IBAN in the 41 SEPA countries.	: платежи в евро со счёта в EUR на IBAN в 41 стране SEPA.	: paiements en euros d'un compte EUR vers un IBAN dans les 41 pays SEPA.	: pagos en euros desde una cuenta EUR a un IBAN de los 41 países SEPA.	: مدفوعات باليورو من حساب EUR إلى رقم IBAN في دول SEPA الـ41.	：从欧元账户向 41 个 SEPA 国家的 IBAN 进行欧元付款。
+Bills & Autopay | PyBank	Счета и автоплатежи | PyBank	Factures et paiements auto | PyBank	Facturas y pagos automáticos | PyBank	الفواتير والدفع التلقائي | PyBank	账单与自动付款 | PyBank
+Bills & autopay	Счета и автоплатежи	Factures et paiements auto	Facturas y pagos automáticos	الفواتير والدفع التلقائي	账单与自动付款
+the billers are made up.	получатели платежей вымышлены.	les facturiers sont inventés.	los emisores son inventados.	جهات الفوترة وهمية.	收费单位均为虚构。
+({0}) · Balance {1}	({0}) · Остаток {1}	({0}) · Solde {1}	({0}) · Saldo {1}	({0}) · الرصيد {1}	（{0}）· 余额 {1}
+Biller	Получатель платежа	Facturier	Emisor	جهة الفوترة	收费单位
+Electricity	Электричество	Électricité	Electricidad	الكهرباء	电费
+Gas	Газ	Gaz	Gas	الغاز	燃气
+Internet	Интернет	Internet	Internet	الإنترنت	宽带
+Water	Вода	Eau	Agua	المياه	水费
+Mobile	Мобильная связь	Mobile	Móvil	الهاتف المحمول	手机
+{0} · {1}	{0} · {1}	{0} · {1}	{0} · {1}	{0} · {1}	{0} · {1}
+Consumer number / mobile number / ID	Номер абонента / номер телефона / ID	Numéro client / numéro de mobile / identifiant	Número de cliente / móvil / ID	رقم المشترك / رقم الهاتف / المعرّف	用户号 / 手机号 / ID
+Get the bill	Получить счёт	Obtenir la facture	Obtener la factura	اجلب الفاتورة	获取账单
+Test tip: a number ending in 000 is unknown at the biller.	Подсказка для теста: номер, оканчивающийся на 000, получателю неизвестен.	Astuce de test : un numéro se terminant par 000 est inconnu du facturier.	Consejo de prueba: un número que termina en 000 es desconocido para el emisor.	تلميح للاختبار: الرقم المنتهي بـ 000 غير معروف لدى جهة الفوترة.	测试提示：以 000 结尾的号码在收费单位不存在。
+Paid bills	Оплаченные счета	Factures payées	Facturas pagadas	الفواتير المدفوعة	已付账单
+Standing instructions (autopay)	Регулярные платежи (автоплатежи)	Ordres permanents (paiements auto)	Órdenes permanentes (pagos automáticos)	الأوامر الدائمة (الدفع التلقائي)	定期付款指令（自动付款）
+Name	Название	Nom	Nombre	الاسم	名称
+Pays to	Кому	Paie à	Paga a	يدفع إلى	收款方
+How often	Как часто	Fréquence	Frecuencia	كم مرة	频率
+Next payment	Следующий платёж	Prochain paiement	Próximo pago	الدفعة التالية	下次付款
+Last result	Последний результат	Dernier résultat	Último resultado	آخر نتيجة	上次结果
+Every month	Каждый месяц	Chaque mois	Cada mes	كل شهر	每月
+Every week	Каждую неделю	Chaque semaine	Cada semana	كل أسبوع	每周
+Every quarter	Каждый квартал	Chaque trimestre	Cada trimestre	كل ربع سنة	每季度
+Pause	Приостановить	Suspendre	Pausar	إيقاف مؤقت	暂停
+Resume	Возобновить	Reprendre	Reanudar	استئناف	恢复
+Paused	Приостановлен	Suspendu	En pausa	متوقف مؤقتًا	已暂停
+Ended	Завершён	Terminé	Terminado	منتهٍ	已结束
+Stop	Остановить	Arrêter	Detener	إيقاف	停止
++ New standing instruction	+ Новый регулярный платёж	+ Nouvel ordre permanent	+ Nueva orden permanente	+ أمر دائم جديد	+ 新建定期付款指令
+What to pay	Что оплачивать	Quoi payer	Qué pagar	ماذا تدفع	付款内容
+Transfer to a PyBank account	Перевод на счёт PyBank	Virement vers un compte PyBank	Transferencia a una cuenta PyBank	تحويل إلى حساب في PyBank	转账至 PyBank 账户
+A bill	Счёт за услуги	Une facture	Una factura	فاتورة	账单
+Name (for you)	Название (для вас)	Nom (pour vous)	Nombre (para usted)	الاسم (لك)	名称（自用）
+Rent, mobile bill ...	Аренда, мобильная связь ...	Loyer, forfait mobile ...	Alquiler, factura del móvil ...	الإيجار، فاتورة الهاتف ...	房租、手机费……
+PyBank account (for a transfer)	Счёт PyBank (для перевода)	Compte PyBank (pour un virement)	Cuenta PyBank (para una transferencia)	حساب PyBank (للتحويل)	PyBank 账户（用于转账）
+Biller (for a bill)	Получатель (для счёта)	Facturier (pour une facture)	Emisor (para una factura)	جهة الفوترة (للفاتورة)	收费单位（用于账单）
+Consumer number (for a bill)	Номер абонента (для счёта)	Numéro client (pour une facture)	Número de cliente (para una factura)	رقم المشترك (للفاتورة)	用户号（用于账单）
+First payment	Первый платёж	Premier paiement	Primer pago	الدفعة الأولى	首次付款
+Last date (optional)	Последняя дата (необязательно)	Dernière date (facultatif)	Última fecha (opcional)	آخر تاريخ (اختياري)	截止日期（可选）
+The payments are taken from A/c {0}. You give your PIN once now; on each date the bank pays and sends you an alert. If the money is not there, that payment is skipped and you get an alert.	Платежи списываются со счёта {0}. PIN-код вводится один раз сейчас; в каждую дату банк платит и присылает уведомление. Если денег не хватает, платёж пропускается, и вы получаете уведомление.	Les paiements sont prélevés sur le compte {0}. Vous donnez votre code PIN une fois maintenant ; à chaque date, la banque paie et vous envoie une alerte. S'il n'y a pas assez d'argent, ce paiement est sauté et vous recevez une alerte.	Los pagos se toman de la cuenta {0}. Introduce su PIN una vez ahora; en cada fecha el banco paga y le envía un aviso. Si no hay dinero, ese pago se omite y recibe un aviso.	تُخصم المدفوعات من الحساب {0}. تُدخل رمز PIN مرة واحدة الآن؛ وفي كل موعد يدفع البنك ويرسل لك تنبيهًا. إذا لم يكن المال متوفرًا تُتخطى تلك الدفعة وتتلقى تنبيهًا.	款项从账户 {0} 扣除。您现在只需输入一次 PIN；每到日期银行会付款并向您发送提醒。如余额不足，该次付款将跳过并通知您。
+Create the standing instruction	Создать регулярный платёж	Créer l'ordre permanent	Crear la orden permanente	أنشئ الأمر الدائم	创建定期付款指令
+Insights & Budgets | PyBank	Аналитика и бюджеты | PyBank	Analyses et budgets | PyBank	Análisis y presupuestos | PyBank	التحليلات والميزانيات | PyBank	分析与预算 | PyBank
+Insights & budgets	Аналитика и бюджеты	Analyses et budgets	Análisis y presupuestos	التحليلات والميزانيات	分析与预算
+Where your money went this month (A/c {0}, {1}), compared with your average of the months before.	Куда ушли деньги в этом месяце (счёт {0}, {1}) в сравнении со средним за прошлые месяцы.	Où est passé votre argent ce mois-ci (compte {0}, {1}), comparé à votre moyenne des mois précédents.	En qué se fue su dinero este mes (cuenta {0}, {1}), comparado con su media de los meses anteriores.	أين ذهب مالك هذا الشهر (الحساب {0}، {1})، مقارنةً بمتوسط الأشهر السابقة.	本月资金去向（账户 {0}，{1}），并与之前几个月的平均值比较。
+Spending in {0}	Расходы за {0}	Dépenses en {0}	Gastos en {0}	الإنفاق في {0}	{0} 支出
+average {0}	в среднем {0}	moyenne {0}	media {0}	المتوسط {0}	平均 {0}
+{0}: share of this month's spending	{0}: доля расходов этого месяца	{0} : part des dépenses du mois	{0}: parte del gasto de este mes	{0}: حصة من إنفاق هذا الشهر	{0}：占本月支出的比例
+Money moved into fixed deposits or between your own accounts is not counted as spending.	Деньги, переведённые на вклады или между своими счетами, не считаются расходами.	L'argent placé en dépôts à terme ou déplacé entre vos comptes n'est pas compté comme dépense.	El dinero pasado a depósitos o entre sus cuentas no cuenta como gasto.	لا يُحتسب المال المحوّل إلى ودائع ثابتة أو بين حساباتك إنفاقًا.	转入定期存款或本人账户之间的资金不计为支出。
+My monthly budgets	Мои месячные бюджеты	Mes budgets mensuels	Mis presupuestos mensuales	ميزانياتي الشهرية	我的月度预算
+Category	Категория	Catégorie	Categoría	الفئة	类别
+Monthly budget	Месячный бюджет	Budget mensuel	Presupuesto mensual	الميزانية الشهرية	月度预算
+Monthly budget ({0})	Месячный бюджет ({0})	Budget mensuel ({0})	Presupuesto mensual ({0})	الميزانية الشهرية ({0})	月度预算（{0}）
+Save budget	Сохранить бюджет	Enregistrer le budget	Guardar presupuesto	احفظ الميزانية	保存预算
+To remove a budget, save it with 0.	Чтобы удалить бюджет, сохраните его с суммой 0.	Pour supprimer un budget, enregistrez-le avec 0.	Para quitar un presupuesto, guárdelo con 0.	لإزالة ميزانية، احفظها بالقيمة 0.	如需删除预算，请将其保存为 0。
+⬇ PDF	⬇ PDF	⬇ PDF	⬇ PDF	⬇ PDF	⬇ PDF
+Interest certificate	Справка о процентах	Attestation d'intérêts	Certificado de intereses	شهادة الفوائد	利息证明
+For your tax return: the interest you earned on savings and fixed deposits and the interest you paid on loans in a financial year (1 April - 31 March).	Для налоговой декларации: проценты, полученные по сбережениям и вкладам, и проценты, уплаченные по кредитам за финансовый год (1 апреля – 31 марта).	Pour votre déclaration d'impôts : les intérêts reçus sur l'épargne et les dépôts à terme et les intérêts payés sur les prêts pendant un exercice (1er avril - 31 mars).	Para su declaración de impuestos: los intereses ganados en ahorros y depósitos y los intereses pagados en préstamos en un año fiscal (1 de abril - 31 de marzo).	لإقرارك الضريبي: الفوائد التي كسبتها من الادخار والودائع الثابتة والفوائد التي دفعتها على القروض في سنة مالية (1 أبريل - 31 مارس).	用于报税：一个财年（4月1日–3月31日）内储蓄和定期存款所得利息及贷款所付利息。
+Year	Год	Année	Año	السنة	年份
+FY {0}	ФГ {0}	Exercice {0}	Año fiscal {0}	السنة المالية {0}	财年 {0}
+⬇ PDF certificate	⬇ Справка PDF	⬇ Attestation PDF	⬇ Certificado PDF	⬇ شهادة PDF	⬇ PDF 证明
+Interest is fixed on the day you open the FD and added every quarter (compound interest).	Ставка фиксируется в день открытия вклада, проценты добавляются каждый квартал (сложные проценты).	Le taux est fixé le jour de l'ouverture du dépôt et les intérêts s'ajoutent chaque trimestre (intérêts composés).	El tipo se fija el día que abre el depósito y el interés se suma cada trimestre (interés compuesto).	يُثبَّت السعر يوم فتح الوديعة وتُضاف الفائدة كل ربع سنة (فائدة مركبة).	利率在开立定期存款当天确定，利息每季度计入（复利）。

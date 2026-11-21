@@ -7,7 +7,7 @@
     <section class="panel">
         <h2>Download a month</h2>
         <form method="get" action="{{ url_for('statement_pdf') }}" class="inline-form">
-            <select name="month">{% for m in months %}<option value="{{ m }}">{{ m }}</option>{% endfor %}</select>
+            <select name="month" aria-label="Month">{% for m in months %}<option value="{{ m }}">{{ m }}</option>{% endfor %}</select>
             <button class="btn btn-primary">&#11015; PDF</button>
         </form>
         <h2 style="margin-top:20px">Statements made for me</h2>
@@ -22,7 +22,18 @@
         <p>On the 1st of every month we make last month's statement and send it to <strong>{{ customer.email }}</strong>.</p>
         <label class="checkbox"><input type="checkbox" name="on" value="1" {% if customer.estatement %}checked{% endif %}> Make and email my e-statement every month</label>
         <button class="btn btn-primary btn-block">Save</button>
-        <p class="small muted">{% if LANG == 'ar' %}The PDF labels are in English: Arabic letters cannot be drawn correctly in this PDF yet.{% else %}The PDF is in your language.{% endif %}</p>
+        <p class="small muted">The PDF is in your language (Arabic too).</p>
     </form>
+    <section class="panel">
+        <h2>Interest certificate</h2>
+        <p class="small">For your tax return: the interest you earned on savings and fixed deposits and the interest you paid on loans{% if customer.country == 'IN' %} in a financial year (1 April - 31 March){% else %} in a year{% endif %}.</p>
+        <form method="get" action="{{ url_for('interest_certificate') }}" class="inline-form">
+            <label for="cert-year" class="sr-only">Year</label>
+            <select id="cert-year" name="year">
+                {% for y in range(today.year, today.year - 4, -1) %}{% set fy = financial_year(customer.country, y) %}{% if fy[0] <= today %}<option value="{{ y }}">{{ fy[2] }}</option>{% endif %}{% endfor %}
+            </select>
+            <button class="btn btn-primary">&#11015; PDF certificate</button>
+        </form>
+    </section>
 </div>
 {% endblock %}

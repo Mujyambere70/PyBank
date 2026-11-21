@@ -4,7 +4,7 @@
 <div class="nb-title"><div><h1>Backups</h1><p class="muted small">Database: <strong>{{ database }}</strong></p></div>
     <a class="btn btn-primary" href="{{ url_for('office_backup_now') }}">&#11015; Download a backup now</a></div>
 {% if database.startswith('SQLite') %}
-<div class="notice notice-warning"><strong>Warning:</strong> this server uses an SQLite file. On free hosting (Render) the file is deleted at every restart, so all changes are lost. Set <code>DATABASE_URL</code> to a PostgreSQL database (for example Neon free) to keep the data.</div>
+<div class="notice notice-warning"><strong>Warning:</strong> this server uses an SQLite file. On free hosting (Fly.io, Render) the file can be deleted at a restart or a new deploy, so changes are lost. Set <code>DATABASE_URL</code> to a PostgreSQL database (for example Neon free) to keep the data.</div>
 {% endif %}
 <div class="dash-grid">
     <section class="panel">
@@ -21,9 +21,9 @@
         <h2>Restore from a backup file</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <p class="small"><b>This replaces ALL data</b> with the data in the file. A copy of the current data is saved first, so you can go back.</p>
-        <label>Backup file (.json.gz)</label><input type="file" name="file" accept=".gz,application/gzip" required>
-        <label>Your password</label><input type="password" name="password" required>
-        <label>Type RESTORE to confirm</label><input name="confirm" placeholder="RESTORE" required>
+        <label for="backups-file">Backup file (.json.gz)</label><input id="backups-file" type="file" name="file" accept=".gz,application/gzip" required>
+        <label for="backups-password">Your password</label><input id="backups-password" type="password" name="password" required>
+        <label for="backups-confirm">Type RESTORE to confirm</label><input id="backups-confirm" name="confirm" placeholder="RESTORE" required>
         <button class="btn btn-danger btn-block">Restore database</button>
     </form>
 </div>

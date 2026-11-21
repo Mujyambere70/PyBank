@@ -1,7 +1,7 @@
 {% extends "admin/layout.html" %}
 {% block title %}Other-bank payments{% endblock %}
 {% block office_content %}
-<div class="nb-title"><div><h1>Payments to other banks</h1><p class="muted small">IMPS / UPI settle at once, NEFT in half-hourly batches, SWIFT after about an hour. Sandbox: no real network.</p></div>
+<div class="nb-title"><div><h1>Payments to other banks</h1><p class="muted small">IMPS / UPI settle at once, NEFT in half-hourly batches, SWIFT and SEPA after about an hour or with ISO 20022 files (<a href="{{ url_for('office_iso') }}">pain.001 / pain.002</a>). Sandbox: no real network.</p></div>
     <div class="chips">{% for s in ['', 'Processing', 'Completed', 'Returned'] %}<a href="{{ url_for('office_payments', status=s) }}" class="chip {{ 'active' if status == s }}">{{ s or 'All' }}</a>{% endfor %}</div></div>
 <section class="panel">
     <div class="table-wrap"><table class="data compact">

@@ -7,6 +7,8 @@ Demo login:  Customer ID PB10000001, password Demo@1234, transaction PIN 2580
 Database: SQLite file bank.db on your computer, or PostgreSQL when DATABASE_URL is set
 (needed online - free hosts like Render delete local files at every restart).
 Languages: English, Russian, French, Spanish, Arabic and Chinese (translations/*.json).
+Version 4: the new pages are in v4_views.py (website content, accounts in several currencies, cards,
+bills and standing instructions, insights, devices, ISO 20022 files, compliance, roles) and api.py (JSON API).
 """
 
 import csv
@@ -22,9 +24,13 @@ from functools import wraps
 from flask import (Flask, Response, abort, flash, jsonify, redirect, render_template, request,
                    send_from_directory, session, url_for)
 
+import api
 import demo_data
 import i18n
+import mrz
 import otp
+import roles
+import v4_views
 import world
 from admin import NOTICE_LEVELS, REQUEST_STATUSES, InternationalOffice
 from bank import (ACCOUNT_TYPES, BRANCH, FD_TENURES, LOAN_PRODUCTS, LOAN_TENURES, REQUEST_TYPES, Bank, BankError,
@@ -50,7 +56,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
 
     target = db_path or os.environ.get("DATABASE_URL") or os.path.join(app.root_path, "bank.db")
     bank = Bank(target, notifier=notifier, driver=driver, fx_fetch=fx_fetch)
-    office = InternationalOffice(bank)
+    office = v4_views.Office(bank)
     # the key that signs login cookies must stay the same after a restart and for every worker
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or bank.secret_key()
     if seed:
@@ -109,11 +115,13 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         if lang not in world.LANGUAGES:
             lang = request.accept_languages.best_match(list(world.LANGUAGES)) or "en"
         if request.path.startswith("/admin"):
-            lang = "en"                               # the back office is in English for all staff
+            lang = session.get("staff_lang", "en")   # v4: each staff member chooses the back-office language
+            if lang not in world.LANGUAGES:
+                lang = "en"
         world.set_context(lang=lang, country="IN", currency=world.DEFAULT_CURRENCY)
         if "cid" in session and request.endpoint != "static":
             try:
-                c, acc = bank.get_customer(session["cid"]), bank.get_account(session["cid"])
+                c, acc = current()
                 world.set_context(country=c.country, currency=acc.currency)
             except BankError:
                 session.pop("cid", None)
@@ -145,6 +153,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
 
     @app.before_request
     def security_checks():
+        if request.path.startswith("/api/"):
+            return                                    # the JSON API uses tokens, not cookies (api.py)
         if request.method == "POST":
             sent = request.form.get("csrf_token", "") or request.headers.get("X-CSRF-Token", "")
             if not sent or not secrets.compare_digest(sent, session.get("csrf_token", "")):
@@ -152,8 +162,14 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         # log out automatically after 10 minutes without activity
         if "cid" in session:
             if time.time() - session.get("last_active", 0) > SESSION_IDLE_MINUTES * 60:
+                bank.end_session(session["cid"], session.get("sid", ""))
                 session.pop("cid", None)
                 flash("Your session expired for your security. Please log in again.", "info")
+                return redirect(url_for("login"))
+            # v4: a device signed out in Net Banking > Security cannot continue
+            if request.endpoint != "static" and not bank.touch_session(session["cid"], session.get("sid", "")):
+                session.pop("cid", None)
+                flash("This device was signed out. Please log in again.", "info")
                 return redirect(url_for("login"))
             session["last_active"] = time.time()
         if "staff_id" in session:
@@ -162,6 +178,12 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 flash("Back-office session expired. Please sign in again.", "info")
                 return redirect(url_for("staff_login"))
             session["staff_active"] = time.time()
+        # v4: every back-office page needs one ability of the staff member's role (roles.py)
+        if request.path.startswith("/admin") and "staff_id" in session:
+            me = office.get_staff(session["staff_id"])
+            need = roles.ability_for(request.path, request.method)
+            if me and me["active"] and not roles.can(me, need):
+                abort(403)
 
     @app.after_request
     def no_cache(resp):
@@ -169,6 +191,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         if request.path.startswith("/netbanking"):
             resp.headers["Cache-Control"] = "no-store"
         resp.headers["X-Frame-Options"] = "DENY"
+        resp.headers["X-Content-Type-Options"] = "nosniff"
+        resp.headers["Referrer-Policy"] = "same-origin"
         lang = world.current_lang()
         if lang != "en" and resp.mimetype == "text/html" and not resp.direct_passthrough:
             resp.set_data(i18n.translate_html(resp.get_data(as_text=True), lang))
@@ -206,8 +230,29 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         return wrapper
 
     def current():
+        """The customer and the account chosen in the account switcher (v4; the main account by default)."""
         cid = session["cid"]
-        return bank.get_customer(cid), bank.get_account(cid)
+        customer = bank.get_customer(cid)
+        chosen = session.get("acc")
+        if chosen:
+            try:
+                acc = bank.account_of(cid, chosen)
+                if acc.status != "Closed":
+                    return customer, acc
+            except BankError:
+                pass
+            session.pop("acc", None)
+        return customer, bank.get_account(cid)
+
+    def current_main():
+        """Cash requests, deposits, loans and the card always use the main account."""
+        cid = session["cid"]
+        acc = bank.get_account(cid)
+        world.set_context(currency=acc.currency)          # amounts on this page are in the main account's currency
+        return bank.get_customer(cid), acc
+
+    def client_ip():
+        return request.headers.get("Fly-Client-IP") or request.remote_addr or "unknown"
 
     # =====================================================================
     # Public website
@@ -244,9 +289,18 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                                        occupations=OCCUPATIONS, countries=world.countries(lang),
                                        dial=world.DIAL_CODES)
         if request.method == "POST":
+            if not bank.rate_ok("register", client_ip()):
+                flash("Too many applications from this network. Please try again in an hour.", "error")
+                return page(), 429
             try:
                 if form.get("password") != form.get("password2"):
                     raise BankError("The two passwords do not match.")
+                mrz_text = (form.get("mrz") or "").strip()
+                if mrz_text:                                   # v4: optional MRZ lines of the passport / ID card
+                    m = mrz.parse(mrz_text)
+                    if m["errors"]:
+                        raise BankError("Please check the MRZ lines of your document: " + ", ".join(m["errors"]) +
+                                        " (or leave the field empty).")
                 if form.get("pin") != form.get("pin2"):
                     raise BankError("The two transaction PINs do not match.")
                 if form.get("terms") != "yes":
@@ -254,6 +308,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 doc = request.files.get("id_doc")
                 docs = [("ID proof", doc.filename, doc.read())] if doc and doc.filename else []
                 cid, account = bank.register({**form.to_dict(), "lang": lang}, online=True, documents=docs)
+                if mrz_text:
+                    bank.check_mrz(cid, mrz_text, "customer (online form)")
             except BankError as e:
                 flash(str(e), "error")
                 return page(), 400
@@ -266,9 +322,12 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         if "cid" in session:
             return redirect(url_for("dashboard"))
         if request.method == "POST":
+            if not bank.rate_ok("login", client_ip()):
+                flash("Too many login attempts from this network. Please wait 10 minutes.", "error")
+                return render_template("public/login.html", login=request.form.get("login", "")), 429
             try:
                 c = bank.authenticate(request.form.get("login", ""), request.form.get("password", ""),
-                                      request.remote_addr or "unknown")
+                                      client_ip())
             except BankError as e:
                 flash(str(e), "error")
                 return render_template("public/login.html", login=request.form.get("login", "")), 401
@@ -285,7 +344,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 session.update(pending_cid=c.customer_id, pending_at=time.time(), pending_tries=0,
                                pending_previous=c.last_login)
                 return redirect(url_for("login_verify"))
-            session.update(cid=c.customer_id, last_active=time.time(), previous_login=c.last_login)
+            session.update(cid=c.customer_id, last_active=time.time(), previous_login=c.last_login,
+                           sid=bank.start_session(c.customer_id, client_ip(), request.user_agent.string))
             return redirect(url_for("dashboard"))
         return render_template("public/login.html", login="")
 
@@ -310,13 +370,16 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             previous = session.get("pending_previous", "")
             for k in ("pending_cid", "pending_at", "pending_tries", "pending_previous"):
                 session.pop(k, None)
-            session.update(cid=cid, last_active=time.time(), previous_login=previous)
+            session.update(cid=cid, last_active=time.time(), previous_login=previous,
+                           sid=bank.start_session(cid, client_ip(), request.user_agent.string))
             return redirect(url_for("dashboard"))
         return render_template("public/verify.html", who="customer")
 
     @app.route("/logout")
     def logout():
-        for k in ("cid", "last_active", "previous_login", "transfer_quote"):
+        if "cid" in session:
+            bank.end_session(session["cid"], session.get("sid", ""))
+        for k in ("cid", "last_active", "previous_login", "transfer_quote", "sid", "acc"):
             session.pop(k, None)
         flash("You have been logged out securely. Thank you for banking with PyBank.", "success")
         return redirect(url_for("login"))
@@ -339,14 +402,15 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             requests_open=[r for r in bank.service_requests(customer.customer_id) if r["status"] in ("Open", "In progress")],
             pending_cash=[r for r in bank.cash_requests(customer.customer_id, 10) if r["status"] == "Pending"],
             loans_open=[ln for ln in bank.loans(customer.customer_id) if ln["status"] in ("Active", "Pending")],
-            rub_view=rub_equivalent(account))
+            rub_view=rub_equivalent(account), accounts=bank.accounts_of(customer.customer_id),
+            budgets=bank.budgets(customer.customer_id, account.number))
 
     def rub_equivalent(account):
         """Russian interface + an account in another currency: show the balance in rubles too (approximate)."""
         if world.current_lang() != "ru" or account.currency == "RUB":
             return None
         try:
-            return bank.convert(account.balance, account.currency, "RUB")[0]
+            return int(account.balance * bank.middle_rate(account.currency, "RUB"))
         except BankError:
             return None
 
@@ -359,12 +423,12 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
 
     def money_form(kind):
         """Shared code for deposit and withdraw pages. The customer sends a request; staff approve it."""
-        customer, account = current()
+        customer, account = current_main()
         form = request.form if request.method == "POST" else {}
         status = 200
         if request.method == "POST":
             try:
-                amount = parse_amount(form.get("amount", ""))
+                amount = parse_amount(form.get("amount", ""), account.currency)
                 ref = bank.request_cash(customer.customer_id, "Deposit" if kind == "deposit" else "Withdrawal",
                                         amount, form.get("pin", ""), form.get("note", ""))
                 flash(f"Request {ref} for {format_money(amount, account.currency)} was sent to the branch. The money moves as soon as "
@@ -415,13 +479,14 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 if to == account.number:
                     raise BankError("You cannot transfer money to your own account.")
                 amount = parse_amount(form.get("amount", ""), account.currency)
-                if amount > account.balance:
+                if amount > bank.available_balance(account.number):
                     raise BankError(f"Insufficient balance. Available balance is "
                                     f"{format_money(account.balance, account.currency)}.")
                 beneficiary = bank.find_beneficiary(to)
                 quote = bank.quote_internal(account.currency, to, amount)
                 if step == "confirm":
-                    t = bank.transfer(customer.customer_id, to, amount, form.get("pin", ""), form.get("remarks", ""))
+                    t = bank.transfer(customer.customer_id, to, amount, form.get("pin", ""), form.get("remarks", ""),
+                                      from_number=account.number)
                     flash("Funds transferred successfully.", "success")
                     return redirect(url_for("receipt", ref=t.ref))
                 return render_template("netbanking/transfer_confirm.html", customer=customer,
@@ -445,10 +510,16 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @login_required
     def receipt(ref):
         customer, account = current()
-        try:
-            t = bank.get_transaction(account.number, ref)
-        except BankError:
+        t = None
+        for acc in bank.accounts_of(customer.customer_id):          # v4: the receipt may be of any own account
+            try:
+                t, account = bank.get_transaction(acc.number, ref), acc
+                break
+            except BankError:
+                continue
+        if t is None:
             abort(404)
+        world.set_context(currency=account.currency)
         return render_template("netbanking/receipt.html", customer=customer, account=account, t=t)
 
     def statement_filters():
@@ -502,7 +573,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         month = request.args.get("month") or date.today().strftime("%Y-%m")
         try:
             year, mon = (int(x) for x in month.split("-"))
-            blob = bank.statement_pdf(customer.customer_id, year, mon, world.current_lang())
+            blob = bank.statement_pdf(customer.customer_id, year, mon, world.current_lang(), number=account.number)
         except (ValueError, BankError):
             flash("Please choose a valid month.", "error")
             return redirect(url_for("statement"))
@@ -512,7 +583,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.route("/netbanking/e-statements", methods=["GET", "POST"])
     @login_required
     def estatements():
-        customer, account = current()
+        customer, account = current_main()
         if request.method == "POST":
             bank.set_estatement(customer.customer_id, request.form.get("on") == "1")
             flash("E-statement setting saved.", "success")
@@ -593,14 +664,15 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             try:
                 amount = parse_amount(form.get("amount", ""), account.currency)
                 if step == "confirm":
-                    ref = bank.send_external(customer.customer_id, form.get("rail"), form, amount, form.get("pin", ""))
+                    ref = bank.send_external(customer.customer_id, form.get("rail"), form, amount, form.get("pin", ""),
+                                             from_number=account.number)
                     flash("Payment sent.", "success")
                     return redirect(url_for("payment_detail", ref=ref))
                 if amount > bank.available_balance(account.number):
                     raise BankError(f"Insufficient balance. Available balance is "
                                     f"{format_money(bank.available_balance(account.number), account.currency)}.")
                 if form.get("rail") not in RAILS:
-                    raise BankError("Please choose how to send the money (IMPS, NEFT, UPI or SWIFT).")
+                    raise BankError("Please choose how to send the money (IMPS, NEFT, UPI, SWIFT or SEPA).")
                 return render_template("netbanking/other_bank_confirm.html", customer=customer, account=account,
                                        form=form, amount=amount, rail=RAILS[form["rail"]])
             except BankError as e:
@@ -661,7 +733,9 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
         secret = session.get("new_totp") if not customer.totp_enabled else None
         return render_template("netbanking/security.html", customer=customer, account=account, new_secret=secret,
                                new_secret_grouped=otp.grouped(secret) if secret else "",
-                               otp_uri=otp.uri(secret, customer.customer_id) if secret else "")
+                               otp_uri=otp.uri(secret, customer.customer_id) if secret else "",
+                               devices=bank.sessions(customer.customer_id, SESSION_IDLE_MINUTES),
+                               this_sid=session.get("sid", ""), tokens=bank.api_tokens(customer.customer_id))
 
     # =====================================================================
     # Loans, alerts
@@ -670,7 +744,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.route("/netbanking/loans", methods=["GET", "POST"])
     @login_required
     def loans():
-        customer, account = current()
+        customer, account = current_main()
         form = request.form if request.method == "POST" else {}
         status = 200
         if request.method == "POST":
@@ -697,7 +771,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.route("/netbanking/loans/<int:loan_id>")
     @login_required
     def loan_detail(loan_id):
-        customer, account = current()
+        customer, account = current_main()
         try:
             ln = bank.get_loan(customer.customer_id, loan_id)
         except BankError:
@@ -819,7 +893,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.route("/netbanking/fixed-deposits", methods=["GET", "POST"])
     @login_required
     def fixed_deposits():
-        customer, account = current()
+        customer, account = current_main()
         if request.method == "POST":
             try:
                 fd_no = bank.open_fd(customer.customer_id, parse_amount(request.form.get("amount", ""), account.currency),
@@ -828,10 +902,12 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 return redirect(url_for("fixed_deposits"))
             except BankError as e:
                 flash(str(e), "error")
-                customer, account = current()
+                customer, account = current_main()
+        senior = bank.is_senior(customer.customer_id)
         return render_template("netbanking/fixed_deposits.html", customer=customer, account=account,
                                fds=bank.fixed_deposits(customer.customer_id), FD_TENURES=FD_TENURES,
-                               FD_MIN=policy(account.currency, "fd_min"), form=request.form)
+                               FD_MIN=policy(account.currency, "fd_min"), form=request.form, senior=senior,
+                               my_rates={m: bank.fd_rate_for(customer.customer_id, m) for m in FD_TENURES})
 
     @app.route("/netbanking/fixed-deposits/<int:fd_id>/close", methods=["POST"])
     @login_required
@@ -888,15 +964,17 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                     session.pop("staff_id", None)
                     flash("Please sign in to the back office.", "info")
                     return redirect(url_for("staff_login"))
-                if role == "admin" and me["role"] != "admin":
-                    abort(403)
+                if not roles.can(me, roles.ability_for(request.path, request.method)):
+                    abort(403)                       # v4: abilities of the role (role="admin" is kept for reading)
                 request.staff = me
                 return view(*args, **kwargs)
             return wrapper
         return deco
 
     def office_page(template, **kw):
-        return render_template(f"admin/{template}", me=request.staff, counts=office.overview(), **kw)
+        me = request.staff
+        return render_template(f"admin/{template}", me=me, counts=office.overview(), can=lambda a: roles.can(me, a),
+                               job_label=roles.job_label(me), **kw)
 
     # ----- account applications and changes of personal data
     @app.route("/admin/applications")
@@ -949,6 +1027,9 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.route("/admin/login", methods=["GET", "POST"])
     def staff_login():
         if request.method == "POST":
+            if not bank.rate_ok("staff_login", client_ip()):
+                flash("Too many sign-in attempts from this network. Please wait 10 minutes.", "error")
+                return render_template("admin/login.html", login=request.form.get("login", "")), 429
             try:
                 me = office.authenticate_staff(request.form.get("login"), request.form.get("password"))
             except BankError as e:
@@ -958,6 +1039,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 session.update(pending_staff=me["staff_id"], pending_staff_at=time.time(), pending_staff_tries=0)
                 return redirect(url_for("staff_verify"))
             session["staff_id"], session["staff_active"] = me["staff_id"], time.time()
+            session["staff_lang"] = me.get("lang") or "en"
             return redirect(url_for("office_dashboard"))
         return render_template("admin/login.html", login="")
 
@@ -981,12 +1063,14 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             for k in ("pending_staff", "pending_staff_at", "pending_staff_tries"):
                 session.pop(k, None)
             session["staff_id"], session["staff_active"] = sid, time.time()
+            session["staff_lang"] = (office.get_staff(sid) or {}).get("lang") or "en"
             return redirect(url_for("office_dashboard"))
         return render_template("public/verify.html", who="staff")
 
     @app.route("/admin/logout")
     def staff_logout():
         session.pop("staff_id", None)
+        session.pop("staff_lang", None)
         flash("You have signed out of the back office.", "success")
         return redirect(url_for("staff_login"))
 
@@ -1073,7 +1157,11 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             elif action == "entry":
                 cur = bank.get_account(cid).currency
                 t = office.manual_entry(me, cid, f.get("kind"), parse_amount(f.get("amount", ""), cur), f.get("description"))
-                flash(f"Entry posted (ref {t.ref}). New balance {format_money(t.balance_after, cur)}.", "success")
+                if isinstance(t, dict):                       # v4 four-eyes rule
+                    flash("This is a large entry: it was sent to a second staff member for approval (Second approvals).",
+                          "info")
+                else:
+                    flash(f"Entry posted (ref {t.ref}). New balance {format_money(t.balance_after, cur)}.", "success")
             elif action == "delete":
                 if me["role"] != "admin":
                     abort(403)
@@ -1100,7 +1188,10 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     def office_reverse(tx_id):
         try:
             t = office.reverse_transaction(request.staff, tx_id, request.form.get("reason"))
-            flash(f"Transaction reversed (new ref {t.ref}).", "success")
+            if isinstance(t, dict):                           # v4 four-eyes rule
+                flash("This is a large amount: the reversal was sent to a second staff member for approval.", "info")
+            else:
+                flash(f"Transaction reversed (new ref {t.ref}).", "success")
         except BankError as e:
             flash(str(e), "error")
         return redirect(request.referrer or url_for("office_transactions"))
@@ -1159,6 +1250,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             try:
                 sid = office.create_staff(request.staff, f.get("full_name"), f.get("email"), f.get("phone"),
                                           f.get("designation"), f.get("role"), f.get("password"))
+                if f.get("role") == "staff" and f.get("job_role") in roles.ROLES:      # v4
+                    office.set_job_role(request.staff, sid, f.get("job_role"))
                 flash(f"Staff member added with ID {sid}.", "success")
                 return redirect(url_for("office_staff"))
             except BankError as e:
@@ -1406,12 +1499,30 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     @app.errorhandler(403)
     def forbidden(e):
         return render_template("public/error.html", code=403, title="Access denied",
-                               message="Only the bank administrator can open this page."), 403
+                               message="Your role in the bank does not allow this page. Ask the administrator "
+                                       "if you need it."), 403
 
     @app.errorhandler(400)
     def bad_request(e):
         return render_template("public/error.html", code=400, title="Session expired",
                                message="This form has expired. Please go back, reload the page and try again."), 400
+
+    @app.errorhandler(429)
+    def too_many(e):
+        return render_template("public/error.html", code=429, title="Too many requests",
+                               message="Please wait a few minutes and try again."), 429
+
+    @app.errorhandler(500)
+    def server_error(e):
+        bank.log_error(request.path, getattr(e, "original_exception", e))
+        return render_template("public/error.html", code=500, title="Something went wrong",
+                               message="The bank could not finish this request. Please try again later."), 500
+
+    # ---------- version 4 ----------
+    helpers = {"login_required": login_required, "current": current, "current_main": current_main,
+               "staff_required": staff_required, "office_page": office_page, "client_ip": client_ip}
+    v4_views.register(app, bank, office, helpers)
+    api.register(app, bank)
 
     return app
 

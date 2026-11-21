@@ -1,0 +1,35 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Insights &amp; Budgets{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Insights &amp; budgets</h1><p class="muted small">Where your money went this month (A/c XX{{ account.number[-4:] }}, {{ account.currency }}), compared with your average of the months before.</p></div></div>
+<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>Spending in {{ today.strftime('%B') }}</h2><strong>{{ data.total|money }}</strong></div>
+        {% for r in data.rows %}
+        <div class="budget-row">
+            <div class="mini-row"><div><strong>{{ r.category }}</strong><small>average {{ r.average|money }}{% if r.change is not none %} &middot; <span class="{{ 'out' if r.change > 0 else 'in' }}">{{ '%+d'|format(r.change) }}%</span>{% endif %}</small></div><strong>{{ r.this_month|money }}</strong></div>
+            <div class="meter" role="progressbar" aria-label="{{ r.category }}: share of this month's spending" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ r.share }}"><span style="width:{{ r.share }}%"></span></div>
+        </div>
+        {% else %}<p class="muted">No spending this month yet.</p>{% endfor %}
+        <p class="small muted">Money moved into fixed deposits or between your own accounts is not counted as spending.</p>
+    </section>
+    <section class="panel">
+        <h2>My monthly budgets</h2>
+        {% for b in budgets %}
+        <div class="budget-row">
+            <div class="mini-row"><div><strong>{{ b.category }}</strong><small>{{ b.spent|money }} spent of the budget of {{ b.monthly_limit|money }}</small></div><strong class="{{ 'out' if b.percent >= 100 else '' }}">{{ b.percent }}%</strong></div>
+            <div class="meter" role="progressbar" aria-label="Budget used: {{ b.category }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ [b.percent, 100]|min }}"><span class="{{ 'over' if b.percent >= 100 else 'warn' if b.percent >= 80 else '' }}" style="width:{{ [b.percent, 100]|min }}%"></span></div>
+        </div>
+        {% else %}<p class="muted">No budget yet. Set one below and you get an alert at 80% and at 100%.</p>{% endfor %}
+        <form method="post" class="inline-form" style="margin-top:14px">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="b-cat" class="sr-only">Category</label>
+            <select id="b-cat" name="category">{% for c in CATEGORIES %}<option>{{ c }}</option>{% endfor %}</select>
+            <label for="b-amount" class="sr-only">Monthly budget</label>
+            <input id="b-amount" type="number" name="amount" min="0" step="1" placeholder="Monthly budget ({{ account.currency }})">
+            <button class="btn btn-primary btn-sm">Save budget</button>
+        </form>
+        <p class="small muted">To remove a budget, save it with 0.</p>
+    </section>
+</div>
+{% endblock %}

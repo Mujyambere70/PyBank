@@ -8,12 +8,12 @@
     {% set f = form %}{% include "admin/_customer_fields.html" %}
     <h2 style="margin-top:22px">Account</h2>
     <div class="form-grid">
-        <div><label>Account type</label><select name="account_type">{% for t, v in ACCOUNT_TYPES.items() %}<option {% if form.get('account_type') == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
-        <div><label>Currency</label><select name="currency">{% for c in CURRENCIES %}<option {% if form.get('currency', 'INR') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
-        <div><label>Opening deposit <small class="muted">(in the account currency; see the minimums on the Rates page)</small></label><input type="number" name="initial_deposit" value="{{ form.get('initial_deposit', '1000') }}" min="0" step="0.01" required></div>
-        <div><label>ID proof (scan, optional at the branch)</label><input type="file" name="id_doc" accept=".pdf,.jpg,.jpeg,.png"></div>
-        <div><label>First password (customer changes it later)</label><input name="password" value="{{ form.get('password', '') }}" required placeholder="8+ letters and numbers"></div>
-        <div><label>Transaction PIN (4 digits)</label><input name="pin" value="{{ form.get('pin', '') }}" pattern="[0-9]{4}" maxlength="4" required></div>
+        <div><label for="customernew-accounttype">Account type</label><select id="customernew-accounttype" name="account_type">{% for t, v in ACCOUNT_TYPES.items() %}<option {% if form.get('account_type') == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+        <div><label for="customernew-currency">Currency</label><select id="customernew-currency" name="currency">{% for c in CURRENCIES %}<option {% if form.get('currency', 'INR') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+        <div><label for="customernew-initialdeposit">Opening deposit <small class="muted">(in the account currency; see the minimums on the Rates page)</small></label><input id="customernew-initialdeposit" type="number" name="initial_deposit" value="{{ form.get('initial_deposit', '1000') }}" min="0" step="0.01" required></div>
+        <div><label for="customernew-iddoc">ID proof (scan, optional at the branch)</label><input id="customernew-iddoc" type="file" name="id_doc" accept=".pdf,.jpg,.jpeg,.png"></div>
+        <div><label for="customernew-password">First password (customer changes it later)</label><input id="customernew-password" name="password" value="{{ form.get('password', '') }}" required placeholder="8+ letters and numbers"></div>
+        <div><label for="customernew-pin">Transaction PIN (4 digits)</label><input id="customernew-pin" name="pin" value="{{ form.get('pin', '') }}" pattern="[0-9]{4}" maxlength="4" required></div>
     </div>
     <button class="btn btn-primary btn-block btn-lg">Open account</button>
 </form>

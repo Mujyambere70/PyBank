@@ -5,6 +5,9 @@ payments.py - money that leaves PyBank (mixin class used by Bank), in a SANDBOX:
     UPI    instant, to a UPI ID like name@bank, rupee accounts, up to ₹1,00,000 per payment
     NEFT   India, rupee accounts, settled in half-hourly batches
     SWIFT  any country, any currency, settled after about one hour in this sandbox
+    SEPA   (version 4) euro payments to an IBAN in the Single Euro Payments Area, from EUR accounts
+
+Version 4: SWIFT and SEPA payments can also be finished with ISO 20022 files (see iso20022.py).
 
 No real payment network is called. The other bank is simulated:
     * a beneficiary account number ending in 0000, or a UPI ID starting with "fail",
@@ -34,7 +37,9 @@ RAILS = {
     "UPI": {"currencies": {"INR"}, "max": 1_00_000 * 100, "speed": "instant"},
     "NEFT": {"currencies": {"INR"}, "max": None, "speed": "half-hourly batch"},
     "SWIFT": {"currencies": None, "max": None, "speed": "about 1 hour (sandbox)"},
+    "SEPA": {"currencies": {"EUR"}, "max": None, "speed": "same day (SEPA)"},
 }
+FILE_RAILS = {"SWIFT", "SEPA"}
 IFSC_RE = re.compile(r"^[A-Z]{4}0[A-Z0-9]{6}$")
 BIC_RE = re.compile(r"^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$")
 UPI_RE = re.compile(r"^[a-zA-Z0-9._-]{2,64}@[a-zA-Z]{2,32}$")
@@ -85,6 +90,7 @@ class PaymentsMixin:
                              "ON CONFLICT(currency) DO UPDATE SET per_usd = excluded.per_usd, "
                              "updated_at = excluded.updated_at, source = excluded.source",
                              (cur, per_usd, now(), source))
+            self.save_fx_history(conn, rates)          # v4: one row per day and currency (wallets.py)
         return len(rates)
 
     def refresh_fx_rates(self):
@@ -108,26 +114,30 @@ class PaymentsMixin:
         return out, rate
 
     def quote_internal(self, src_currency, to_number, amount):
-        """For a transfer inside PyBank to an account in another currency: what the receiver gets."""
+        """For a transfer inside PyBank to an account in another currency: what the receiver gets
+        (version 4: at the customer rate, with the bank's margin)."""
         with self._connect() as conn:
             r = conn.execute("SELECT currency FROM accounts WHERE number = ?", (str(to_number).strip(),)).fetchone()
         if r is None or r[0] == src_currency:
             return None
-        received, rate = self.convert(amount, src_currency, r[0])
-        return {"currency": r[0], "amount": received, "rate": rate}
+        q = self.quote(src_currency, r[0], amount)
+        return {"currency": r[0], "amount": q["amount"], "rate": q["rate"], "mid": q["mid"], "margin": q["margin"]}
 
     # ===== payments to other banks =====
 
-    def send_external(self, cid, rail, data, amount, pin):
+    def send_external(self, cid, rail, data, amount, pin, from_number=None):
         """Pay to another bank. The money leaves the account at once; the payment then settles
-        (or is returned) according to the rail. Returns the PyBank reference."""
+        (or is returned) according to the rail. Returns the PyBank reference.
+        from_number (v4): one of the customer's accounts (default: the main account)."""
         rail = (rail or "").upper()
         if rail not in RAILS:
-            raise BankError("Please choose how to send the money (IMPS, NEFT, UPI or SWIFT).")
+            raise BankError("Please choose how to send the money (IMPS, NEFT, UPI, SWIFT or SEPA).")
         self._check_pin(cid, pin)
-        acc = self.get_account(cid)
+        acc = self.account_of(cid, from_number) if from_number else self.get_account(cid)
         info = RAILS[rail]
         if info["currencies"] and acc.currency not in info["currencies"]:
+            if rail == "SEPA":
+                raise BankError("SEPA works only from euro (EUR) accounts. Use SWIFT for other currencies.")
             raise BankError(f"{rail} works only from rupee (INR) accounts. Use SWIFT to send money abroad.")
         if info["max"] and amount > info["max"]:
             raise BankError(f"The {rail} limit is {format_money(info['max'], 'INR')} per payment.")
@@ -144,7 +154,18 @@ class PaymentsMixin:
             bank_name = "UPI"
         else:
             account = re.sub(r"[\s-]", "", str(data.get("account", ""))).upper()
-            if rail == "SWIFT":
+            if rail == "SEPA":
+                from iso20022 import SEPA_COUNTRIES
+                if not iban_ok(account):
+                    raise BankError("Please enter a valid IBAN (SEPA payments need an IBAN).")
+                country = account[:2]
+                if country not in SEPA_COUNTRIES:
+                    raise BankError("This IBAN is not in a SEPA country. Use SWIFT instead.")
+                code = re.sub(r"\s", "", str(data.get("bic", ""))).upper()
+                if code and not BIC_RE.match(code):
+                    raise BankError("Please enter a valid SWIFT/BIC code (8 or 11 characters) or leave it empty.")
+                bank_name = " ".join(str(data.get("bank_name", "")).split())[:60] or (code or "SEPA bank")
+            elif rail == "SWIFT":
                 code = re.sub(r"\s", "", str(data.get("bic", ""))).upper()
                 if not BIC_RE.match(code):
                     raise BankError("Please enter a valid SWIFT/BIC code (8 or 11 characters).")
@@ -170,6 +191,8 @@ class PaymentsMixin:
         start = datetime.now()
         settle = (start if info["speed"] == "instant" else next_neft_batch(start) if rail == "NEFT"
                   else start + timedelta(hours=1))
+        if rail in FILE_RAILS and self.payments_mode() == "iso_files":
+            settle = datetime(9999, 12, 31)             # waits for a pain.002 status report (iso20022.py)
         with self._connect() as conn:
             limit = self.limit_for("transfer", acc.currency)
             if self._today_total(conn, acc.number, "Transfer") + amount > limit:

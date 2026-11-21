@@ -1,0 +1,15 @@
+{% extends "admin/layout.html" %}
+{% block title %}Exchange rate history{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Exchange rates: last 30 days</h1><p class="muted small">Units of each currency for 1 US dollar (middle rates). <a href="{{ url_for('office_settings') }}">&larr; Bank settings</a></p></div></div>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Day</th>{% for c in CURRENCIES if c != 'USD' %}<th class="num">{{ c }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for day, rates in days|reverse %}
+        <tr><td class="nowrap">{{ day }}</td>{% for c in CURRENCIES if c != 'USD' %}<td class="num">{{ '%.4f'|format(rates[c]) if c in rates else '–' }}</td>{% endfor %}</tr>
+        {% else %}<tr><td colspan="9" class="center muted">No history yet: it starts with the first download of rates.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+</section>
+{% endblock %}

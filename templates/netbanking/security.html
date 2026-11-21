@@ -24,12 +24,37 @@
 </div>
 {% set action_field = 'action' %}{% set totp_enabled = customer.totp_enabled %}
 {% include "_totp_setup.html" %}
+<section class="panel" id="devices">
+    <div class="panel-head"><h2>Signed-in devices</h2>
+        {% if devices|length > 1 %}<form method="post" action="{{ url_for('devices_action') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="action" value="end_others" class="btn btn-outline btn-sm">Sign out all other devices</button></form>{% endif %}</div>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Device</th><th>Network</th><th>Signed in</th><th>Last seen</th><th></th></tr></thead>
+        <tbody>
+        {% for d in devices %}
+        <tr><td><strong>{{ d.device }}</strong>{% if d.id == this_sid %} <span class="badge ok">This device</span>{% endif %}</td><td class="small">{{ d.ip }}</td><td class="nowrap small">{{ d.created_at|nicedate }}</td><td class="nowrap small">{{ d.last_seen|nicedate }}</td>
+            <td><form method="post" action="{{ url_for('devices_action') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ d.id }}"><button name="action" value="end" class="btn btn-outline btn-sm">Sign out</button></form></td></tr>
+        {% endfor %}
+        </tbody>
+    </table></div>
+    <h3>Apps signed in with the API</h3>
+    {% for t in tokens %}
+    <div class="mini-row"><div><strong>{{ t.name }}</strong><small>since {{ t.created_at|nicedate }} &middot; last used {{ t.last_used|nicedate if t.last_used else 'never' }} &middot; valid until {{ t.expires_at|nicedate(false) }}</small></div>
+        <form method="post" action="{{ url_for('devices_action') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ t.id }}"><button name="action" value="revoke" class="btn btn-outline btn-sm">Sign the app out</button></form></div>
+    {% else %}<p class="muted small">No app is signed in. Developers: see <a href="{{ url_for('developers') }}">the PyBank API</a>.</p>{% endfor %}
+</section>
+<section class="panel">
+    <h2>My data</h2>
+    <p>Download everything PyBank keeps about you: personal details, accounts, transactions, payees, deposits, loans, requests, alerts, logins and devices (one JSON file). Passwords, PINs and document files are not in it.</p>
+    <a href="{{ url_for('my_data') }}" class="btn btn-outline">&#11015; Download my data</a>
+    <a href="{{ url_for('site_page', slug='privacy') }}" class="link-arrow" style="margin-left:12px">Privacy notice &rarr;</a>
+</section>
 <section class="panel">
     <h2>Security tips</h2>
     <ul class="check-list">
         <li>Use a password you don't use on any other website.</li>
         <li>Don't choose a PIN like your birth year or 1111.</li>
         <li>PyBank staff will never ask for your password, PIN or OTP.</li>
+        <li>A sign-in from a new device sends you an alert. If it was not you, sign the device out above and change your password.</li>
     </ul>
 </section>
 {% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}API for Developers{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>PyBank API</h1><p>JSON API for a mobile app (version 1, sandbox bank).</p></div></section>
+<section class="section">
+    <div class="wrap narrow page-body">
+        <h2>How to start</h2>
+        <ol class="steps">
+            <li>Ask for a token with your Customer ID and password (and the 6-digit code if two-factor login is on).</li>
+            <li>Send the token in every call: <code>Authorization: Bearer pbk_...</code></li>
+            <li>Amounts are whole numbers of the smallest unit of the currency (paise, kopeks, cents); every amount also comes as text.</li>
+            <li>A token works 30 days. You can sign an app out in Net Banking &rarr; Security.</li>
+            <li>Limits: 120 calls a minute per token and 10 token requests per 10 minutes per network.</li>
+        </ol>
+        <h2>Example</h2>
+<pre class="code-block">curl -X POST {{ request.host_url }}api/v1/token \
+     -H "Content-Type: application/json" \
+     -d '{"customer_id": "PB10000001", "password": "Demo@1234", "device": "My phone"}'
+
+curl {{ request.host_url }}api/v1/accounts -H "Authorization: Bearer pbk_..."</pre>
+        <h2>Calls</h2>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Method</th><th>Address</th><th>What it does</th></tr></thead>
+            <tbody>
+            {% for path, ops in spec.paths.items() %}{% for method, op in ops.items() %}
+            <tr><td><code>{{ method|upper }}</code></td><td><code translate="no">/api/v1{{ path }}</code></td><td>{{ op.summary }}{% if op.requestBody %}<br><small class="muted" translate="no">{{ op.requestBody.content['application/json'].schema.properties.keys()|join(', ') }}</small>{% endif %}</td></tr>
+            {% endfor %}{% endfor %}
+            </tbody>
+        </table></div>
+        <p class="small">The full description in the OpenAPI 3.0 format: <a href="{{ url_for('api.spec') }}">/api/v1/openapi.json</a> (open it in Swagger Editor or Postman).</p>
+    </div>
+</section>
+{% endblock %}

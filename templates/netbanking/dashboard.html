@@ -16,7 +16,7 @@
         <div class="bc-label">Available balance</div>
         <div class="bc-balance" id="balance">{{ account.balance|money }}</div>
         {% if rub_view is not none %}<div class="bc-label">&asymp; {{ rub_view|money('RUB') }}</div>{% endif %}
-        <div class="bc-number">XXXX XXXX XXXX {{ account.card_last4 }}</div>
+        <div class="bc-number">{% if account.card_last4 %}XXXX XXXX XXXX {{ account.card_last4 }}{% else %}{{ account.currency }} account &middot; no card{% endif %}</div>
         <div class="bc-row bc-bottom">
             <span>{{ customer.full_name|upper }}</span>
             <span>A/c {{ account.masked_number }}</span>
@@ -30,6 +30,17 @@
     </div>
 </div>
 
+{% if accounts|length > 1 %}
+<div class="acc-strip">
+    {% for a in accounts if a.status != 'Closed' %}
+    <form method="post" action="{{ url_for('switch_account') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="account" value="{{ a.number }}"><input type="hidden" name="next" value="/netbanking">
+        <button class="acc-pill {{ 'active' if a.number == account.number }}"><small>{{ a.currency }} &middot; XX{{ a.number[-4:] }}{{ ' (main)' if loop.first }}</small><strong>{{ a.balance|money(a.currency) }}</strong></button>
+    </form>
+    {% endfor %}
+    <a href="{{ url_for('my_accounts') }}" class="acc-pill add"><small>Exchange</small><strong>&#8644; Move money</strong></a>
+</div>
+{% endif %}
 <div class="quick-actions">
     <a href="{{ url_for('transfer') }}"><span class="qa qa-gold">&#8644;</span>Fund Transfer</a>
     <a href="{{ url_for('deposit') }}"><span class="qa qa-green">&#11015;</span>Deposit</a>
@@ -37,6 +48,8 @@
     <a href="{{ url_for('statement') }}"><span class="qa qa-blue">&#128196;</span>Statement</a>
     <a href="{{ url_for('payees') }}"><span class="qa qa-navy">&#128101;</span>Beneficiaries</a>
     <a href="{{ url_for('fixed_deposits') }}"><span class="qa qa-gold">&#128176;</span>Fixed Deposits</a>
+    <a href="{{ url_for('bills') }}"><span class="qa qa-green">&#129534;</span>Pay bills</a>
+    <a href="{{ url_for('my_card') }}"><span class="qa qa-navy">&#128179;</span>Card controls</a>
     <a href="{{ url_for('service_requests') }}"><span class="qa qa-blue">&#128172;</span>Requests</a>
 </div>
 
@@ -92,6 +105,15 @@
         <a class="mini-row" href="{{ url_for('loan_detail', loan_id=ln.id) }}"><div><strong>{{ ln.product }} {{ ln.loan_number }}</strong><small>{% if ln.status == 'Active' %}EMI {{ ln.emi|money }} due {{ ln.next_due }}{% if ln.overdue %} &middot; overdue{% endif %}{% else %}Application waiting{% endif %}</small></div><strong>{{ ln.outstanding|money if ln.status == 'Active' else ln.principal|money }}</strong></a>
         {% else %}<p class="muted">No loans. <a href="{{ url_for('loans') }}">See loan rates &rarr;</a></p>{% endfor %}
     </section>
+    {% if budgets %}
+    <section class="panel">
+        <div class="panel-head"><h2>Budgets this month</h2><a href="{{ url_for('insights') }}" class="link-arrow">Insights &rarr;</a></div>
+        {% for b in budgets %}
+        <div class="budget-row"><div class="mini-row"><div><strong>{{ b.category }}</strong><small>{{ b.spent|money }} spent of the budget of {{ b.monthly_limit|money }}</small></div><strong class="{{ 'out' if b.percent >= 100 else '' }}">{{ b.percent }}%</strong></div>
+            <div class="meter" role="progressbar" aria-label="{{ b.category }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ [b.percent, 100]|min }}"><span class="{{ 'over' if b.percent >= 100 else 'warn' if b.percent >= 80 else '' }}" style="width:{{ [b.percent, 100]|min }}%"></span></div></div>
+        {% endfor %}
+    </section>
+    {% endif %}
     <section class="panel">
         <div class="panel-head"><h2>My open requests</h2><a href="{{ url_for('service_requests') }}" class="link-arrow">All requests &rarr;</a></div>
         {% for r in requests_open %}

@@ -20,14 +20,18 @@
             <tr><th>Opening deposit</th><td>{{ r.opening_deposit|money(r.currency) }}</td></tr>
         </table>
         <div><b class="small">Documents</b>
-            {% for d in r.documents %}<div><a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">{{ d.kind }}: {{ d.filename }}</a> <small class="muted">{{ '{:,.0f}'.format(d.size / 1024) }} KB</small></div>{% else %}<p class="small out">No document!</p>{% endfor %}</div>
+            {% for d in r.documents %}<div><a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">{{ d.kind }}: {{ d.filename }}</a> <small class="muted">{{ '{:,.0f}'.format(d.size / 1024) }} KB</small></div>{% else %}<p class="small out">No document!</p>{% endfor %}
+            <b class="small" style="display:block;margin-top:8px">MRZ check</b>
+            {% for m in mrz_checks(r.customer_id) %}<div class="small"><span class="badge {{ 'ok' if m.ok else 'st-rejected' }}">{{ 'Correct' if m.ok else 'Problems' }}</span> {{ m.doc_type }} ...{{ m.doc_end }} ({{ m.nationality }}) &middot; {{ m.checked_by }}{% if m.problems %}<br>{{ m.problems }}{% endif %}</div>
+            {% else %}<p class="small muted">Not checked yet.</p>{% endfor %}
+            {% set c = None %}{% set mrz_next = url_for('office_applications') %}{% include "admin/_mrz_form.html" %}</div>
     </div>
     <div class="btn-row">
         <form method="post" action="{{ url_for('office_application_action', cid=r.customer_id, action='approve') }}" onsubmit="return confirm('Open the account of {{ r.full_name }}?')">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-primary btn-sm">&#10004; Approve &amp; open account</button></form>
         <form method="post" action="{{ url_for('office_application_action', cid=r.customer_id, action='reject') }}" class="inline-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input name="reason" placeholder="Reason for rejecting (sent to the applicant)" required minlength="3" maxlength="200">
+            <input name="reason" aria-label="Reason for rejecting" placeholder="Reason for rejecting (sent to the applicant)" required minlength="3" maxlength="200">
             <button class="btn btn-danger btn-sm">Reject</button></form>
     </div>
 </section>

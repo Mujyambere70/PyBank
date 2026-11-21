@@ -1,29 +1,38 @@
 {% extends "base.html" %}
 {% block title %}Contact Us &amp; Branch Locator{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="wrap"><h1>Contact Us</h1><p>We are here to help, 24 hours a day.</p></div></section>
+<section class="page-hero"><div class="wrap"><h1>Contact Us</h1><p>{{ SITE.contact_intro }}</p></div></section>
 <section class="section">
     <div class="wrap contact-grid">
-        <div class="contact-card"><span>&#9742;</span><h3>Phone banking</h3><p><strong>1800-000-7926</strong><br>Toll free, 24x7</p></div>
-        <div class="contact-card"><span>&#9993;</span><h3>Email</h3><p><strong>care@pybank.example</strong><br>Reply within 24 hours</p></div>
-        <div class="contact-card"><span>&#128274;</span><h3>Report fraud</h3><p><strong>1800-000-1930</strong><br>Block your card instantly</p></div>
+        <div class="contact-card"><span>&#9742;</span><h3>Phone banking</h3><p><strong translate="no">{{ SITE.care_phone }}</strong><br>Toll free, {{ SITE.care_hours }}</p></div>
+        <div class="contact-card"><span>&#9993;</span><h3>Email</h3><p><strong translate="no">{{ SITE.care_email }}</strong><br>{{ SITE.email_reply }}</p></div>
+        <div class="contact-card"><span>&#128274;</span><h3>Report fraud</h3><p><strong translate="no">{{ SITE.fraud_phone }}</strong><br>Block your card instantly</p></div>
     </div>
-    <div class="wrap split" style="margin-top:40px">
-        <img src="{{ url_for('static', filename='images/branch.jpg') }}" alt="PyBank branch building" class="rounded shadow">
-        <div>
+    <div class="wrap" style="margin-top:40px">
+        <div class="section-head left">
             <h2>Branches &amp; ATMs</h2>
-            {% for name, addr, ifsc, atm in [
-                (BRANCH.name, BRANCH.address, BRANCH.ifsc, '24x7 ATM + Cash deposit machine'),
-                ('Ambala City Branch', 'SCO 45, Jagadhri Road, Ambala City, Haryana 134003', 'PYBK0001031', '24x7 ATM'),
-                ('Mullana Branch', 'Near MMDU Gate 1, Mullana, Ambala, Haryana 133203', 'PYBK0001057', 'ATM 8 AM - 10 PM')] %}
-            <div class="branch">
-                <h3>{{ name }}</h3>
-                <p>{{ addr }}</p>
-                <p class="small"><strong>IFSC:</strong> {{ ifsc }} &middot; {{ atm }}</p>
-            </div>
-            {% endfor %}
-            <p class="muted small">Branch hours: Monday to Saturday 9:30 AM &ndash; 4:30 PM (closed on 2nd &amp; 4th Saturday and public holidays).</p>
+            {% if countries|length > 1 %}
+            <form method="get" class="inline-form">
+                <label for="country" class="small">Country</label>
+                <select id="country" name="country" onchange="this.form.submit()">
+                    <option value="">All countries</option>
+                    {% for c in countries %}<option value="{{ c }}" {{ 'selected' if c == country }}>{{ country_name(c, LANG) }}</option>{% endfor %}
+                </select>
+                <noscript><button class="btn btn-outline btn-sm">Show</button></noscript>
+            </form>
+            {% endif %}
         </div>
+        <div class="branch-grid">
+            {% for b in branches %}
+            <div class="branch">
+                <h3>{{ b.name }} <span class="badge {{ 'ok' if 'Branch' in b.kind else '' }}">{{ b.kind }}</span></h3>
+                <p>{{ b.address }}</p>
+                <p class="small">{% if b.ifsc %}<strong>IFSC:</strong> <span translate="no">{{ b.ifsc }}</span> &middot; {% endif %}{% if b.phone %}&#9742; <span translate="no">{{ b.phone }}</span> &middot; {% endif %}{{ b.hours }}</p>
+                {% if osm_link(b) %}<p class="small"><a href="{{ osm_link(b) }}" target="_blank" rel="noopener">Show on the map &#8599;</a></p>{% endif %}
+            </div>
+            {% else %}<p class="muted">No branch in this country yet.</p>{% endfor %}
+        </div>
+        <p class="muted small">Branch hours: {{ SITE.branch_hours }}</p>
     </div>
 </section>
 {% endblock %}

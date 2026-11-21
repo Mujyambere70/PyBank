@@ -150,11 +150,11 @@ class TestCurrencies(Base):
             self.bank.transfer(self.cid, self.rub_acc.number, 88_000, PIN)
         self.bank.refresh_fx_rates()
         before = self.balance(self.rub)
-        self.bank.transfer(self.cid, self.rub_acc.number, 88_000, PIN)           # ₹880 -> 800 ₽
-        self.assertEqual(self.balance(self.rub) - before, 80_000)
+        self.bank.transfer(self.cid, self.rub_acc.number, 88_000, PIN)           # ₹880 -> 800 ₽ - 1 % margin (v4)
+        self.assertEqual(self.balance(self.rub) - before, 79_200)
         self.assertEqual(self.balance(), 1_000_000 - 88_000)
         q = self.bank.quote_internal("INR", self.rub_acc.number, 8_800)
-        self.assertEqual((q["currency"], q["amount"]), ("RUB", 8_000))
+        self.assertEqual((q["currency"], q["amount"], q["margin"]), ("RUB", 7_920, 1.0))
 
 
 class TestOtherBanks(Base):

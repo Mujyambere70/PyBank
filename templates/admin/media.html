@@ -1,0 +1,25 @@
+{% extends "admin/layout.html" %}
+{% block title %}Pictures{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Pictures</h1><p class="muted small">Upload a PNG, JPG or WEBP picture (max 1 MB), then choose it for a product card or a banner.</p></div></div>
+<div class="dash-grid">
+    <form method="post" enctype="multipart/form-data" class="panel">
+        <h2>Upload a picture</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="m-file">Picture</label><input id="m-file" type="file" name="file" accept="image/png,image/jpeg,image/webp" required>
+        <label for="m-alt">What the picture shows (for blind visitors)</label><input id="m-alt" name="alt" maxlength="120">
+        <button class="btn btn-primary btn-block">Upload</button>
+        <p class="small muted">The type is checked from the first bytes of the file, not from its name.</p>
+    </form>
+    <section class="panel">
+        <h2>Uploaded pictures ({{ rows|length }})</h2>
+        <div class="media-grid">
+        {% for m in rows %}
+            <figure><img src="{{ url_for('media', media_id=m.id) }}" alt="{{ m.alt }}" loading="lazy">
+                <figcaption><code>media:{{ m.id }}</code> {{ m.filename }}<br><small class="muted">{{ '%.0f'|format(m.size / 1024) }} KB &middot; {{ m.uploaded_by }}</small>
+                <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ m.id }}"><button name="action" value="delete" class="btn btn-danger btn-sm">Delete</button></form></figcaption></figure>
+        {% else %}<p class="muted">No uploaded pictures. The website uses the pictures that come with PyBank.</p>{% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

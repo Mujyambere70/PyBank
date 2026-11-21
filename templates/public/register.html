@@ -79,6 +79,9 @@
         <h2><span class="step">&#128196;</span> Identity document</h2>
         <label for="id_doc">Passport or national ID card * <small class="muted">(PDF, JPG or PNG, up to 2 MB)</small></label>
         <input type="file" id="id_doc" name="id_doc" accept=".pdf,.jpg,.jpeg,.png" required>
+        <label for="mrz">MRZ lines of the document <small class="muted">(optional - the lines with &lt;&lt;&lt; at the bottom of the photo page; typing them makes the check faster)</small></label>
+        <textarea id="mrz" name="mrz" rows="3" class="mono" spellcheck="false" autocomplete="off" translate="no" maxlength="200" placeholder="P&lt;UTOERIKSSON&lt;&lt;ANNA&lt;MARIA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+L898902C36UTO7408122F1204159ZE184226B&lt;&lt;&lt;&lt;&lt;10">{{ form.get('mrz', '') }}</textarea>
 
         <h2><span class="step">4</span> Security</h2>
         <div class="form-grid">

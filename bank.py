@@ -8,7 +8,9 @@ Classes
     Bank         - manages customers, accounts, transactions, cash requests, loans,
                    savings interest, alerts and two-factor login (SQLite or PostgreSQL).
                    More features come from the mixin classes in onboarding.py, payments.py,
-                   statements.py and push.py.
+                   statements.py and push.py, and (version 4) sitecontent.py, wallets.py, cards.py,
+                   iso20022.py, mrz.py, autopay.py, insights.py, compliance.py, devices.py,
+                   privacy.py and api.py.
 
 Money is stored as an integer number of the smallest unit (paise, kopecks, cents: 1/100),
 so there are no rounding errors like 0.1 + 0.2 = 0.30000000000000004.
@@ -39,6 +41,18 @@ from payments import PaymentsMixin
 from push import PushMixin
 from statements import StatementsMixin
 from world import format_money, policy
+# version 4
+from api import API_SCHEMA, ApiTokensMixin
+from autopay import AUTOPAY_SCHEMA, AutopayMixin
+from cards import CARD_SCHEMA, CardsMixin
+from compliance import COMPLIANCE_SCHEMA, ComplianceMixin
+from devices import DEVICE_SCHEMA, DevicesMixin
+from insights import INSIGHT_SCHEMA, InsightsMixin
+from iso20022 import ISO_SCHEMA, IsoMixin
+from mrz import MRZ_SCHEMA, MrzMixin
+from privacy import PrivacyMixin
+from sitecontent import CONTENT_SCHEMA, CONTENT_TABLES, SiteContentMixin
+from wallets import WALLET_SCHEMA, WalletsMixin
 
 # ---------- bank settings ----------
 
@@ -538,14 +552,24 @@ MIGRATIONS = {
               ("penalty_due", "INTEGER NOT NULL DEFAULT 0"), ("penalty_total", "INTEGER NOT NULL DEFAULT 0"),
               ("late_count", "INTEGER NOT NULL DEFAULT 0"), ("last_penalty_for", "TEXT NOT NULL DEFAULT ''")],
     "staff": [("totp_secret", "TEXT NOT NULL DEFAULT ''"), ("totp_enabled", "INTEGER NOT NULL DEFAULT 0"),
-              ("totp_last_step", "INTEGER NOT NULL DEFAULT 0")],
+              ("totp_last_step", "INTEGER NOT NULL DEFAULT 0"),
+              ("job_role", "TEXT NOT NULL DEFAULT 'officer'"), ("lang", "TEXT NOT NULL DEFAULT 'en'")],      # v4
+    "fixed_deposits": [("compounding", "TEXT NOT NULL DEFAULT 'simple'"),                                    # v4
+                       ("senior", "INTEGER NOT NULL DEFAULT 0")],
+    "external_transfers": [("iso_file", "TEXT NOT NULL DEFAULT ''")],                                       # v4
 }
+V4_SCHEMA = (CONTENT_SCHEMA + WALLET_SCHEMA + CARD_SCHEMA + ISO_SCHEMA + MRZ_SCHEMA + AUTOPAY_SCHEMA +
+             INSIGHT_SCHEMA + COMPLIANCE_SCHEMA + DEVICE_SCHEMA + API_SCHEMA)
 
 # tables in the order they can be filled (parents before children) - used by backups
 DATA_TABLES = ["customers", "accounts", "transactions", "login_history", "beneficiaries", "fixed_deposits",
                "tx_notes", "service_requests", "cash_requests", "loans", "loan_payments", "alerts", "staff",
                "notices", "settings", "audit_log", "interest_runs", "documents", "profile_changes",
-               "external_transfers", "fx_rates", "statements", "push_subscriptions"]
+               "external_transfers", "fx_rates", "statements", "push_subscriptions",
+               # version 4
+               *CONTENT_TABLES, "fx_history", "cards", "card_events", "iso_files", "mrz_checks", "billers",
+               "bill_payments", "standing_instructions", "budgets", "aml_flags", "pending_entries", "sessions",
+               "api_tokens"]
 
 # Bank-wide settings the admin can change (stored in the settings table)
 DEFAULT_SETTINGS = {
@@ -556,7 +580,13 @@ DEFAULT_SETTINGS = {
     "savings_rate": "3.50",
     "loan_rate_Personal": "10.75", "loan_rate_Vehicle": "8.90", "loan_rate_Education": "9.15",
     "late_fee_percent": "2.00",          # penalty for a late EMI, % of the EMI
+    # version 4
+    "savings_rate_high": "4.00",         # savings interest on the part of the balance above the slab
+    "fd_senior_extra": "0.50",           # extra FD interest for customers aged 60 or more
+    "fx_margin": "1.00",                 # bank's margin on currency exchange, %
+    "payments_mode": "sandbox",          # SWIFT / SEPA: "sandbox" (answers by itself) or "iso_files" (pain.001 / pain.002)
 }
+SENIOR_AGE = 60
 FD_TENURES = (6, 12, 24, 36)                 # months
 FD_MIN = 1000 * 100                          # ₹1,000
 FD_PREMATURE_PENALTY = 1.0                   # % less interest if closed early
@@ -568,7 +598,9 @@ REQUEST_TYPES = ["Cheque book", "Debit card block", "New debit card", "Account s
                  "Update nominee", "Address proof letter", "Account closure", "Complaint", "Other"]
 
 
-class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
+class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, AutopayMixin, InsightsMixin,
+           ComplianceMixin, DevicesMixin, PrivacyMixin, ApiTokensMixin,
+           OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
     """Keeps all customers, accounts and transactions in a database (SQLite file or PostgreSQL)."""
 
     def __init__(self, db_path="bank.db", notifier=None, driver=None, fx_fetch=None):
@@ -577,13 +609,15 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         self.notifier = notifier or Notifier()
         self.fx_fetch = fx_fetch                 # function that downloads exchange rates (None = internet)
         self.alerts_on = True
-        self.db.init_schema(SCHEMA)
+        self.db.init_schema(SCHEMA + V4_SCHEMA)
         with self._connect() as conn:
             for table, cols in MIGRATIONS.items():
                 have = conn.columns(table)
                 for name, ddl in cols:
                     if name not in have:
                         conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}")
+        self.ensure_site_content()                     # v4: the website texts of version 3 go into the database once
+        self.ensure_billers()
 
     # ----- settings -----
 
@@ -648,6 +682,12 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
                      (t.balance_after, t.account_number))
         if self.alerts_on:
             self._transaction_alert(conn, t)
+            self._after_save(conn, t)
+
+    def _after_save(self, conn, t):
+        """Version 4: budgets and the suspicious-activity rules look at every new transaction."""
+        self._check_budget(conn, t)
+        self._check_aml(conn, t)
 
     @staticmethod
     def _unique(conn, sql, make):
@@ -809,9 +849,10 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         return Customer(**dict(row))
 
     def get_account(self, cid):
-        """The customer's account (one account per customer in this version)."""
+        """The customer's main account (the first one; version 4 adds accounts in other currencies, see wallets.py)."""
         with self._connect() as conn:
-            row = conn.execute("SELECT * FROM accounts WHERE customer_id = ? ORDER BY opened_at LIMIT 1",
+            row = conn.execute("SELECT * FROM accounts WHERE customer_id = ? "
+                               "ORDER BY CASE WHEN card_last4 = '' THEN 1 ELSE 0 END, opened_at, number LIMIT 1",
                                (cid,)).fetchone()
         if row is None:
             raise BankError("Account not found.")
@@ -905,8 +946,11 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         lock = " FOR UPDATE" if conn.is_postgres else ""          # two payments at once wait for each other
         acc = BankAccount(**dict(conn.execute("SELECT * FROM accounts WHERE number = ?" + lock, (number,)).fetchone()))
         if must_be_active and acc.status != "Active":
-            raise BankError("This account is not approved yet." if acc.status == "Pending"
-                            else "This account is frozen. Please contact your branch.")
+            raise BankError("This account is not approved yet." if acc.status == "Pending" else
+                            "This account is dormant (not used for 2 years). Please ask the bank to activate it."
+                            if acc.status == "Dormant" else
+                            "This account is closed." if acc.status == "Closed" else
+                            "This account is frozen. Please contact your branch.")
         return acc
 
     # ----- deposits and withdrawals: the customer asks, a staff member approves -----
@@ -1002,37 +1046,50 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
                             f"approved. Reason: {reason}")
         return r, t
 
-    def transfer(self, cid, to_number, amount, pin, remarks=""):
+    def transfer(self, cid, to_number, amount, pin, remarks="", from_number=None):
         """Move money to another PyBank account. Both sides are saved in ONE database
-        transaction, so money can never disappear or be created."""
+        transaction, so money can never disappear or be created.
+        from_number (v4): one of the customer's own accounts (default: the main account)."""
         self._check_pin(cid, pin)
-        sender = self.get_account(cid)
+        sender = self.account_of(cid, from_number) if from_number else self.get_account(cid)
         to_number = to_number.strip()
         if to_number == sender.number:
             raise BankError("You cannot transfer money to the same account.")
+        if any(a.number == to_number for a in self.accounts_of(cid)):
+            raise BankError("This is your own account. Please use My Accounts to move money between your accounts.")
         self.find_beneficiary(to_number)
         remarks = remarks.strip()[:60]
         with self._connect() as conn:
-            limit = self.limit_for("transfer", sender.currency)
-            if self._today_total(conn, sender.number, "Transfer") + amount > limit:
-                raise BankError(f"Daily transfer limit is {format_money(limit, sender.currency)}.")
-            src, dst = self._load(conn, sender.number), self._load(conn, to_number)
-            self._check_available(conn, src, amount)
-            received, fx = amount, ""
-            if dst.currency != src.currency:                 # different currencies: convert at the bank's rate
-                received, rate = self.convert(amount, src.currency, dst.currency, conn)
-                fx = f" (FX 1 {src.currency} = {rate:.4f} {dst.currency})"
-            rail = "IMPS" if src.currency == dst.currency == "INR" else "TRANSFER"
-            src_name = conn.execute("SELECT full_name FROM customers WHERE customer_id = ?",
-                                    (src.customer_id,)).fetchone()[0]
-            dst_name = conn.execute("SELECT full_name FROM customers WHERE customer_id = ?",
-                                    (dst.customer_id,)).fetchone()[0]
-            note = f" - {remarks}" if remarks else ""
-            out = src.debit(amount, "Transfer", f"{rail}/To {dst_name}/A/c XX{dst.number[-4:]}{note}{fx}")
-            inn = dst.credit(received, "Transfer", f"{rail}/From {src_name}/A/c XX{src.number[-4:]}{note}{fx}")
-            inn.ref = out.ref
-            self._save(conn, out)
-            self._save(conn, inn)
+            return self._internal_transfer(conn, sender.number, to_number, amount, remarks)
+
+    def _internal_transfer(self, conn, from_number, to_number, amount, remarks=""):
+        """The money part of a transfer inside PyBank (also used by standing instructions)."""
+        src0 = conn.execute("SELECT currency FROM accounts WHERE number = ?", (from_number,)).fetchone()
+        if src0 is None:
+            raise BankError("Account not found.")
+        limit = self.limit_for("transfer", src0[0])
+        if self._today_total(conn, from_number, "Transfer") + amount > limit:
+            raise BankError(f"Daily transfer limit is {format_money(limit, src0[0])}.")
+        if conn.execute("SELECT 1 FROM accounts WHERE number = ?", (to_number,)).fetchone() is None:
+            raise BankError("Beneficiary account not found. Please check the account number.")
+        src, dst = self._load(conn, from_number), self._load(conn, to_number)
+        self._check_available(conn, src, amount)
+        received, fx = amount, ""
+        if dst.currency != src.currency:                 # different currencies: the customer rate (v4: with margin)
+            q = self.quote(src.currency, dst.currency, amount, conn)
+            received, rate = q["amount"], q["rate"]
+            fx = f" (FX 1 {src.currency} = {rate:.4f} {dst.currency})"
+        rail = "IMPS" if src.currency == dst.currency == "INR" else "TRANSFER"
+        src_name = conn.execute("SELECT full_name FROM customers WHERE customer_id = ?",
+                                (src.customer_id,)).fetchone()[0]
+        dst_name = conn.execute("SELECT full_name FROM customers WHERE customer_id = ?",
+                                (dst.customer_id,)).fetchone()[0]
+        note = f" - {remarks}" if remarks else ""
+        out = src.debit(amount, "Transfer", f"{rail}/To {dst_name}/A/c XX{dst.number[-4:]}{note}{fx}")
+        inn = dst.credit(received, "Transfer", f"{rail}/From {src_name}/A/c XX{src.number[-4:]}{note}{fx}")
+        inn.ref = out.ref
+        self._save(conn, out)
+        self._save(conn, inn)
         return out
 
     # ----- profile & security -----
@@ -1143,24 +1200,47 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
             rows = [dict(r) for r in conn.execute(
                 "SELECT * FROM fixed_deposits WHERE customer_id = ? ORDER BY status, opened_at DESC", (cid,))]
         for fd in rows:
-            fd["maturity_value"] = fd["principal"] + self._fd_interest(fd["principal"], fd["rate"], fd["months"] * 365 // 12)
+            days = (date.fromisoformat(fd["matures_on"]) - datetime.strptime(fd["opened_at"], "%Y-%m-%d %H:%M:%S").date()).days
+            fd["maturity_value"] = fd["principal"] + self._fd_interest(fd["principal"], fd["rate"], days,
+                                                                       fd.get("compounding") or "simple")
             if fd["status"] == "Active":
                 fd["value_today"] = self._fd_close_value(fd)[0]
         return rows
 
     @staticmethod
-    def _fd_interest(principal, rate, days):
-        return int(principal * rate / 100 * days / 365)
+    def _fd_interest(principal, rate, days, compounding="simple"):
+        """Interest of a fixed deposit. Version 4 deposits are compounded every quarter, like the
+        cumulative deposits of Indian banks: P x (1 + r/400)^(full quarters), then simple interest for
+        the days after the last full quarter. Older deposits keep the simple interest they were opened with."""
+        if compounding != "quarterly":
+            return int(principal * rate / 100 * days / 365)
+        quarters = int(days * 4 // 365)
+        rest = days - quarters * 365 / 4
+        value = Decimal(principal) * (1 + Decimal(str(rate)) / 400) ** quarters
+        value *= 1 + Decimal(str(rate)) / 100 * Decimal(str(rest)) / 365
+        return int(value.to_integral_value(ROUND_HALF_UP)) - principal
 
     def _fd_close_value(self, fd, today=None):
         today = today or date.today()
         opened = datetime.strptime(fd["opened_at"], "%Y-%m-%d %H:%M:%S").date()
         matures = date.fromisoformat(fd["matures_on"])
+        how = fd.get("compounding") or "simple"
         if today >= matures:
             days, rate, early = (matures - opened).days, fd["rate"], False
         else:
             days, rate, early = (today - opened).days, max(fd["rate"] - FD_PREMATURE_PENALTY, 0), True
-        return fd["principal"] + self._fd_interest(fd["principal"], rate, days), early
+        return fd["principal"] + self._fd_interest(fd["principal"], rate, days, how), early
+
+    def is_senior(self, cid, on=None):
+        dob = date.fromisoformat(self.get_customer(cid).dob)
+        on = on or date.today()
+        return on.year - dob.year - ((on.month, on.day) < (dob.month, dob.day)) >= SENIOR_AGE
+
+    def fd_rate_for(self, cid, months):
+        rate = self.fd_rates()[months]
+        if self.is_senior(cid):
+            rate += float(self.settings().get("fd_senior_extra", "0.50"))
+        return round(rate, 2)
 
     def open_fd(self, cid, amount, months, pin, when=None):
         self._check_pin(cid, pin)
@@ -1170,7 +1250,8 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         currency = self.get_account(cid).currency
         if amount < policy(currency, "fd_min"):
             raise BankError(f"Minimum fixed deposit is {format_money(policy(currency, 'fd_min'), currency)}.")
-        rate = self.fd_rates()[months]
+        rate = self.fd_rate_for(cid, months)
+        senior = int(self.is_senior(cid))
         when = when or now()
         start = datetime.strptime(when, "%Y-%m-%d %H:%M:%S").date()
         y, m = divmod(start.month - 1 + months, 12)
@@ -1183,8 +1264,8 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
             self._check_available(conn, acc, amount)
             self._save(conn, acc.debit(amount, "Fixed deposit", f"FD BOOKING/{fd_no}/{months} MONTHS @ {rate:.2f}%", when))
             conn.execute("INSERT INTO fixed_deposits (fd_number, customer_id, principal, rate, months, opened_at, "
-                         "matures_on) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                         (fd_no, cid, amount, rate, months, when, matures.isoformat()))
+                         "matures_on, compounding, senior) VALUES (?, ?, ?, ?, ?, ?, ?, 'quarterly', ?)",
+                         (fd_no, cid, amount, rate, months, when, matures.isoformat(), senior))
         return fd_no
 
     def close_fd(self, cid, fd_id, pin):
@@ -1336,9 +1417,13 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         cur = t.currency
         text = (f"PyBank: A/c XX{t.account_number[-4:]} {word} {format_money(t.amount, cur, 'en')} on {when} "
                 f"({t.category}, Ref {t.ref}). Avl bal {format_money(t.balance_after, cur, 'en')}. "
-                f"Not you? Call 1800-202-5050.")
+                f"Not you? Call {self._fraud_phone(conn)}.")
         self._alert(conn, row["customer_id"], f"A/c XX{t.account_number[-4:]} {word} {format_money(t.amount, cur, 'en')}",
                     text)
+
+    def _fraud_phone(self, conn):
+        r = conn.execute("SELECT value FROM site_texts WHERE key = 'fraud_phone'").fetchone()
+        return r[0] if r else "1800-000-1930"
 
     def alerts(self, cid, limit=60):
         with self._connect() as conn:
@@ -1652,6 +1737,31 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
             end = start - timedelta(days=1)
         return list(reversed(out))
 
+    def _daily_balances(self, conn, number, start, end):
+        """End-of-day balance of every day of the period (daily balance method used by banks)."""
+        before = conn.execute("SELECT balance_after FROM transactions WHERE account_number = ? AND created_at < ? "
+                              "ORDER BY created_at DESC, id DESC LIMIT 1", (number, start.isoformat())).fetchone()
+        balance = before[0] if before else 0
+        day_end = {}
+        for r in conn.execute("SELECT created_at, balance_after FROM transactions WHERE account_number = ? "
+                              "AND created_at >= ? AND created_at <= ? ORDER BY created_at, id",
+                              (number, start.isoformat(), end.isoformat() + " 23:59:59")).fetchall():
+            day_end[r[0][:10]] = r[1]
+        out, d = [], start
+        while d <= end:
+            balance = day_end.get(d.isoformat(), balance)
+            out.append(balance)
+            d += timedelta(days=1)
+        return out
+
+    def savings_interest(self, balances, currency, rate, rate_high):
+        """Version 4 slabs: the part of each day's balance up to the slab earns `rate`, the rest `rate_high`."""
+        slab = policy(currency, "slab")
+        low = sum(min(b, slab) for b in balances)
+        high = sum(max(b - slab, 0) for b in balances)
+        value = (Decimal(low) * Decimal(str(rate)) + Decimal(high) * Decimal(str(rate_high))) / 100 / 365
+        return int(value.to_integral_value(ROUND_HALF_UP))
+
     def _daily_balance_sum(self, conn, number, start, end):
         """Sum of the end-of-day balances over the quarter (daily balance method used by banks)."""
         before = conn.execute("SELECT balance_after FROM transactions WHERE account_number = ? AND created_at < ? "
@@ -1672,7 +1782,8 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
 
     def post_quarterly_interest(self, today=None):
         """Credit interest for every finished quarter not paid yet. Safe to call many times."""
-        rate = float(self.settings()["savings_rate"])
+        s = self.settings()
+        rate, rate_high = float(s["savings_rate"]), float(s.get("savings_rate_high") or s["savings_rate"])
         results = []
         for name, start, end in self.due_quarters(today):
             with self._connect() as conn:
@@ -1686,13 +1797,15 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
                                         (end.isoformat() + " 23:59:59",)).fetchall()
                 paid, total, totals = 0, 0, {}
                 for (number, currency) in accounts:
-                    product = self._daily_balance_sum(conn, number, start, end)
-                    interest = int((Decimal(product) * Decimal(str(rate)) / 100 / 365).to_integral_value(ROUND_HALF_UP))
+                    balances = self._daily_balances(conn, number, start, end)
+                    interest = self.savings_interest(balances, currency, rate, rate_high)
                     if interest < 100:                     # less than ₹1 is not paid
                         continue
                     acc = self._load(conn, number, must_be_active=False)
+                    shown = f"{rate:.2f}%" if rate == rate_high or max(balances) <= policy(currency, "slab") \
+                        else f"{rate:.2f}% / {rate_high:.2f}%"
                     self._save(conn, acc.credit(interest, "Interest",
-                                                f"SAVINGS INTEREST {name} ({start:%d-%m-%Y} TO {end:%d-%m-%Y}) @ {rate:.2f}%"))
+                                                f"SAVINGS INTEREST {name} ({start:%d-%m-%Y} TO {end:%d-%m-%Y}) @ {shown}"))
                     paid, total = paid + 1, total + interest
                     totals[currency] = totals.get(currency, 0) + interest
                 conn.execute("UPDATE interest_runs SET accounts = ?, total = ?, totals = ? WHERE quarter = ?",
@@ -1711,7 +1824,7 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
 
     def export_data(self):
         """Every table as JSON-ready lists of rows (password and PIN hashes included, so a restore can log in)."""
-        data = {"app": "PyBank", "version": 2, "created_at": now(), "tables": {}}
+        data = {"app": "PyBank", "version": 4, "created_at": now(), "tables": {}}
         with self._connect() as conn:
             for t in DATA_TABLES:
                 cur = conn.execute(f"SELECT * FROM {t}")
@@ -1787,7 +1900,10 @@ class Bank(OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
         done = {"interest": self.post_quarterly_interest(today)}
         for name, job in (("fx", self.refresh_fx_rates), ("external", self.process_external),
                           ("emis", lambda: self.collect_due_emis(today)),
-                          ("statements", lambda: self.monthly_estatements(today))):
+                          ("statements", lambda: self.monthly_estatements(today)),
+                          ("standing", lambda: self.run_instructions(today)),          # v4
+                          ("dormant", lambda: self.mark_dormant(today)),               # v4
+                          ("rate_hits", self.clean_rate_hits)):                         # v4
             try:
                 done[name] = job()
             except Exception as e:                       # one failing job must not stop the others

@@ -1,0 +1,24 @@
+{% extends "admin/layout.html" %}
+{% block title %}System health{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>System health</h1><p class="muted small">The same checks as the public <a href="{{ url_for('status_page') }}">status page</a> and <a href="{{ url_for('health') }}">/health</a>, plus the limits and errors.</p></div>
+    <span class="badge {{ 'ok' if h.status == 'ok' else 'st-pending' }}">{{ h.status|upper }}</span></div>
+<div class="kpi-grid">
+    {% for name, c in h.checks.items() %}
+    <div class="tile"><small>{{ name|replace('_', ' ')|capitalize }}</small><strong class="{{ '' if c.ok else 'out' }}">{{ 'OK' if c.ok else 'Check' }}</strong><span class="small muted">{{ c.detail }}</span></div>
+    {% endfor %}
+</div>
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Rate limits (last 7 days)</h2>
+        <p class="small muted">{% for n, (count, sec) in LIMITS.items() %}{{ n }}: {{ count }} per {{ sec // 60 }} min{{ '; ' if not loop.last }}{% endfor %}</p>
+        {% for b in blocks %}<div class="mini-row"><div><strong>{{ b.name }}</strong><small>{{ b.who }} &middot; last {{ b.last|nicedate }}</small></div><strong>{{ b.times }}&times;</strong></div>
+        {% else %}<p class="muted">Nobody was stopped by a limit.</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <h2>Server errors</h2>
+        {% for e in errors %}<div class="mini-row"><div><strong translate="no">{{ e.path }}</strong><small translate="no">{{ e.at|nicedate }} &middot; {{ e.error|truncate(120) }}</small></div></div>
+        {% else %}<p class="muted">No errors.</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+.git
+.github
+__pycache__
+*.pyc
+*.db
+*.db-wal
+*.db-shm
+*.old-backup
+screenshots
+tests
+tools
+README.md

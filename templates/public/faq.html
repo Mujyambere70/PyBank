@@ -4,20 +4,25 @@
 <section class="page-hero"><div class="wrap"><h1>Help &amp; FAQ</h1><p>Quick answers to common questions.</p></div></section>
 <section class="section">
     <div class="wrap narrow faq">
-        {% for q, a in [
-            ('How do I open an account?', 'Click "Open Account", fill in your personal and contact details, choose Savings or Current, make the opening deposit and set your password and 4-digit transaction PIN. You get your Customer ID and account number immediately.'),
-            ('What is my Customer ID?', 'It is your login ID, for example PB10000001. It is shown after opening the account and on the "Account details" page. You can also log in with your registered email.'),
-            ('What is the difference between password and transaction PIN?', 'The password is used to log in. The 4-digit transaction PIN is needed for every deposit, withdrawal and transfer, so even if someone sees your password they cannot move your money.'),
-            ('How do I transfer money?', 'Go to Net Banking > Fund Transfer, enter the 12-digit PyBank account number twice and the amount. On the next screen check the beneficiary name, then enter your PIN to confirm.'),
-            ('Is there a transaction limit?', 'Yes. Cash withdrawal up to ' ~ (DAILY_WITHDRAW_LIMIT|money) ~ ' per day and fund transfer up to ' ~ (DAILY_TRANSFER_LIMIT|money) ~ ' per day.'),
-            ('My login is locked. What should I do?', 'After 5 wrong passwords your login is locked for 15 minutes for your safety. Wait and try again, or call customer care.'),
-            ('How do I download my statement?', 'Go to Net Banking > Statement, choose the dates and click "Download CSV" (opens in Excel) or "Print / Save PDF".'),
-            ('Why was I logged out?', 'For your security, PyBank logs you out automatically after 10 minutes without activity.')] %}
-        <details {% if loop.first %}open{% endif %}>
-            <summary>{{ q }}</summary>
-            <p>{{ a }}</p>
+        <form method="get" class="search-row" role="search">
+            <label for="faq-q" class="sr-only">Search the questions</label>
+            <input id="faq-q" name="q" value="{{ q }}" placeholder="Search the questions, e.g. transfer limit">
+            <button class="btn btn-primary">Search</button>
+            {% if q %}<a href="{{ url_for('faq') }}" class="btn btn-outline">Show all</a>{% endif %}
+        </form>
+        {% if q %}<p class="muted small">{{ rows|length }} answer(s) for &ldquo;{{ q }}&rdquo;</p>{% endif %}
+        {% for cat in cats %}
+        <h2 class="faq-cat">{{ cat }}</h2>
+        {% for r in rows if r.category == cat %}
+        <details {% if loop.first and not q and cat == cats[0] %}open{% endif %} {% if q %}open{% endif %}>
+            <summary>{{ r.question }}</summary>
+            <p>{{ r.answer }}</p>
         </details>
         {% endfor %}
+        {% else %}
+        <p class="muted">No answer matches your words. Please call us or write a service request.</p>
+        {% endfor %}
+        <p class="small muted" style="margin-top:24px">Still need help? Call <strong translate="no">{{ SITE.care_phone }}</strong> or write to <span translate="no">{{ SITE.care_email }}</span>.</p>
     </div>
 </section>
 {% endblock %}

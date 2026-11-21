@@ -1,0 +1,37 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ page.title if page else 'New page' }}{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>{{ 'Edit page: ' ~ page.title if page else 'New page' }}</h1><p class="muted small"><a href="{{ url_for('office_content') }}#pages">&larr; All pages</a></p></div>
+    {% if page %}<div class="btn-row" style="margin:0"><a href="{{ url_for('office_translate', kind='page', ref=page.slug) }}" class="btn btn-outline">Translate</a> <a href="{{ (url_for('about') if page.slug == 'about' else url_for('site_page', slug=page.slug)) }}?preview=1" target="_blank" rel="noopener" class="btn btn-outline">Preview as a customer &#8599;</a></div>{% endif %}</div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% if not page %}
+        <label for="slug">Address of the page</label>
+        <div class="input-prefix"><span>/page/</span><input id="slug" name="slug" value="{{ form.get('slug', '') }}" pattern="[a-z0-9][a-z0-9-]{1,39}" maxlength="40" required placeholder="fees-2027"></div>
+        {% endif %}
+        <label for="title">Title</label>
+        <input id="title" name="title" value="{{ form.get('title', '') }}" maxlength="80" required>
+        <label for="body">Text</label>
+        <textarea id="body" name="body" rows="18" maxlength="20000" required>{{ form.get('body', '') }}</textarea>
+        <p class="small muted">Write normal text. A line starting with <code>## </code> is a heading, <code>- </code> a list item; <code>**bold**</code>; <code>[words](/rates)</code> or <code>[words](https://...)</code> is a link. HTML is not allowed (it is shown as text).</p>
+        <label class="checkbox"><input type="checkbox" name="published" value="1" {{ 'checked' if form.get('published', 1)|string in ('1', 'True', 'on') }}> Visible on the website</label>
+        <label class="checkbox"><input type="checkbox" name="in_footer" value="1" {{ 'checked' if form.get('in_footer', 1)|string in ('1', 'True', 'on') }}> Link in the footer</label>
+        <div class="btn-row">
+            <button class="btn btn-primary" name="action" value="save">Save page</button>
+            {% if page and page.slug != 'about' %}<button class="btn btn-danger" name="action" value="delete" formnovalidate onclick="return confirm('Delete this page? Its text stays in the history.')">Delete</button>{% endif %}
+        </div>
+    </form>
+    <section class="panel">
+        {% if page %}
+        <h2>How it looks</h2>
+        <div class="page-body preview-box" tabindex="0" role="region" aria-label="Preview of the page">{{ preview_html|safe }}</div>
+        {% endif %}
+        <h2>History</h2>
+        {% for h in history %}
+        <div class="mini-row"><div><strong>{{ h.data.title }}</strong><small>replaced {{ h.saved_at|nicedate }} by {{ h.saved_by }} &middot; {{ h.data.body|length }} characters</small></div>
+            <form method="post" action="{{ url_for('office_history_restore', hid=h.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">Put this back</button></form></div>
+        {% else %}<p class="muted small">No older versions yet.</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

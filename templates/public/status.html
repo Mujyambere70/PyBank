@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}System Status{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><h1>System status</h1><p>Is PyBank working right now?</p></div></section>
+<section class="section">
+    <div class="wrap narrow">
+        <div class="status-head status-{{ h.status }}">
+            {% if h.status == 'ok' %}&#10003; All systems are working{% elif h.status == 'degraded' %}&#9888; Working, with a small problem{% else %}&#10007; The bank is not available{% endif %}
+            <small>checked {{ h.time|nicedate }}</small>
+        </div>
+        <div class="table-card"><table class="data">
+            <thead><tr><th>Part</th><th>State</th><th>Details</th></tr></thead>
+            <tbody>
+            {% for name, c in h.checks.items() %}
+            <tr><td>{{ {'database': 'Database', 'backup': 'Daily backup', 'daily_jobs': 'Daily jobs (interest, statements, autopay)', 'exchange_rates': 'Exchange rates', 'payments_queue': 'Payments to other banks', 'errors': 'Server errors'}[name] }}</td>
+                <td>{% if c.ok %}<span class="badge ok">OK</span>{% else %}<span class="badge st-pending">Check</span>{% endif %}</td>
+                <td class="small">{{ c.detail }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table></div>
+        <p class="muted small">Machines can read the same information as JSON at <a href="{{ url_for('health') }}">/health</a>.</p>
+    </div>
+</section>
+{% endblock %}

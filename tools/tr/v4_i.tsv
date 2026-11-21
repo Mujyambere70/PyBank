@@ -1,0 +1,76 @@
+IMPS, NEFT and UPI inside India · SWIFT to any country · SEPA for euro payments in Europe.	IMPS, NEFT и UPI внутри Индии · SWIFT в любую страну · SEPA для платежей в евро по Европе.	IMPS, NEFT et UPI en Inde · SWIFT vers tout pays · SEPA pour les paiements en euros en Europe.	IMPS, NEFT y UPI dentro de la India · SWIFT a cualquier país · SEPA para pagos en euros en Europa.	IMPS وNEFT وUPI داخل الهند · SWIFT إلى أي دولة · SEPA لمدفوعات اليورو في أوروبا.	IMPS、NEFT 和 UPI 用于印度境内 · SWIFT 可汇往任何国家 · SEPA 用于欧洲境内欧元付款。
+UPI ID	UPI ID	Identifiant UPI	ID de UPI	معرّف UPI	UPI ID
+SWIFT and SEPA payments travel to the payment network in ISO 20022 files (pain.001) and come back with a status report (pain.002).	Платежи SWIFT и SEPA уходят в платёжную сеть в файлах ISO 20022 (pain.001) и возвращаются с отчётом о статусе (pain.002).	Les paiements SWIFT et SEPA partent vers le réseau de paiement dans des fichiers ISO 20022 (pain.001) et reviennent avec un rapport de statut (pain.002).	Los pagos SWIFT y SEPA viajan a la red de pagos en archivos ISO 20022 (pain.001) y vuelven con un informe de estado (pain.002).	تنتقل مدفوعات SWIFT وSEPA إلى شبكة الدفع في ملفات ISO 20022 (pain.001) وتعود بتقرير حالة (pain.002).	SWIFT 和 SEPA 付款以 ISO 20022 文件（pain.001）发往支付网络，并以状态报告（pain.002）返回。
+All together ≈	Всего ≈	Au total ≈	En total ≈	الإجمالي ≈	合计 ≈
+(middle rates)	(по средним курсам)	(taux moyens)	(tipos medios)	(بالأسعار الوسطية)	（按中间价）
+Open a second account in another currency first (on the right).	Сначала откройте второй счёт в другой валюте (справа).	Ouvrez d'abord un deuxième compte dans une autre devise (à droite).	Abra primero una segunda cuenta en otra moneda (a la derecha).	افتح أولًا حسابًا ثانيًا بعملة أخرى (على اليمين).	请先开立另一种货币的第二个账户（右侧）。
+Middle rate	Средний курс	Taux moyen	Tipo medio	السعر الوسطي	中间价
+Bank's margin	Маржа банка	Marge de la banque	Margen del banco	هامش البنك	银行差价
+Your rate	Ваш курс	Votre taux	Su tipo	سعرك	您的汇率
+Confirm and move	Подтвердить и перевести	Confirmer et transférer	Confirmar y mover	أكّد وانقل	确认并转账
+You send ({0})	Вы отправляете ({0})	Vous envoyez ({0})	Usted envía ({0})	ترسل ({0})	您转出（{0}）
+You get ({0})	Вы получаете ({0})	Vous recevez ({0})	Usted recibe ({0})	تستلم ({0})	您收到（{0}）
+This account has no debit card. Ask for one in Service Requests.	У этого счёта нет дебетовой карты. Закажите её в разделе «Сервисные заявки».	Ce compte n'a pas de carte de débit. Demandez-en une dans Demandes de service.	Esta cuenta no tiene tarjeta de débito. Pida una en Solicitudes de servicio.	لا توجد بطاقة خصم لهذا الحساب. اطلب واحدة من طلبات الخدمة.	此账户没有借记卡。请在“服务申请”中申请。
+DEBIT	ДЕБЕТ	DÉBIT	DÉBITO	خصم	借记
+No card payments yet.	Платежей картой пока нет.	Aucun paiement par carte pour l'instant.	Aún no hay pagos con tarjeta.	لا توجد مدفوعات بالبطاقة بعد.	暂无刷卡付款。
+Amount due this month	Сумма к оплате в этом месяце	Montant dû ce mois-ci	Importe a pagar este mes	المبلغ المستحق هذا الشهر	本月应付金额
+No bills paid yet.	Оплаченных счетов пока нет.	Aucune facture payée pour l'instant.	Aún no hay facturas pagadas.	لم تُدفع فواتير بعد.	尚未支付账单。
+No standing instructions yet.	Регулярных платежей пока нет.	Pas encore d'ordre permanent.	Aún no hay órdenes permanentes.	لا توجد أوامر دائمة بعد.	暂无定期付款指令。
+No spending this month yet.	В этом месяце расходов пока нет.	Aucune dépense ce mois-ci pour l'instant.	Aún no hay gastos este mes.	لا يوجد إنفاق هذا الشهر بعد.	本月暂无支出。
+No budget yet. Set one below and you get an alert at 80% and at 100%.	Бюджета пока нет. Задайте его ниже — уведомление придёт при 80% и 100%.	Pas encore de budget. Définissez-en un ci-dessous et vous recevrez une alerte à 80 % et à 100 %.	Aún no hay presupuesto. Defina uno abajo y recibirá un aviso al 80 % y al 100 %.	لا توجد ميزانية بعد. حدّد واحدة أدناه وستتلقى تنبيهًا عند 80٪ و100٪.	暂无预算。在下方设置后，用到 80% 和 100% 时会收到提醒。
+No app is signed in. Developers: see	Нет приложений с выполненным входом. Разработчикам: см.	Aucune application connectée. Développeurs : voir	No hay aplicaciones conectadas. Desarrolladores: vean	لا يوجد تطبيق مسجّل. للمطورين: راجع	没有已登录的应用。开发者请参阅
+the PyBank API	API PyBank	l'API PyBank	la API de PyBank	واجهة PyBank البرمجية	PyBank API
+Senior citizen rate:	Ставка для пенсионеров:	Taux senior :	Tipo para mayores:	سعر كبار السن:	老年人利率：
+PDF →	PDF →	PDF →	PDF →	PDF ←	PDF →
+✓ All systems are working	✓ Все системы работают	✓ Tous les systèmes fonctionnent	✓ Todos los sistemas funcionan	✓ كل الأنظمة تعمل	✓ 所有系统运行正常
+✗ The bank is not available	✗ Банк недоступен	✗ La banque n'est pas disponible	✗ El banco no está disponible	✗ البنك غير متاح	✗ 银行暂不可用
+We buy	Покупаем	Nous achetons	Compramos	نشتري	买入
+We sell	Продаём	Nous vendons	Vendemos	نبيع	卖出
+7 days	7 дней	7 jours	7 días	7 أيام	7 天
+Simple, secure banking	Простой и безопасный банк	Une banque simple et sûre	Banca sencilla y segura	خدمات مصرفية بسيطة وآمنة	简单、安全的银行服务
+Email *	E-mail *	E-mail *	Correo *	البريد الإلكتروني *	电子邮件 *
+ISO 20022 payment files	Платёжные файлы ISO 20022	Fichiers de paiement ISO 20022	Archivos de pago ISO 20022	ملفات الدفع ISO 20022	ISO 20022 付款文件
+ISO 20022 payment files | PyBank	Платёжные файлы ISO 20022 | PyBank	Fichiers de paiement ISO 20022 | PyBank	Archivos de pago ISO 20022 | PyBank	ملفات الدفع ISO 20022 | PyBank	ISO 20022 付款文件 | PyBank
+ISO 20022 files	Файлы ISO 20022	Fichiers ISO 20022	Archivos ISO 20022	ملفات ISO 20022	ISO 20022 文件
+Make pain.001 file	Создать файл pain.001	Créer le fichier pain.001	Crear archivo pain.001	أنشئ ملف pain.001	生成 pain.001 文件
+Read a status report (pain.002)	Прочитать отчёт о статусе (pain.002)	Lire un rapport de statut (pain.002)	Leer un informe de estado (pain.002)	اقرأ تقرير حالة (pain.002)	读取状态报告（pain.002）
+. Rejected:	. Отклонено:	. Refusé :	. Rechazado:	. مرفوض:	。拒绝：
+Test answer	Тестовый ответ	Réponse de test	Respuesta de prueba	رد تجريبي	测试答复
+No files yet.	Файлов пока нет.	Pas encore de fichier.	Aún no hay archivos.	لا توجد ملفات بعد.	暂无文件。
+"Test answer" downloads the pain.002 that the test partner would send (an IBAN or account ending in 0000 is rejected with AC04 - account closed). Read it back above to finish the payments.	«Тестовый ответ» скачивает pain.002, который прислал бы тестовый партнёр (IBAN или счёт, оканчивающийся на 0000, отклоняется с кодом AC04 — счёт закрыт). Загрузите его выше, чтобы завершить платежи.	« Réponse de test » télécharge le pain.002 que le partenaire de test enverrait (un IBAN ou un compte se terminant par 0000 est refusé avec AC04 - compte fermé). Relisez-le ci-dessus pour terminer les paiements.	«Respuesta de prueba» descarga el pain.002 que enviaría el socio de prueba (un IBAN o una cuenta que termina en 0000 se rechaza con AC04: cuenta cerrada). Léalo arriba para terminar los pagos.	يُنزّل «رد تجريبي» ملف pain.002 الذي كان سيرسله الشريك التجريبي (يُرفض رقم IBAN أو الحساب المنتهي بـ 0000 برمز AC04 - الحساب مغلق). اقرأه أعلاه لإتمام المدفوعات.	“测试答复”会下载测试合作方将发送的 pain.002（以 0000 结尾的 IBAN 或账号会以 AC04——账户已关闭——被拒绝）。在上方读取即可完成付款。
+No flags here.	Здесь отметок нет.	Aucune alerte ici.	No hay alertas aquí.	لا توجد تنبيهات هنا.	此处无标记。
+Report (sandbox - not sent)	Сообщение (песочница — не отправлено)	Déclaration (bac à sable - non envoyée)	Informe (pruebas: no enviado)	البلاغ (تجريبي - لم يُرسل)	报告（沙盒——未发送）
+Put this back	Вернуть эту версию	Remettre cette version	Restaurar esta versión	أعِد هذه النسخة	恢复此版本
+· hidden	· скрыто	· masqué	· oculto	· مخفي	· 已隐藏
+not translated	не переведено	non traduit	sin traducir	غير مترجم	未翻译
+Your entry - another person must approve	Ваша запись — одобрить должен другой человек	Votre écriture - une autre personne doit l'approuver	Su asiento: otra persona debe aprobarlo	قيدك - يجب أن يوافق عليه شخص آخر	您的分录——须由他人批准
+Nothing is waiting.	Ничего не ожидает.	Rien n'est en attente.	Nada en espera.	لا شيء بالانتظار.	无待处理事项。
+Last customer transaction	Последняя операция клиента	Dernière opération du client	Último movimiento del cliente	آخر معاملة للعميل	客户最后一笔交易
+No dormant account.	Неактивных счетов нет.	Aucun compte dormant.	No hay cuentas inactivas.	لا يوجد حساب خامل.	无休眠账户。
+outstanding	задолженность	restant dû	pendiente	مستحق	未偿
+Website texts, pages and lists	Тексты, страницы и списки сайта	Textes, pages et listes du site	Textos, páginas y listas del sitio	نصوص الموقع وصفحاته وقوائمه	网站文本、页面和列表
+Edit the website	Редактировать сайт	Modifier le site	Editar el sitio	عدّل الموقع	编辑网站
+Notices on the website	Объявления на сайте	Avis sur le site	Avisos en el sitio	الإشعارات على الموقع	网站公告
+No requests.	Заявок нет.	Aucune demande.	No hay solicitudes.	لا توجد طلبات.	暂无申请。
+What I can do	Что я могу	Ce que je peux faire	Qué puedo hacer	ما الذي يمكنني فعله	我的权限
+Good morning, {0}	Доброе утро, {0}	Bonjour, {0}	Buenos días, {0}	صباح الخير، {0}	早上好，{0}
+Good afternoon, {0}	Добрый день, {0}	Bon après-midi, {0}	Buenas tardes, {0}	مساء الخير، {0}	下午好，{0}
+Good evening, {0}	Добрый вечер, {0}	Bonsoir, {0}	Buenas noches, {0}	مساء الخير، {0}	晚上好，{0}
+Application rejected	Заявка отклонена	Demande refusée	Solicitud rechazada	تم رفض الطلب	申请已拒绝
+Login locked	Вход заблокирован	Connexion verrouillée	Acceso bloqueado	الدخول مقفل	登录已锁定
+Login is locked	Вход заблокирован	La connexion est verrouillée	El acceso está bloqueado	الدخول مقفل	登录已锁定
+after wrong passwords.	после неверных паролей.	après des mots de passe erronés.	tras contraseñas erróneas.	بعد إدخال كلمات مرور خاطئة.	（因多次输错密码）。
+Unlock now	Разблокировать	Déverrouiller	Desbloquear ahora	فك القفل الآن	立即解锁
+Two-factor login is on.	Двухфакторный вход включён.	La double authentification est activée.	El inicio en dos pasos está activado.	الدخول الثنائي مفعّل.	双重验证登录已开启。
+Lost phone?	Потерян телефон?	Téléphone perdu ?	¿Perdió el teléfono?	فقدت الهاتف؟	手机丢失？
+Turn off 2FA	Отключить 2FA	Désactiver la 2FA	Desactivar 2FA	أوقف التحقق الثنائي	关闭双重验证
+No card.	Карты нет.	Pas de carte.	Sin tarjeta.	لا توجد بطاقة.	无卡。
+Disabled	Отключён	Désactivé	Desactivado	معطّل	已停用
+No document!	Нет документа!	Aucun document !	¡Sin documento!	لا توجد وثيقة!	无证件！
+Not checked yet.	Ещё не проверено.	Pas encore vérifié.	Aún no comprobado.	لم يُفحص بعد.	尚未核验。
+No applications waiting.	Заявок в ожидании нет.	Aucune demande en attente.	No hay solicitudes en espera.	لا توجد طلبات بالانتظار.	无待处理申请。
+No document (not needed for email, phone or occupation).	Документа нет (не нужен для e-mail, телефона или рода занятий).	Aucun document (inutile pour l'e-mail, le téléphone ou la profession).	Sin documento (no hace falta para correo, teléfono u ocupación).	لا توجد وثيقة (غير مطلوبة للبريد أو الهاتف أو المهنة).	无证件（邮箱、电话或职业变更无需证件）。
+No changes waiting.	Изменений в ожидании нет.	Aucune modification en attente.	No hay cambios en espera.	لا توجد تغييرات بالانتظار.	无待处理变更。
+PyBank Back Office · every action is recorded in the audit log ·	Бэк-офис PyBank · каждое действие записывается в журнал аудита ·	Back-office PyBank · chaque action est enregistrée dans le journal d'audit ·	Back office de PyBank · cada acción queda en el registro de auditoría ·	المكتب الخلفي لـ PyBank · يُسجَّل كل إجراء في سجل التدقيق ·	PyBank 后台 · 每项操作均记录在审计日志中 ·
+For your tax return: the interest you earned on savings and fixed deposits and the interest you paid on loans in a financial year (1 April - 31 March).	Для налоговой декларации: проценты, полученные по сбережениям и вкладам, и проценты, уплаченные по кредитам за финансовый год (1 апреля – 31 марта).	Pour votre déclaration d'impôts : les intérêts reçus sur l'épargne et les dépôts à terme et les intérêts payés sur les prêts pendant un exercice (1er avril - 31 mars).	Para su declaración de impuestos: los intereses ganados en ahorros y depósitos y los intereses pagados en préstamos en un año fiscal (1 de abril - 31 de marzo).	لإقرارك الضريبي: الفوائد التي كسبتها من الادخار والودائع الثابتة والفوائد التي دفعتها على القروض في سنة مالية (1 أبريل - 31 مارس).	用于报税：一个财年（4月1日–3月31日）内储蓄和定期存款所得利息及贷款所付利息。
+For your tax return: the interest you earned on savings and fixed deposits and the interest you paid on loans in a year.	Для налоговой декларации: проценты, полученные по сбережениям и вкладам, и проценты, уплаченные по кредитам за год.	Pour votre déclaration d'impôts : les intérêts reçus sur l'épargne et les dépôts à terme et les intérêts payés sur les prêts pendant une année.	Para su declaración de impuestos: los intereses ganados en ahorros y depósitos y los intereses pagados en préstamos en un año.	لإقرارك الضريبي: الفوائد التي كسبتها من الادخار والودائع الثابتة والفوائد التي دفعتها على القروض في سنة.	用于报税：一年内储蓄和定期存款所得利息及贷款所付利息。

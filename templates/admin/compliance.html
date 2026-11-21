@@ -1,0 +1,29 @@
+{% extends "admin/layout.html" %}
+{% block title %}Suspicious activity{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Suspicious activity</h1><p class="muted small">Flags made by simple rules after every transaction. Look at the account, then clear the flag or report it. The rules are examples for a study project.</p></div>
+    <a href="{{ url_for('office_dormant') }}" class="btn btn-outline">Dormant accounts</a></div>
+<nav class="tabs" aria-label="Status">{% for s in STATUSES + [''] %}<a href="{{ url_for('office_compliance', status=s) }}" class="{{ 'active' if s == status }}">{{ s or 'All' }}</a>{% endfor %}</nav>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>#</th><th>Customer</th><th>Rule</th><th>What happened</th><th class="num">Amount</th><th>Date</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for f in rows %}
+        <tr><td>{{ f.id }}</td><td><a href="{{ url_for('office_customer', cid=f.customer_id) }}">{{ f.full_name }}</a><br><small class="muted" translate="no">XX{{ f.account_number[-4:] }}</small></td>
+            <td><strong>{{ RULES[f.rule] }}</strong></td><td class="small">{{ f.details }}</td><td class="num">{{ f.amount|money(f.currency) }}</td><td class="nowrap small">{{ f.created_at|nicedate }}</td>
+            <td><span class="badge {{ 'st-pending' if f.status == 'Open' else 'ok' if f.status == 'Cleared' else 'st-rejected' }}">{{ f.status }}</span></td>
+            <td><a href="{{ url_for('office_flag', flag_id=f.id) }}" class="btn btn-outline btn-sm">{{ 'Review' if f.status == 'Open' else 'Open' }}</a></td></tr>
+        {% else %}<tr><td colspan="8" class="center muted">No flags here.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+</section>
+<section class="panel info">
+    <h2>The rules</h2>
+    <ul class="check-list small">
+        <li><b>{{ RULES.LARGE_CASH }}</b>: one cash deposit or withdrawal at or above the reporting amount ({% for c, v in examples.items() %}{% if c in ('INR', 'RUB', 'USD', 'EUR') %}{{ v|money(c) }}{{ ', ' if c != 'EUR' }}{% endif %}{% endfor %} ...).</li>
+        <li><b>{{ RULES.STRUCTURING }}</b>: 3 or more cash deposits in 7 days, each below that amount, together above it.</li>
+        <li><b>{{ RULES.PASS_THROUGH }}</b>: at least half of the reporting amount came in, and 90 % of it went out again within 24 hours.</li>
+        <li><b>{{ RULES.NEW_PAYEES }}</b>: transfers to 5 or more different accounts within one hour.</li>
+    </ul>
+</section>
+{% endblock %}

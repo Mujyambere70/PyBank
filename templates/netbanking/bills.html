@@ -1,0 +1,79 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Bills &amp; Autopay{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Bills &amp; autopay</h1><p class="muted small">Pay electricity, mobile, water, gas and internet bills, and let the bank pay regular payments for you. <span class="badge st-pending">Sandbox</span> the billers are made up.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Pay a bill</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="balance-line">From: <strong translate="no">A/c {{ account.number }}</strong> ({{ account.currency }}) &middot; Balance {{ account.balance|money }}</div>
+        {% if bill %}
+        <input type="hidden" name="action" value="pay"><input type="hidden" name="biller" value="{{ bill.biller.id }}"><input type="hidden" name="consumer_no" value="{{ bill.consumer_no }}">
+        <div class="confirm-box">
+            <div class="mini-row"><span>Biller</span><strong>{{ bill.biller.name }}</strong></div>
+            <div class="mini-row"><span>{{ bill.biller.number_label }}</span><strong translate="no">{{ bill.consumer_no }}</strong></div>
+            <div class="mini-row total"><span>Amount due this month</span><strong>{{ bill.amount|money(bill.biller.currency) }}</strong></div>
+        </div>
+        <label for="bill-amount">Amount to pay ({{ account.currency }})</label>
+        <input type="number" id="bill-amount" name="amount" min="1" step="0.01" value="{{ '%.2f'|format(bill.amount / 100) }}" required>
+        <label for="bill-pin">Transaction PIN</label>
+        <input type="password" id="bill-pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required autofocus>
+        <div class="btn-row"><button class="btn btn-primary">Pay the bill</button><a href="{{ url_for('bills') }}" class="btn btn-outline">Cancel</a></div>
+        {% elif billers %}
+        <input type="hidden" name="action" value="fetch">
+        <label for="biller">Biller</label>
+        <select id="biller" name="biller" required>
+            {% for b in billers %}<option value="{{ b.id }}" {{ 'selected' if form.get('biller') == b.id|string }}>{{ b.category }} &middot; {{ b.name }}</option>{% endfor %}
+        </select>
+        <label for="consumer">Consumer number / mobile number / ID</label>
+        <input id="consumer" name="consumer_no" value="{{ form.get('consumer_no', '') }}" inputmode="numeric" required>
+        <button class="btn btn-primary btn-block">Get the bill</button>
+        <p class="small muted">Test tip: a number ending in 000 is unknown at the biller.</p>
+        {% else %}<p class="muted">There is no biller for {{ account.currency }} accounts yet. Choose another account at the top of the menu.</p>{% endif %}
+    </form>
+    <section class="panel">
+        <h2>Paid bills</h2>
+        {% for p in payments %}
+        <div class="mini-row"><div><strong>{{ p.biller }}</strong><small>{{ p.category }} &middot; <span translate="no">{{ p.consumer_no }}</span> &middot; {{ p.created_at|nicedate }}{{ ' · autopay' if p.instruction_id }}</small></div><a href="{{ url_for('receipt', ref=p.tx_ref) }}"><strong>{{ p.amount|money }}</strong></a></div>
+        {% else %}<p class="muted">No bills paid yet.</p>{% endfor %}
+    </section>
+</div>
+
+<section class="panel" id="autopay">
+    <h2>Standing instructions (autopay)</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Name</th><th>Pays to</th><th class="num">Amount</th><th>How often</th><th>Next payment</th><th>Last result</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for s in instructions %}
+        <tr><td><strong>{{ s.name }}</strong><br><small class="muted" translate="no">from XX{{ s.account_number[-4:] }}</small></td>
+            <td class="small" translate="no">{{ 'A/c XX' ~ s.payee_account[-4:] if s.kind == 'transfer' else s.consumer_no }}</td>
+            <td class="num">{{ s.amount|money(s.currency) }}</td><td>{{ FREQUENCIES[s.frequency] }}</td>
+            <td class="nowrap">{{ s.next_run if s.status == 'Active' else '–' }}{% if s.ends_on %}<br><small class="muted">until {{ s.ends_on }}</small>{% endif %}</td>
+            <td class="small">{{ s.last_result or '–' }}</td>
+            <td><span class="badge {{ 'ok' if s.status == 'Active' else 'st-pending' if s.status == 'Paused' else '' }}">{{ s.status }}</span></td>
+            <td>{% if s.status in ('Active', 'Paused') %}<form method="post" class="btn-row"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ s.id }}">
+                {% if s.status == 'Active' %}<button name="action" value="pause" class="btn btn-outline btn-sm">Pause</button>{% else %}<button name="action" value="resume" class="btn btn-outline btn-sm">Resume</button>{% endif %}
+                <button name="action" value="cancel" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this standing instruction?')">Cancel</button></form>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="8" class="center muted">No standing instructions yet.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+    <details class="own-tools" {{ 'open' if form.get('action') == 'instruction' }}><summary class="btn btn-primary">+ New standing instruction</summary>
+    <form method="post" class="panel inner" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="instruction">
+        <div class="form-grid">
+            <div><label for="si-kind">What to pay</label><select id="si-kind" name="kind"><option value="transfer" {{ 'selected' if form.get('kind') == 'transfer' }}>Transfer to a PyBank account</option><option value="bill" {{ 'selected' if form.get('kind') == 'bill' }}>A bill</option></select></div>
+            <div><label for="si-name">Name (for you)</label><input id="si-name" name="name" maxlength="40" value="{{ form.get('name', '') }}" placeholder="Rent, mobile bill ..."></div>
+            <div><label for="si-payee">PyBank account (for a transfer)</label><input id="si-payee" name="payee" list="payee-list" inputmode="numeric" maxlength="12" value="{{ form.get('payee', '') }}"><datalist id="payee-list">{% for p in payees %}<option value="{{ p.account_number }}">{{ p.nickname }}</option>{% endfor %}</datalist></div>
+            <div><label for="si-biller">Biller (for a bill)</label><select id="si-biller" name="biller">{% for b in billers %}<option value="{{ b.id }}">{{ b.name }}</option>{% else %}<option value="">No biller for {{ account.currency }}</option>{% endfor %}</select></div>
+            <div><label for="si-consumer">Consumer number (for a bill)</label><input id="si-consumer" name="consumer_no" value="{{ form.get('consumer_no', '') }}" inputmode="numeric"></div>
+            <div><label for="si-amount">Amount ({{ account.currency }})</label><input id="si-amount" type="number" name="amount" min="1" step="0.01" value="{{ form.get('amount', '') }}" required></div>
+            <div><label for="si-freq">How often</label><select id="si-freq" name="frequency">{% for k, v in FREQUENCIES.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select></div>
+            <div><label for="si-start">First payment</label><input id="si-start" type="date" name="start" min="{{ today.isoformat() }}" value="{{ form.get('start', today.isoformat()) }}" required></div>
+            <div><label for="si-ends">Last date (optional)</label><input id="si-ends" type="date" name="ends" value="{{ form.get('ends', '') }}"></div>
+            <div><label for="si-pin">Transaction PIN</label><input id="si-pin" type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required></div>
+        </div>
+        <p class="small muted">The payments are taken from A/c XX{{ account.number[-4:] }}. You give your PIN once now; on each date the bank pays and sends you an alert. If the money is not there, that payment is skipped and you get an alert.</p>
+        <button class="btn btn-primary">Create the standing instruction</button>
+    </form></details>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "admin/layout.html" %}
+{% block title %}Billers{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Billers</h1><p class="muted small"><a href="{{ url_for('office_content') }}#billers">&larr; Website content</a> &middot; companies whose bills customers pay in Net Banking (sandbox).</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <h2>{{ 'Change ' ~ edit.name if edit else 'Add a biller' }}</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ edit.id if edit else '' }}">
+        <label for="b-name">Name</label><input id="b-name" name="name" value="{{ form.get('name', '') }}" maxlength="80" required>
+        <div class="form-grid">
+            <div><label for="b-cat">Category</label><select id="b-cat" name="category">{% for c in CATEGORIES %}<option {{ 'selected' if form.get('category') == c }}>{{ c }}</option>{% endfor %}</select></div>
+            <div><label for="b-cur">Currency</label><select id="b-cur" name="currency">{% for c in CURRENCIES %}<option {{ 'selected' if form.get('currency', 'INR') == c }}>{{ c }}</option>{% endfor %}</select></div>
+        </div>
+        <label for="b-country">Country</label><select id="b-country" name="country">{% for code, cname in countries %}<option value="{{ code }}" {{ 'selected' if form.get('country', 'IN') == code }}>{{ cname }}</option>{% endfor %}</select>
+        <div class="form-grid">
+            <div><label for="b-label">Name of the customer's number</label><input id="b-label" name="number_label" value="{{ form.get('number_label', 'Consumer number') }}" maxlength="40" required></div>
+            <div><label for="b-re">Number pattern (regular expression)</label><input id="b-re" name="number_regex" value="{{ form.get('number_regex', '^[0-9]{6,12}$') }}" maxlength="80" translate="no"></div>
+        </div>
+        <label class="checkbox"><input type="checkbox" name="active" value="1" {{ 'checked' if form.get('active', 1)|string in ('1', 'True', 'on') }}> Customers can pay this biller</label>
+        <div class="btn-row"><button class="btn btn-primary">Save</button>{% if edit %}<a href="{{ url_for('office_billers') }}" class="btn btn-outline">Cancel</a>{% endif %}</div>
+    </form>
+    <section class="panel">
+        <h2>All billers ({{ rows|length }})</h2>
+        {% for b in rows %}
+        <div class="mini-row {{ '' if b.active else 'off' }}"><div><strong>{{ b.name }}</strong><small>{{ b.category }} &middot; {{ b.country }} &middot; {{ b.currency }} &middot; {{ b.number_label }} <code translate="no">{{ b.number_regex }}</code></small></div>
+            <a href="{{ url_for('office_billers', id=b.id) }}" class="btn btn-outline btn-sm">Edit</a></div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

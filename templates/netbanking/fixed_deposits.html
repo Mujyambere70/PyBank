@@ -13,7 +13,7 @@
         <div class="choice-grid fd-choices">
             {% for m in FD_TENURES %}
             <label class="choice"><input type="radio" name="months" value="{{ m }}" {{ 'checked' if form.get('months', '12') == m|string }}>
-                <span><strong>{{ m }} months</strong><br><small>{{ '%.2f'|format(FD_RATES[m]) }}% a year</small></span></label>
+                <span><strong>{{ m }} months</strong><br><small>{{ '%.2f'|format(my_rates[m]) }}% a year</small></span></label>
             {% endfor %}
         </div>
         <label for="pin">Transaction PIN</label>
@@ -23,7 +23,8 @@
     <aside class="panel info">
         <h2>Good to know</h2>
         <ul class="check-list">
-            <li>Interest is fixed on the day you open the FD.</li>
+            <li>Interest is fixed on the day you open the FD and added every quarter (compound interest).</li>
+            {% if senior %}<li><strong>Senior citizen rate:</strong> you get {{ SETTINGS.fd_senior_extra }}% more than the general rate.</li>{% endif %}
             <li>At maturity you get the full interest.</li>
             <li>Close early at any time: you get {{ '%.0f'|format(1) }}% less interest.</li>
             <li>The money goes straight back to your account.</li>

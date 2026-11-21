@@ -205,15 +205,20 @@ class BankAdmin:
     # ================================================================ customers
 
     def customers(self, q="", status=""):
+        """One row per customer with the main account (version 4: other currency accounts are counted)."""
         sql = ("SELECT c.*, a.number, a.type AS account_type, a.balance, a.status AS account_status, a.currency, "
                "(SELECT COUNT(*) FROM service_requests r WHERE r.customer_id = c.customer_id AND r.status = 'Open') "
-               "AS open_requests FROM customers c JOIN accounts a ON a.customer_id = c.customer_id WHERE 1 = 1")
+               "AS open_requests, (SELECT COUNT(*) FROM accounts x WHERE x.customer_id = c.customer_id) - 1 "
+               "AS extra_accounts FROM customers c JOIN accounts a ON a.customer_id = c.customer_id "
+               "WHERE a.number = (SELECT m.number FROM accounts m WHERE m.customer_id = c.customer_id "
+               "ORDER BY CASE WHEN m.card_last4 = '' THEN 1 ELSE 0 END, m.opened_at, m.number LIMIT 1)")
         args = []
         if q:
-            sql += " AND (c.full_name LIKE ? OR c.customer_id LIKE ? OR c.email LIKE ? OR c.mobile LIKE ? OR a.number LIKE ?)"
+            sql += (" AND (c.full_name LIKE ? OR c.customer_id LIKE ? OR c.email LIKE ? OR c.mobile LIKE ? OR "
+                    "EXISTS (SELECT 1 FROM accounts y WHERE y.customer_id = c.customer_id AND y.number LIKE ?))")
             args += [f"%{q}%"] * 5
         if status == "frozen":
-            sql += " AND a.status = 'Frozen'"
+            sql += " AND EXISTS (SELECT 1 FROM accounts f WHERE f.customer_id = c.customer_id AND f.status = 'Frozen')"
         elif status in ("Pending", "Rejected"):
             sql += " AND c.status = ?"
             args.append(status)

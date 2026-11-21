@@ -1,0 +1,83 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}My Accounts{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>My accounts</h1><p class="muted small">Keep money in several currencies and move it between your accounts at the bank's rate.</p></div></div>
+<section class="panel">
+    <div class="panel-head"><h2>Accounts ({{ accounts|selectattr('status', 'ne', 'Closed')|list|length }})</h2>{% if total is not none %}<span class="small muted">All together &asymp; <strong>{{ total|money(main.currency) }}</strong> (middle rates)</span>{% endif %}</div>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Account</th><th>Currency</th><th>Type</th><th class="num">Balance</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for a in accounts %}
+        <tr>
+            <td><strong translate="no">{{ a.number }}</strong>{% if loop.first %} <span class="badge ok">Main &middot; card</span>{% endif %}<br><small class="muted">{{ a.branch }}</small></td>
+            <td>{{ a.currency }} <small class="muted">{{ currency_name(a.currency, LANG) }}</small></td>
+            <td>{{ a.type }}</td>
+            <td class="num"><strong>{{ a.balance|money(a.currency) }}</strong></td>
+            <td><span class="badge {{ 'ok' if a.status == 'Active' else 'st-pending' }}">{{ a.status }}</span></td>
+            <td>{% if not loop.first and a.status != 'Closed' %}
+                <details class="own-tools right"><summary class="btn btn-outline btn-sm">Close</summary>
+                <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="action" value="close"><input type="hidden" name="account" value="{{ a.number }}">
+                    <span class="small">Only an empty account can be closed.</span>
+                    <input type="password" name="pin" placeholder="PIN" aria-label="Transaction PIN" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+                    <button class="btn btn-danger btn-sm">Close account</button></form></details>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table></div>
+</section>
+
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off" id="exchange">
+        <h2>Move money between my accounts</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% set live = accounts|selectattr('status', 'equalto', 'Active')|list %}
+        {% if live|length < 2 %}
+        <p class="muted">Open a second account in another currency first (on the right).</p>
+        {% elif quote %}
+        <input type="hidden" name="action" value="exchange">
+        <input type="hidden" name="from" value="{{ quote.src_acc.number }}"><input type="hidden" name="to" value="{{ quote.dst_acc.number }}">
+        <input type="hidden" name="amount" value="{{ '%.2f'|format(quote.amount_in / 100) }}">
+        <div class="confirm-box">
+            <div class="mini-row"><span>You send (XX{{ quote.src_acc.number[-4:] }})</span><strong>{{ quote.amount_in|money(quote.src) }}</strong></div>
+            {% if quote.src != quote.dst %}
+            <div class="mini-row"><span>Middle rate</span><span translate="no">1 {{ quote.src }} = {{ '%.4f'|format(quote.mid) }} {{ quote.dst }}</span></div>
+            <div class="mini-row"><span>Bank's margin</span><span>{{ '%.2f'|format(quote.margin) }}% ({{ quote.cost|money(quote.dst) }})</span></div>
+            <div class="mini-row"><span>Your rate</span><strong translate="no">1 {{ quote.src }} = {{ '%.4f'|format(quote.rate) }} {{ quote.dst }}</strong></div>
+            {% endif %}
+            <div class="mini-row total"><span>You get (XX{{ quote.dst_acc.number[-4:] }})</span><strong class="in">{{ quote.amount|money(quote.dst) }}</strong></div>
+        </div>
+        <label for="ex-pin">Transaction PIN</label>
+        <input type="password" id="ex-pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required autofocus>
+        <div class="btn-row"><button class="btn btn-primary">Confirm and move</button><a href="{{ url_for('my_accounts') }}" class="btn btn-outline">Change</a></div>
+        {% else %}
+        <input type="hidden" name="action" value="quote">
+        <div class="form-grid">
+            <div><label for="ex-from">From</label><select id="ex-from" name="from" translate="no">{% for a in live %}<option value="{{ a.number }}" {{ 'selected' if form.get('from') == a.number }}>{{ a.currency }} XX{{ a.number[-4:] }} &middot; {{ a.balance|money(a.currency) }}</option>{% endfor %}</select></div>
+            <div><label for="ex-to">To</label><select id="ex-to" name="to" translate="no">{% for a in live %}<option value="{{ a.number }}" {{ 'selected' if form.get('to', live[1].number) == a.number }}>{{ a.currency }} XX{{ a.number[-4:] }}</option>{% endfor %}</select></div>
+        </div>
+        <label for="ex-amount">Amount (in the currency of the "From" account)</label>
+        <input type="number" id="ex-amount" name="amount" min="0.01" step="0.01" value="{{ form.get('amount', '') }}" required>
+        <button class="btn btn-primary btn-block">See the rate</button>
+        <p class="small muted">You see the exact amount and the bank's margin before you confirm.</p>
+        {% endif %}
+    </form>
+    <form method="post" class="panel" autocomplete="off">
+        <h2>Open an account in another currency</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="open">
+        {% if can_open and accounts|length - 1 < MAX_EXTRA %}
+        <label for="cur">Currency</label>
+        <select id="cur" name="currency">{% for c in can_open %}<option value="{{ c }}">{{ c }} &middot; {{ currency_name(c, LANG) }}</option>{% endfor %}</select>
+        <label for="open-pin">Transaction PIN</label>
+        <input type="password" id="open-pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <button class="btn btn-primary btn-block">Open the account</button>
+        {% else %}<p class="muted">You have the largest number of accounts ({{ MAX_EXTRA }} extra currencies).</p>{% endif %}
+        <ul class="check-list small">
+            <li>No minimum deposit and no fee for a currency account.</li>
+            <li>It earns savings interest like your main account.</li>
+            <li>Other PyBank customers can send money to it, and you can pay abroad from it with SWIFT or SEPA.</li>
+            <li>The debit card stays on your main account.</li>
+        </ul>
+    </form>
+</div>
+{% endblock %}

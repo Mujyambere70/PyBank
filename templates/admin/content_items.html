@@ -1,0 +1,61 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>{{ title }}{% if item %} &middot; edit #{{ item.id }}{% endif %}</h1><p class="muted small"><a href="{{ url_for('office_content') }}#lists">&larr; Website content</a> &middot; items are shown in the order of the number "Order" (small first).</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel" id="item-form">
+        <h2>{{ 'Change' if item else 'Add' }}</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% for name, (label, size, required) in fields.items() %}
+            <label for="f-{{ name }}">{{ label }}{% if not required %} <small class="muted">(optional)</small>{% endif %}</label>
+            {% if name == 'image' %}
+            <select id="f-{{ name }}" name="image"><option value="">No picture</option>{% for v, l in pictures %}<option value="{{ v }}" {{ 'selected' if form.get('image') == v }}>{{ l }}</option>{% endfor %}</select>
+            {% elif name == 'kind' %}
+            <select id="f-{{ name }}" name="kind">{% for k in BRANCH_KINDS %}<option {{ 'selected' if form.get('kind') == k }}>{{ k }}</option>{% endfor %}</select>
+            {% elif name == 'country' %}
+            <select id="f-{{ name }}" name="country">{% for code, cname in countries %}<option value="{{ code }}" {{ 'selected' if form.get('country', 'IN') == code }}>{{ cname }}</option>{% endfor %}</select>
+            {% elif name in ('starts', 'ends') %}
+            <input id="f-{{ name }}" type="date" name="{{ name }}" value="{{ form.get(name, '') or '' }}">
+            {% elif size > 120 %}
+            <textarea id="f-{{ name }}" name="{{ name }}" rows="4" maxlength="{{ size }}" {{ 'required' if required }}>{{ form.get(name, '') or '' }}</textarea>
+            {% else %}
+            <input id="f-{{ name }}" name="{{ name }}" value="{{ form.get(name, '') or '' }}" maxlength="{{ size }}" {{ 'required' if required }}>
+            {% endif %}
+        {% endfor %}
+        {% if kind == 'branch' %}
+        <div class="form-grid">
+            <div><label for="f-lat">Latitude (map)</label><input id="f-lat" name="lat" value="{{ form.get('lat', '') if form.get('lat') is not none else '' }}" inputmode="decimal" placeholder="30.3336"></div>
+            <div><label for="f-lng">Longitude (map)</label><input id="f-lng" name="lng" value="{{ form.get('lng', '') if form.get('lng') is not none else '' }}" inputmode="decimal" placeholder="76.8382"></div>
+        </div>
+        {% endif %}
+        <div class="form-grid">
+            <div><label for="f-position">Order</label><input id="f-position" type="number" name="position" min="0" max="999" value="{{ form.get('position', '') }}"></div>
+            <div><label>&nbsp;</label><label class="checkbox"><input type="checkbox" name="active" value="1" {{ 'checked' if form.get('active', 1)|string in ('1', 'True', 'on') }}> Show on the website</label></div>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-primary" name="action" value="save">{{ 'Save' if item else 'Add' }}</button>
+            {% if item %}<button class="btn btn-danger" name="action" value="delete" formnovalidate onclick="return confirm('Delete it? A copy stays in the history.')">Delete</button>
+            <a href="{{ url_for('office_translate', kind=kind, ref=item.id) }}" class="btn btn-outline">Translate</a>
+            <a href="{{ url_for('office_items', kind=kind) }}" class="btn btn-outline">Cancel</a>{% endif %}
+        </div>
+    </form>
+    <section class="panel">
+        {% if item %}
+        <h2>History</h2>
+        {% for h in history %}
+        <div class="mini-row"><div><strong>{{ h.data[fields|list|first] }}</strong><small>replaced {{ h.saved_at|nicedate }} by {{ h.saved_by }}</small></div></div>
+        {% else %}<p class="muted small">No older versions yet.</p>{% endfor %}
+        {% else %}
+        <h2>{{ title }} ({{ rows|length }})</h2>
+        {% for r in rows %}
+        <div class="mini-row {{ '' if r.active else 'off' }}">
+            <div><strong>{{ r.position }}. {{ r.title or r[fields|list|first] if 'title' in fields else r[fields|list|first] }}</strong>
+                <small>{% if kind == 'faq' %}{{ r.category }}{% elif kind == 'branch' %}{{ r.kind }} &middot; {{ r.city }}, {{ r.country }}{% elif kind == 'banner' %}{{ r.starts or 'always' }} &ndash; {{ r.ends or 'no end' }}{% elif kind == 'charge' %}{{ r.savings_fee }} / {{ r.current_fee }}{% else %}{{ r.stat }}{% endif %}
+                {% if not r.active %} &middot; hidden{% endif %} &middot; {% for l in status.get((kind, r.id|string), []) %}<span class="tr-tick" title="{{ LANGUAGES[l] }}">{{ l }}</span>{% else %}not translated{% endfor %}</small></div>
+            <a href="{{ url_for('office_item', kind=kind, item_id=r.id) }}" class="btn btn-outline btn-sm">Edit</a>
+        </div>
+        {% else %}<p class="muted">Nothing yet.</p>{% endfor %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

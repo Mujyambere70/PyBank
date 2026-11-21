@@ -10,6 +10,7 @@ Run alone:  python demo_data.py   (only works on an empty database)
 
 import io
 import json
+import os
 import random
 from datetime import date, datetime, timedelta
 
@@ -171,10 +172,17 @@ def seed_staff(office):
 def seed(bank, office=None, months=6, seed_value=42):
     if office is not None:
         seed_staff(office)
-    if not bank.is_empty():
-        return
-    with bank.alerts_paused():            # demo customers are fictional: never email or text them
-        _seed(bank, office, months, seed_value)
+    if bank.is_empty():
+        with bank.alerts_paused():            # demo customers are fictional: never email or text them
+            _seed(bank, office, months, seed_value)
+    if office is not None and hasattr(office, "set_job_role"):
+        import demo_v4                        # version 4 demo content (once, also on an existing database)
+        try:
+            demo_v4.seed_v4(bank, office)
+        except Exception as e:                # the website must start even if the demo content fails
+            bank.log_error("demo_v4", e)
+            if os.environ.get("PYBANK_STRICT_DEMO") == "1":
+                raise
 
 
 def _seed(bank, office, months, seed_value):
@@ -307,7 +315,7 @@ def _seed_version2(bank, office):
                              (cid, f"A/c XX{number[-4:]} {word} {format_money(t.amount, t.currency, 'en')}",
                               f"PyBank: A/c XX{number[-4:]} {word} {format_money(t.amount, t.currency, 'en')} on {when} "
                               f"({t.category}, Ref {t.ref}). Avl bal {format_money(t.balance_after, t.currency, 'en')}. "
-                              f"Not you? Call 1800-202-5050.",
+                              f"Not you? Call 1800-000-1930.",
                               t.created_at))
 
 

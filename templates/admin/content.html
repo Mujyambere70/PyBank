@@ -1,0 +1,69 @@
+{% extends "admin/layout.html" %}
+{% block title %}Website content{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Website content</h1><p class="muted small">Everything a visitor reads on the public website. Changes show at once; the old text is kept in the history. &#127760; = translated into that language.</p></div>
+    <a href="{{ url_for('index') }}" target="_blank" rel="noopener" class="btn btn-outline">Open the website &#8599;</a></div>
+
+<nav class="tabs" aria-label="Parts of the website">
+    <a href="#texts">Contacts &amp; texts</a><a href="#pages">Pages</a><a href="#lists">Lists</a><a href="#billers">Billers</a><a href="{{ url_for('office_media') }}">Pictures ({{ media|length }})</a>
+</nav>
+
+<form method="post" action="{{ url_for('office_content_texts') }}" class="panel" id="texts">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <h2>Contacts &amp; short texts</h2>
+    {% set by_key = {} %}{% for t in texts %}{% set _ = by_key.update({t.key: t}) %}{% endfor %}
+    {% for group, keys in groups %}
+    <h3>{{ group }}</h3>
+    <div class="form-grid">
+        {% for k in keys %}
+        <div>
+            <label for="t-{{ k }}">{{ labels[k] }}</label>
+            {% set v = by_key[k].value if k in by_key else '' %}
+            {% if v|length > 60 %}<textarea id="t-{{ k }}" name="{{ k }}" rows="2" maxlength="300">{{ v }}</textarea>{% else %}<input id="t-{{ k }}" name="{{ k }}" value="{{ v }}" maxlength="300">{% endif %}
+            <small class="muted">{% if k in by_key and by_key[k].updated_by %}changed {{ by_key[k].updated_at|nicedate }} by {{ by_key[k].updated_by }} &middot; {% endif %}<a href="{{ url_for('office_translate', kind='text', ref=k) }}">Translate</a> {% for l in status.get(('text', k), []) %}<span class="tr-tick" title="{{ LANGUAGES[l] }}">{{ l }}</span>{% endfor %} &middot; <a href="{{ url_for('office_content', key=k) }}#history">History</a></small>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <button class="btn btn-primary">Save the texts</button>
+</form>
+
+<section class="panel" id="history">
+    <h2>History of &ldquo;{{ labels.get(history_key, history_key) }}&rdquo;</h2>
+    {% for h in history %}
+    <div class="mini-row"><div><strong>{{ h.data.value }}</strong><small>replaced {{ h.saved_at|nicedate }} by {{ h.saved_by }}</small></div>
+        <form method="post" action="{{ url_for('office_history_restore', hid=h.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">Put this back</button></form></div>
+    {% else %}<p class="muted small">This text was never changed.</p>{% endfor %}
+</section>
+
+<section class="panel" id="pages">
+    <div class="panel-head"><h2>Pages ({{ pages|length }})</h2><a href="{{ url_for('office_page_new') }}" class="btn btn-primary btn-sm">+ New page</a></div>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Page</th><th>Address</th><th>Shown</th><th>Changed</th><th>Translations</th><th></th></tr></thead>
+        <tbody>
+        {% for pg in pages %}
+        <tr><td><strong>{{ pg.title }}</strong></td><td><code>{{ '/about' if pg.slug == 'about' else '/page/' ~ pg.slug }}</code></td>
+            <td>{% if pg.published %}<span class="badge ok">Visible</span>{% else %}<span class="badge">Hidden</span>{% endif %}{% if pg.in_footer %} <small class="muted">footer</small>{% endif %}</td>
+            <td class="small">{{ pg.updated_at|nicedate if pg.updated_at else '' }}{% if pg.updated_by %}<br>{{ pg.updated_by }}{% endif %}</td>
+            <td>{% for l in status.get(('page', pg.slug), []) %}<span class="tr-tick" title="{{ LANGUAGES[l] }}">{{ l }}</span>{% else %}<span class="muted small">none</span>{% endfor %}</td>
+            <td class="nowrap"><a href="{{ url_for('office_page_edit', slug=pg.slug) }}" class="btn btn-outline btn-sm">Edit</a> <a href="{{ url_for('office_translate', kind='page', ref=pg.slug) }}" class="btn btn-outline btn-sm">Translate</a> <a href="{{ (url_for('about') if pg.slug == 'about' else url_for('site_page', slug=pg.slug)) }}?preview=1" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Preview</a></td></tr>
+        {% endfor %}
+        </tbody>
+    </table></div>
+</section>
+
+<section class="panel" id="lists">
+    <h2>Lists on the website</h2>
+    <div class="kpi-grid">
+        {% for k, title in KINDS.items() %}
+        <a class="tile" href="{{ url_for('office_items', kind=k) }}"><small>{{ title }}</small><strong>{{ item_counts[k] }}</strong><span class="small muted">{{ {'faq': 'Help & FAQ page', 'product': 'cards on the home page', 'branch': 'contact page', 'banner': 'top of the home page', 'charge': 'rates page'}[k] }}</span></a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="panel" id="billers">
+    <div class="panel-head"><h2>Billers ({{ billers|length }})</h2><a href="{{ url_for('office_billers') }}" class="btn btn-primary btn-sm">Manage billers</a></div>
+    <p class="small muted">Companies whose bills customers can pay in Net Banking &rarr; Bills &amp; Autopay.</p>
+    {% for b in billers[:6] %}<div class="mini-row"><div><strong>{{ b.name }}</strong><small>{{ b.category }} &middot; {{ b.country }} &middot; {{ b.currency }}</small></div><span class="badge {{ 'ok' if b.active }}">{{ 'On' if b.active else 'Off' }}</span></div>{% endfor %}
+</section>
+{% endblock %}

@@ -144,6 +144,8 @@ class PgConnection:
         return {r[0] for r in cur.fetchall()}
 
     def reset_sequence(self, table):
+        if table.lower() not in self.serial_tables:          # e.g. sessions: the id is a text, no sequence
+            return
         cur = self.raw.cursor()
         cur.execute(f"SELECT setval(pg_get_serial_sequence('{table}', 'id'), "
                     f"COALESCE((SELECT MAX(id) FROM {table}), 0) + 1, false)")

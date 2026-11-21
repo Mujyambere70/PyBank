@@ -1,0 +1,58 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}My Card{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>My debit card</h1><p class="muted small">Your controls work at once, at every shop, ATM and website.</p></div></div>
+{% if not card %}
+<section class="panel"><p class="muted">This account has no debit card. Ask for one in Service Requests.</p></section>
+{% else %}
+<div class="dash-grid">
+    <section class="panel">
+        <div class="bank-card small-card {{ 'card-off' if card.status != 'Active' }}" style="background-image:url('{{ url_for('static', filename='images/card.png') }}')">
+            <div class="bc-row"><span class="bc-bank">PyBank</span><span class="bc-type">DEBIT</span></div>
+            <div class="bc-chip" aria-hidden="true"></div>
+            <div class="bc-number">XXXX XXXX XXXX {{ card.last4 }}</div>
+            <div class="bc-row bc-bottom"><span>{{ customer.full_name|upper }}</span><span>VALID THRU {{ card.expires[5:7] }}/{{ card.expires[2:4] }}</span></div>
+        </div>
+        <p>Status: <span class="badge {{ 'ok' if card.status == 'Active' else 'st-rejected' }}">{{ card.status }}</span></p>
+        <form method="post" class="btn-row">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if card.status == 'Active' %}
+            <button name="action" value="block" class="btn btn-danger">&#128274; Block the card for now</button>
+            {% else %}
+            <button name="action" value="unblock" class="btn btn-primary">&#128275; Unblock the card</button>
+            {% endif %}
+        </form>
+        <details class="own-tools" style="margin-top:12px"><summary class="btn btn-outline btn-sm">Card lost or stolen?</summary>
+            <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="lost">
+                <span class="small">The card is blocked for ever and a new card with a new number is sent to you.</span>
+                <input type="password" name="pin" placeholder="PIN" aria-label="Transaction PIN" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+                <button class="btn btn-danger btn-sm">Block for ever and order a new card</button></form>
+        </details>
+    </section>
+    <form method="post" class="panel">
+        <h2>Card controls</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="controls">
+        <label class="switch-row"><input type="checkbox" name="online" value="1" {{ 'checked' if card.online }}> <span><strong>Online payments</strong><br><small class="muted">Shopping on websites and in apps</small></span></label>
+        <label class="switch-row"><input type="checkbox" name="abroad" value="1" {{ 'checked' if card.abroad }}> <span><strong>Payments abroad</strong><br><small class="muted">Shops and ATMs outside your country</small></span></label>
+        <label class="switch-row"><input type="checkbox" name="contactless" value="1" {{ 'checked' if card.contactless }}> <span><strong>Contactless (tap to pay)</strong></span></label>
+        <div class="form-grid">
+            <div><label for="atm">ATM cash a day ({{ card.currency }})</label><input type="number" id="atm" name="atm_limit" min="0" max="{{ card.max_atm // 100 }}" step="1" value="{{ card.atm_limit // 100 }}"><small class="muted">max {{ card.max_atm|money(card.currency) }}</small></div>
+            <div><label for="pos">Shops and online a day ({{ card.currency }})</label><input type="number" id="pos" name="pos_limit" min="0" max="{{ card.max_pos // 100 }}" step="1" value="{{ card.pos_limit // 100 }}"><small class="muted">max {{ card.max_pos|money(card.currency) }}</small></div>
+        </div>
+        <button class="btn btn-primary btn-block">Save controls</button>
+    </form>
+</div>
+<section class="panel">
+    <h2>Recent card activity</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Date</th><th>Where</th><th>Type</th><th class="num">Amount</th><th>Result</th></tr></thead>
+        <tbody>
+        {% for e in events %}
+        <tr><td class="nowrap">{{ e.at|nicedate }}</td><td>{{ e.merchant }} <small class="muted">{{ e.country }}</small></td><td>{{ CHANNELS[e.channel] }}</td><td class="num">{{ e.amount|money(card.currency) }}</td>
+            <td>{% if e.result == 'APPROVED' %}<span class="badge ok">Approved</span>{% else %}<span class="badge st-rejected">Declined</span> <small class="muted">{{ e.result }}</small>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="5" class="center muted">No card payments yet.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+</section>
+{% endif %}
+{% endblock %}

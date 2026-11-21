@@ -1,0 +1,25 @@
+{% extends "admin/layout.html" %}
+{% block title %}Dormant accounts{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Dormant accounts</h1><p class="muted small">An account that the customer did not use for 24 months becomes dormant: money cannot move until an officer checks the customer and activates it. Interest is still paid.</p></div></div>
+<section class="panel">
+    <h2>Dormant now ({{ rows|length }})</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Account</th><th>Customer</th><th class="num">Balance</th><th>Last customer transaction</th><th>Activate</th></tr></thead>
+        <tbody>
+        {% for a in rows %}
+        <tr><td translate="no">{{ a.number }} <small class="muted">{{ a.currency }}</small></td><td><a href="{{ url_for('office_customer', cid=a.customer_id) }}">{{ a.full_name }}</a></td><td class="num">{{ a.balance|money(a.currency) }}</td><td class="small">{{ a.last|nicedate(false) if a.last else 'never' }}</td>
+            <td><form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="number" value="{{ a.number }}">
+                <label class="sr-only" for="n-{{ a.number }}">How was the customer checked?</label>
+                <input id="n-{{ a.number }}" name="note" maxlength="300" required placeholder="How was the customer checked?">
+                <button class="btn btn-primary btn-sm">Activate</button></form></td></tr>
+        {% else %}<tr><td colspan="5" class="center muted">No dormant account.</td></tr>{% endfor %}
+        </tbody>
+    </table></div>
+</section>
+<section class="panel">
+    <h2>Will become dormant at the next daily job ({{ soon|length }})</h2>
+    {% for a in soon %}<div class="mini-row"><div><strong translate="no">{{ a.number }}</strong><small>{{ a.customer_id }} &middot; last customer transaction {{ a.last|nicedate(false) if a.last else 'never' }}</small></div><strong>{{ a.balance|money(a.currency) }}</strong></div>
+    {% else %}<p class="muted small">None.</p>{% endfor %}
+</section>
+{% endblock %}

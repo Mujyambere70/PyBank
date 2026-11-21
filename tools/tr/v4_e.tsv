@@ -1,0 +1,123 @@
+All notices ({0})	Все объявления ({0})	Tous les avis ({0})	Todos los avisos ({0})	كل الإشعارات ({0})	全部公告（{0}）
+Visible · {0} · {1}	Видно · {0} · {1}	Visible · {0} · {1}	Visible · {0} · {1}	ظاهر · {0} · {1}	可见 · {0} · {1}
+Hidden · {0} · {1}	Скрыто · {0} · {1}	Masqué · {0} · {1}	Oculto · {0} · {1}	مخفي · {0} · {1}	隐藏 · {0} · {1}
+Staff | PyBank	Сотрудники | PyBank	Personnel | PyBank	Personal | PyBank	الموظفون | PyBank	员工 | PyBank
+An administrator can do everything. Every other staff member has a job role; the role decides which back-office pages he can open.	Администратор может всё. У остальных сотрудников есть роль, которая определяет доступные страницы бэк-офиса.	Un administrateur peut tout faire. Chaque autre membre du personnel a un rôle ; le rôle décide des pages du back-office qu'il peut ouvrir.	Un administrador puede hacerlo todo. Cada otro empleado tiene un puesto; el puesto decide qué páginas del back office puede abrir.	يستطيع المدير فعل كل شيء. لكل موظف آخر دور وظيفي يحدد صفحات المكتب الخلفي التي يمكنه فتحها.	管理员拥有全部权限。其他员工都有岗位角色，角色决定其可打开的后台页面。
+Team ({0})	Команда ({0})	Équipe ({0})	Equipo ({0})	الفريق ({0})	团队（{0}）
+{0} (you)	{0} (вы)	{0} (vous)	{0} (usted)	{0} (أنت)	{0}（您）
+Last sign-in: {0}	Последний вход: {0}	Dernière connexion : {0}	Último acceso: {0}	آخر تسجيل دخول: {0}	上次登录：{0}
+Last sign-in: never	Последний вход: никогда	Dernière connexion : jamais	Último acceso: nunca	آخر تسجيل دخول: أبدًا	上次登录：从未
+Administrator	Администратор	Administrateur	Administrador	المدير	管理员
+Edit my own details →	Изменить мои данные →	Modifier mes informations →	Editar mis datos →	عدّل بياناتي ←	编辑我的信息 →
+Website editor	Редактор сайта	Éditeur du site	Editor del sitio	محرر الموقع	网站编辑
+Job role	Должность	Rôle	Puesto	الدور الوظيفي	岗位角色
+Customer service officer	Специалист по обслуживанию	Conseiller clientèle	Agente de atención al cliente	موظف خدمة العملاء	客服专员
+Teller (cash counter)	Кассир (касса)	Guichetier (caisse)	Cajero (ventanilla)	أمين الصندوق (الشباك)	柜员（现金柜台）
+Loan officer	Кредитный специалист	Chargé de prêts	Oficial de préstamos	موظف القروض	信贷专员
+Compliance officer	Специалист по комплаенсу	Responsable conformité	Oficial de cumplimiento	موظف الامتثال	合规专员
+Branch manager	Управляющий отделением	Directeur d'agence	Director de sucursal	مدير الفرع	网点经理
+Change role	Изменить роль	Changer le rôle	Cambiar puesto	غيّر الدور	更改角色
+Access	Доступ	Accès	Acceso	الصلاحية	权限
+Staff (by job role)	Сотрудник (по роли)	Personnel (selon le rôle)	Empleado (según puesto)	موظف (حسب الدور)	员工（按岗位）
+Administrator (everything)	Администратор (всё)	Administrateur (tout)	Administrador (todo)	مدير (كل شيء)	管理员（全部）
+New password for {0}	Новый пароль для {0}	Nouveau mot de passe pour {0}	Nueva contraseña para {0}	كلمة مرور جديدة لـ {0}	{0} 的新密码
+Reset password	Сбросить пароль	Réinitialiser le mot de passe	Restablecer contraseña	أعد تعيين كلمة المرور	重置密码
+Disable	Отключить	Désactiver	Desactivar	تعطيل	停用
+Enable	Включить	Activer	Activar	تمكين	启用
+Add staff member	Добавить сотрудника	Ajouter un membre du personnel	Añadir empleado	أضف موظفًا	添加员工
+e.g. Cashier	напр. Кассир	p. ex. Caissier	p. ej. Cajero	مثل أمين صندوق	例如 出纳
+First password	Первый пароль	Premier mot de passe	Primera contraseña	كلمة المرور الأولى	初始密码
+What each job role can do	Что может каждая роль	Ce que chaque rôle peut faire	Qué puede hacer cada puesto	ما الذي يستطيعه كل دور	各岗位角色的权限
+Ability	Возможность	Capacité	Capacidad	الصلاحية	权限项
+See customers, accounts and documents	Просмотр клиентов, счетов и документов	Voir les clients, comptes et documents	Ver clientes, cuentas y documentos	عرض العملاء والحسابات والمستندات	查看客户、账户和证件
+Open accounts at the branch, change KYC data, unlock, reset, freeze, manual entries	Открытие счетов в отделении, изменение KYC, разблокировка, сброс, заморозка, ручные проводки	Ouvrir des comptes en agence, modifier les données KYC, déverrouiller, réinitialiser, geler, écritures manuelles	Abrir cuentas en sucursal, cambiar datos KYC, desbloquear, restablecer, congelar, asientos manuales	فتح الحسابات في الفرع، وتغيير بيانات اعرف عميلك، وفك القفل، وإعادة التعيين، والتجميد، والقيود اليدوية	网点开户、修改 KYC 资料、解锁、重置、冻结、手工分录
+Search all transactions	Поиск по всем операциям	Rechercher toutes les opérations	Buscar todos los movimientos	البحث في كل المعاملات	搜索全部交易
+Reverse a wrong transaction	Сторно ошибочной операции	Annuler une opération erronée	Revertir un movimiento erróneo	عكس معاملة خاطئة	冲正错误交易
+Approve new accounts and changes of personal data (KYC, MRZ check)	Одобрение новых счетов и изменений личных данных (KYC, проверка MRZ)	Approuver les nouveaux comptes et les modifications de données personnelles (KYC, contrôle MRZ)	Aprobar cuentas nuevas y cambios de datos personales (KYC, comprobación MRZ)	الموافقة على الحسابات الجديدة وتغييرات البيانات الشخصية (اعرف عميلك، فحص MRZ)	审批新账户和个人资料变更（KYC、MRZ 核验）
+Approve cash deposits and withdrawals	Одобрение взносов и снятия наличных	Approuver les dépôts et retraits en espèces	Aprobar depósitos y retiros de efectivo	الموافقة على الإيداع والسحب النقدي	审批现金存取
+Approve or reject loan applications	Одобрение или отклонение заявок на кредит	Approuver ou refuser les demandes de prêt	Aprobar o rechazar solicitudes de préstamo	الموافقة على طلبات القروض أو رفضها	批准或拒绝贷款申请
+Payments to other banks and ISO 20022 files	Платежи в другие банки и файлы ISO 20022	Paiements vers d'autres banques et fichiers ISO 20022	Pagos a otros bancos y archivos ISO 20022	المدفوعات إلى بنوك أخرى وملفات ISO 20022	跨行付款和 ISO 20022 文件
+Answer service requests and card disputes	Ответы на заявки и споры по картам	Répondre aux demandes de service et aux contestations de carte	Responder solicitudes de servicio y disputas de tarjeta	الرد على طلبات الخدمة ونزاعات البطاقات	答复服务申请和卡片争议
+Second approval of large manual entries and reversals (four-eyes rule)	Второе одобрение крупных ручных проводок и сторно (принцип четырёх глаз)	Seconde approbation des grosses écritures manuelles et annulations (règle des quatre yeux)	Segunda aprobación de asientos manuales grandes y reversiones (regla de los cuatro ojos)	الموافقة الثانية على القيود اليدوية الكبيرة والعكوس (قاعدة الأعين الأربع)	大额手工分录和冲正的第二人审批（四眼原则）
+Suspicious-activity flags and dormant accounts	Отметки о подозрительных операциях и неактивные счета	Alertes d'activité suspecte et comptes dormants	Alertas de actividad sospechosa y cuentas inactivas	تنبيهات النشاط المشبوه والحسابات الخاملة	可疑活动标记和休眠账户
+Website content: contacts, pages, FAQ, products, branches, banners, charges, billers	Содержимое сайта: контакты, страницы, FAQ, продукты, отделения, баннеры, тарифы, получатели платежей	Contenu du site : contacts, pages, FAQ, produits, agences, bannières, frais, facturiers	Contenido del sitio: contactos, páginas, preguntas frecuentes, productos, sucursales, banners, cargos, emisores	محتوى الموقع: جهات الاتصال والصفحات والأسئلة الشائعة والمنتجات والفروع واللافتات والرسوم وجهات الفوترة	网站内容：联系方式、页面、常见问题、产品、网点、横幅、收费、收费单位
+Notices on the website and in Net Banking	Объявления на сайте и в интернет-банке	Avis sur le site et dans la banque en ligne	Avisos en el sitio y en la banca en línea	الإشعارات على الموقع وفي الخدمات المصرفية عبر الإنترنت	网站和网上银行公告
+Reports and the health of the system	Отчёты и состояние системы	Rapports et santé du système	Informes y salud del sistema	التقارير وصحة النظام	报表和系统健康
+Read the audit log	Чтение журнала аудита	Lire le journal d'audit	Leer el registro de auditoría	قراءة سجل التدقيق	查看审计日志
+Add and change staff members and their roles	Добавление и изменение сотрудников и их ролей	Ajouter et modifier le personnel et ses rôles	Añadir y cambiar empleados y sus puestos	إضافة الموظفين وأدوارهم وتغييرها	添加和修改员工及其角色
+Bank settings: limits, interest rates, exchange rates	Настройки банка: лимиты, процентные ставки, курсы валют	Paramètres de la banque : limites, taux d'intérêt, taux de change	Ajustes del banco: límites, tipos de interés, tipos de cambio	إعدادات البنك: الحدود وأسعار الفائدة وأسعار الصرف	银行设置：限额、利率、汇率
+Backups, restore test and restore	Резервные копии, проверка и восстановление	Sauvegardes, test de restauration et restauration	Copias de seguridad, prueba de restauración y restauración	النسخ الاحتياطية واختبار الاستعادة والاستعادة	备份、恢复测试和恢复
+Read-only database viewer	Просмотр базы данных (только чтение)	Visionneuse de base de données (lecture seule)	Visor de base de datos (solo lectura)	عارض قاعدة البيانات (قراءة فقط)	只读数据库查看器
+Bank settings | PyBank	Настройки банка | PyBank	Paramètres de la banque | PyBank	Ajustes del banco | PyBank	إعدادات البنك | PyBank	银行设置 | PyBank
+Changes apply at once to Net Banking and the website.	Изменения сразу применяются к интернет-банку и сайту.	Les modifications s'appliquent tout de suite à la banque en ligne et au site.	Los cambios se aplican al instante a la banca en línea y al sitio.	تُطبَّق التغييرات فورًا على الخدمات المصرفية عبر الإنترنت والموقع.	修改立即应用于网上银行和网站。
+Interest slabs, senior citizens, exchange and payments	Пороги ставок, пенсионеры, обмен и платежи	Tranches d'intérêt, seniors, change et paiements	Tramos de interés, mayores, cambio y pagos	شرائح الفائدة وكبار السن والصرف والمدفوعات	利率分档、老年人、兑换和付款
+Savings rate above the slab (% a year)	Ставка сверх порога (% годовых)	Taux d'épargne au-dessus de la tranche (% par an)	Tipo de ahorro por encima del tramo (% anual)	سعر الادخار فوق الشريحة (٪ سنويًا)	超出分档部分的储蓄利率（年 %）
+Extra FD rate for customers aged 60+ (%)	Надбавка по вкладам для клиентов 60+ (%)	Taux supplémentaire des dépôts pour les 60 ans et plus (%)	Tipo extra de depósitos para clientes de 60+ (%)	سعر إضافي للودائع للعملاء بعمر 60+ (٪)	60 岁以上客户定期存款加息（%）
+Bank's exchange margin (%)	Курсовая маржа банка (%)	Marge de change de la banque (%)	Margen de cambio del banco (%)	هامش الصرف لدى البنك (٪)	银行汇兑差价（%）
+SWIFT and SEPA payments	Платежи SWIFT и SEPA	Paiements SWIFT et SEPA	Pagos SWIFT y SEPA	مدفوعات SWIFT وSEPA	SWIFT 和 SEPA 付款
+Sandbox: answered by itself after 1 hour	Песочница: ответ сам через 1 час	Bac à sable : réponse automatique après 1 heure	Pruebas: respuesta automática tras 1 hora	تجريبي: رد تلقائي بعد ساعة	沙盒：1 小时后自动答复
+ISO 20022 files: wait for the partner's pain.002	Файлы ISO 20022: ждать pain.002 от партнёра	Fichiers ISO 20022 : attendre le pain.002 du partenaire	Archivos ISO 20022: esperar el pain.002 del socio	ملفات ISO 20022: انتظار pain.002 من الشريك	ISO 20022 文件：等待合作方的 pain.002
+The slab of each currency: the part of a day's balance up to the slab earns the normal savings rate, the rest the higher rate ({0} for rupees). FD interest is compounded every quarter.	Порог каждой валюты: часть дневного остатка до порога получает обычную ставку, остальное — повышенную ({0} для рупий). Проценты по вкладам капитализируются ежеквартально.	La tranche de chaque devise : la part du solde du jour jusqu'à la tranche reçoit le taux normal, le reste le taux supérieur ({0} pour les roupies). Les intérêts des dépôts sont capitalisés chaque trimestre.	El tramo de cada moneda: la parte del saldo diario hasta el tramo gana el tipo normal y el resto el tipo superior ({0} para rupias). El interés de los depósitos se capitaliza cada trimestre.	شريحة كل عملة: الجزء من رصيد اليوم حتى الشريحة يكسب سعر الادخار العادي، والباقي السعر الأعلى ({0} للروبية). تُضاف فائدة الودائع كل ربع سنة.	各货币分档：每日余额中不超过分档的部分按普通储蓄利率计息，其余按较高利率（卢比为 {0}）。定期存款每季度复利。
+Exchange rates of the last 30 days →	Курсы валют за последние 30 дней →	Taux de change des 30 derniers jours →	Tipos de cambio de los últimos 30 días →	أسعار الصرف لآخر 30 يومًا ←	近 30 天汇率 →
+Rate of {0}	Курс {0}	Taux de {0}	Tipo de {0}	سعر {0}	{0} 汇率
+missing	нет	manquant	falta	غير متوفر	缺失
+Cash withdrawal limit {0}	Лимит снятия наличных {0}	Limite de retrait {0}	Límite de retiro {0}	حد السحب النقدي {0}	{0} 取现限额
+Transfer limit {0}	Лимит перевода {0}	Limite de virement {0}	Límite de transferencia {0}	حد التحويل {0}	{0} 转账限额
+set above: {0} · {1}	задано выше: {0} · {1}	défini plus haut : {0} · {1}	fijado arriba: {0} · {1}	محدد أعلاه: {0} · {1}	已在上方设置：{0} · {1}
+Waiting to be paid:	Ожидает выплаты:	En attente de paiement :	Pendiente de pago:	بانتظار الدفع:	待支付：
+. It is paid automatically on the first visit of the day, or now:	. Выплата происходит автоматически при первом визите за день или сейчас:	. Ils sont versés automatiquement à la première visite du jour, ou maintenant :	. Se paga automáticamente en la primera visita del día, o ahora:	. يُدفع تلقائيًا عند أول زيارة في اليوم، أو الآن:	。会在当天首次访问时自动支付，或立即支付：
+SQLite file ({0})	Файл SQLite ({0})	Fichier SQLite ({0})	Archivo SQLite ({0})	ملف SQLite ({0})	SQLite 文件（{0}）
+data is lost when the server restarts - set DATABASE_URL	данные теряются при перезапуске сервера — задайте DATABASE_URL	les données sont perdues au redémarrage du serveur - définissez DATABASE_URL	los datos se pierden al reiniciar el servidor: defina DATABASE_URL	تُفقد البيانات عند إعادة تشغيل الخادم - اضبط DATABASE_URL	服务器重启后数据会丢失——请设置 DATABASE_URL
+System health | PyBank	Состояние системы | PyBank	Santé du système | PyBank	Salud del sistema | PyBank	صحة النظام | PyBank	系统健康 | PyBank
+The same checks as the public	Те же проверки, что и на публичной	Les mêmes contrôles que la page publique	Las mismas comprobaciones que la página pública de	الفحوصات نفسها في صفحة	与公开的
+status page	странице состояния	d'état	estado	الحالة العامة	状态页面
+, plus the limits and errors.	, а также лимиты и ошибки.	, plus les limites et les erreurs.	, más los límites y errores.	، بالإضافة إلى الحدود والأخطاء.	相同，另加限额和错误信息。
+Backup	Резервная копия	Sauvegarde	Copia de seguridad	النسخة الاحتياطية	备份
+Daily jobs	Ежедневные задачи	Tâches quotidiennes	Tareas diarias	المهام اليومية	每日任务
+Payments queue	Очередь платежей	File des paiements	Cola de pagos	طابور المدفوعات	付款队列
+Errors	Ошибки	Erreurs	Errores	الأخطاء	错误
+Rate limits (last 7 days)	Ограничения частоты (последние 7 дней)	Limites de fréquence (7 derniers jours)	Límites de frecuencia (últimos 7 días)	حدود المعدل (آخر 7 أيام)	频率限制（近 7 天）
+Nobody was stopped by a limit.	Никто не упёрся в лимит.	Personne n'a été arrêté par une limite.	Nadie fue detenido por un límite.	لم يُوقَف أحد بسبب حد.	没有人触发限制。
+No errors.	Ошибок нет.	Aucune erreur.	Sin errores.	لا أخطاء.	无错误。
+Warning:	Внимание:	Attention :	Atención:	تحذير:	警告：
+this server uses an SQLite file. On free hosting (Fly.io, Render) the file can be deleted at a restart or a new deploy, so changes are lost. Set	этот сервер использует файл SQLite. На бесплатном хостинге (Fly.io, Render) файл может удалиться при перезапуске или новом деплое, и изменения пропадут. Задайте	ce serveur utilise un fichier SQLite. Sur un hébergement gratuit (Fly.io, Render), le fichier peut être supprimé à un redémarrage ou un nouveau déploiement, et les modifications sont perdues. Définissez	este servidor usa un archivo SQLite. En alojamiento gratuito (Fly.io, Render) el archivo puede borrarse al reiniciar o desplegar de nuevo y se pierden los cambios. Defina	يستخدم هذا الخادم ملف SQLite. في الاستضافة المجانية (Fly.io، Render) قد يُحذف الملف عند إعادة التشغيل أو نشر جديد فتضيع التغييرات. اضبط	此服务器使用 SQLite 文件。在免费托管（Fly.io、Render）上，重启或重新部署时该文件可能被删除，修改会丢失。请将
+to a PostgreSQL database (for example Neon free) to keep the data.	на базу PostgreSQL (например, бесплатный Neon), чтобы сохранить данные.	vers une base PostgreSQL (par exemple Neon gratuit) pour garder les données.	a una base de datos PostgreSQL (por ejemplo Neon gratuito) para conservar los datos.	إلى قاعدة بيانات PostgreSQL (مثل Neon المجاني) للاحتفاظ بالبيانات.	设置为 PostgreSQL 数据库（例如免费的 Neon）以保留数据。
+Account is dormant.	Счёт неактивен.	Le compte est dormant.	La cuenta está inactiva.	الحساب خامل.	账户处于休眠状态。
+Check & activate	Проверить и активировать	Vérifier et réactiver	Comprobar y activar	تحقق وفعّل	核实并激活
+Website {0} translated ({1})	Переведено на сайте: {0} ({1})	Site : {0} traduit ({1})	Sitio: {0} traducido ({1})	تمت ترجمة {0} في الموقع ({1})	网站{0}已翻译（{1}）
+Job role changed	Роль изменена	Rôle modifié	Puesto cambiado	تم تغيير الدور	岗位角色已更改
+Staff added	Сотрудник добавлен	Membre du personnel ajouté	Empleado añadido	تمت إضافة موظف	已添加员工
+Service request answered	Ответ на заявку отправлен	Demande de service traitée	Solicitud de servicio respondida	تم الرد على طلب الخدمة	服务申请已答复
+Notice published	Объявление опубликовано	Avis publié	Aviso publicado	تم نشر الإشعار	公告已发布
+Bank settings changed	Настройки банка изменены	Paramètres de la banque modifiés	Ajustes del banco cambiados	تم تغيير إعدادات البنك	银行设置已更改
+{0} · online {1} · abroad {2} · contactless {3} · ATM {4} / shops {5} a day	{0} · онлайн {1} · за границей {2} · бесконтактно {3} · банкомат {4} / магазины {5} в день	{0} · en ligne {1} · étranger {2} · sans contact {3} · DAB {4} / magasins {5} par jour	{0} · en línea {1} · extranjero {2} · sin contacto {3} · cajero {4} / tiendas {5} al día	{0} · عبر الإنترنت {1} · الخارج {2} · لاتلامسي {3} · الصراف {4} / المتاجر {5} يوميًا	{0} · 网上 {1} · 境外 {2} · 非接触 {3} · ATM {4} / 商店 {5} 每日
+· online {0} · abroad {1} · contactless {2} · ATM {3} / shops {4} a day	· онлайн {0} · за границей {1} · бесконтактно {2} · банкомат {3} / магазины {4} в день	· en ligne {0} · étranger {1} · sans contact {2} · DAB {3} / magasins {4} par jour	· en línea {0} · extranjero {1} · sin contacto {2} · cajero {3} / tiendas {4} al día	· عبر الإنترنت {0} · الخارج {1} · لاتلامسي {2} · الصراف {3} / المتاجر {4} يوميًا	· 网上 {0} · 境外 {1} · 非接触 {2} · ATM {3} / 商店 {4} 每日
+on	вкл.	activé	sí	مفعّل	开
+off	выкл.	désactivé	no	متوقف	关
+Channel	Канал	Canal	Canal	القناة	渠道
+Shop	Магазин	Commerçant	Comercio	المتجر	商户
+Test card payment	Тестовый платёж картой	Paiement test par carte	Pago de prueba con tarjeta	دفعة اختبار بالبطاقة	测试卡片付款
+Sandbox card network: the answer follows the customer's own controls, limits and balance.	Тестовая карточная сеть: ответ зависит от настроек, лимитов и остатка клиента.	Réseau carte de test : la réponse suit les réglages, limites et solde du client.	Red de tarjetas de prueba: la respuesta sigue los controles, límites y saldo del cliente.	شبكة بطاقات تجريبية: تتبع الإجابة إعدادات العميل وحدوده ورصيده.	沙盒卡组织：结果取决于客户自己的设置、限额和余额。
+Passport / ID check (MRZ)	Проверка паспорта / ID (MRZ)	Contrôle passeport / pièce d'identité (MRZ)	Comprobación de pasaporte / documento (MRZ)	فحص جواز السفر / الهوية (MRZ)	护照 / 身份证核验（MRZ）
+Not checked.	Не проверено.	Non vérifié.	No comprobado.	لم يُفحص.	未核验。
+Suspicious-activity flags	Отметки о подозрительных операциях	Alertes d'activité suspecte	Alertas de actividad sospechosa	تنبيهات النشاط المشبوه	可疑活动标记
+Flag #{0} | PyBank	Отметка №{0} | PyBank	Alerte n° {0} | PyBank	Alerta n.º {0} | PyBank	التنبيه رقم {0} | PyBank	标记 #{0} | PyBank
+Flag #{0}: {1}	Отметка №{0}: {1}	Alerte n° {0} : {1}	Alerta n.º {0}: {1}	التنبيه رقم {0}: {1}	标记 #{0}：{1}
+← Suspicious activity	← Подозрительные операции	← Activité suspecte	← Actividad sospechosa	→ النشاط المشبوه	← 可疑活动
+Transaction	Операция	Opération	Movimiento	المعاملة	交易
+Flagged	Отмечено	Signalé	Marcado	وُضع التنبيه	标记时间
+What did you check?	Что вы проверили?	Qu'avez-vous vérifié ?	¿Qué comprobó?	ما الذي تحققت منه؟	您核查了什么？
+e.g. Salary of the month and rent - normal for this customer.	напр. Зарплата за месяц и аренда — обычно для этого клиента.	p. ex. Salaire du mois et loyer - normal pour ce client.	p. ej. Sueldo del mes y alquiler: normal para este cliente.	مثل: راتب الشهر والإيجار - أمر طبيعي لهذا العميل.	例如：当月工资和房租——对该客户属正常。
+Clear the flag	Снять отметку	Lever l'alerte	Cerrar la alerta	أغلق التنبيه	清除标记
+Report	Сообщить	Déclarer	Reportar	أبلغ	上报
+Last transactions of the account	Последние операции по счёту	Dernières opérations du compte	Últimos movimientos de la cuenta	آخر معاملات الحساب	账户最近交易
+Translate | PyBank	Перевод | PyBank	Traduire | PyBank	Traducir | PyBank	ترجمة | PyBank	翻译 | PyBank
+← Website content	← Содержимое сайта	← Contenu du site	← Contenido del sitio	→ محتوى الموقع	← 网站内容
+. Leave a field empty to show the English text in that language.	. Оставьте поле пустым, чтобы на этом языке показывался английский текст.	. Laissez un champ vide pour afficher le texte anglais dans cette langue.	. Deje un campo vacío para mostrar el texto en inglés en ese idioma.	. اترك الحقل فارغًا لعرض النص الإنجليزي بتلك اللغة.	。字段留空则该语言显示英文文本。
+English	Английский	Anglais	Inglés	الإنجليزية	英语
+Text ({0})	Текст ({0})	Texte ({0})	Texto ({0})	النص ({0})	文本（{0}）
+Save the translation	Сохранить перевод	Enregistrer la traduction	Guardar la traducción	احفظ الترجمة	保存翻译
+New page | PyBank	Новая страница | PyBank	Nouvelle page | PyBank	Página nueva | PyBank	صفحة جديدة | PyBank	新建页面 | PyBank
+New page	Новая страница	Nouvelle page	Página nueva	صفحة جديدة	新建页面
+← All pages	← Все страницы	← Toutes les pages	← Todas las páginas	→ كل الصفحات	← 所有页面
+Address of the page	Адрес страницы	Adresse de la page	Dirección de la página	عنوان الصفحة	页面地址

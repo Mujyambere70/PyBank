@@ -19,7 +19,7 @@
         {% if ln.penalty_due %}<p class="flash error">Late fee to pay with this EMI: <strong>{{ ln.penalty_due|money }}</strong></p>{% endif %}
         <p class="small muted">Paid from A/c {{ ln.account_number }}. Available: {{ available|money }}</p>
         <p class="small muted">Auto-debit is on: if you do not pay before {{ ln.next_due }}, the EMI is taken automatically that day.</p>
-        <label>Transaction PIN</label><input type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <label for="loan-pin">Transaction PIN</label><input id="loan-pin" type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
         <button class="btn btn-primary btn-block">Pay EMI now</button>
     </form>
     <form method="post" action="{{ url_for('loan_action', loan_id=ln.id, action='close') }}" class="panel" autocomplete="off"
@@ -27,7 +27,7 @@
         <h2>Close the loan early</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <p>Pay <strong>{{ ln.close_amount|money }}</strong> today: {{ ln.outstanding|money }} left + {{ (ln.close_amount - ln.outstanding - ln.penalty_due)|money }} interest since the last payment{% if ln.penalty_due %} + {{ ln.penalty_due|money }} late fee{% endif %}. No extra charge.</p>
-        <label>Transaction PIN</label><input type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+        <label for="loan-pin-2">Transaction PIN</label><input id="loan-pin-2" type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
         <button class="btn btn-outline btn-block">Close loan</button>
     </form>
 </div>

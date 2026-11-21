@@ -5,7 +5,7 @@
 <div class="nb-title">
     <div class="profile-top" style="margin:0"><div class="avatar big">{{ c.initials }}</div>
         <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; {{ country_name(c.country) }} &middot; {{ LANGUAGES.get(c.lang, c.lang) }} &middot; customer since {{ c.created_at|nicedate(false) }} &middot; last login {{ c.last_login|nicedate if c.last_login else 'never' }}</p></div></div>
-    <div>{% if c.status == 'Pending' %}<a class="badge st-pending" href="{{ url_for('office_applications') }}">Application waiting</a>{% elif c.status == 'Rejected' %}<span class="badge bad">Application rejected</span>{% elif account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
+    <div>{% if c.status == 'Pending' %}{% if can('applications') %}<a class="badge st-pending" href="{{ url_for('office_applications') }}">Application waiting</a>{% else %}<span class="badge st-pending">Application waiting</span>{% endif %}{% elif c.status == 'Rejected' %}<span class="badge bad">Application rejected</span>{% elif account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
         {% if locked %}<span class="badge bad">Login locked</span>{% endif %}</div>
 </div>
 
@@ -50,9 +50,9 @@
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='entry') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-grid">
-                        <div><label>Type</label><select name="kind"><option value="CR">Credit (money in)</option><option value="DR">Debit (money out)</option></select></div>
-                        <div><label>Amount ({{ account.currency }})</label><input type="number" name="amount" min="0.01" step="0.01" required></div>
-                        <div class="full"><label>Reason</label><input name="description" placeholder="e.g. Cash deposit at counter" required></div>
+                        <div><label for="customer-kind">Type</label><select id="customer-kind" name="kind"><option value="CR">Credit (money in)</option><option value="DR">Debit (money out)</option></select></div>
+                        <div><label for="customer-amount">Amount ({{ account.currency }})</label><input id="customer-amount" type="number" name="amount" min="0.01" step="0.01" required></div>
+                        <div class="full"><label for="customer-description">Reason</label><input id="customer-description" name="description" placeholder="e.g. Cash deposit at counter" required></div>
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-top:10px">Post entry</button></form></details>
             {% if account.status == 'Active' %}
@@ -61,7 +61,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="reason" placeholder="Reason (e.g. lost card, court order)" required><button class="btn btn-danger btn-sm">Freeze</button></form></details>
             {% else %}
             <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='activate') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <b>Account is frozen.</b> No money can move. <button class="btn btn-primary btn-sm">Activate</button></form>
+                {% if account.status == 'Dormant' %}<b>Account is dormant.</b> No money can move. {% if can('compliance') %}<a class="btn btn-primary btn-sm" href="{{ url_for('office_dormant') }}">Check &amp; activate</a>{% endif %}{% else %}<b>Account is frozen.</b> No money can move. <button class="btn btn-primary btn-sm">Activate</button>{% endif %}</form>
             {% endif %}
             {% if me.role == 'admin' %}
             <details><summary class="out">Close &amp; delete customer</summary>
@@ -75,16 +75,49 @@
     </section>
 </div>
 
+<div class="dash-grid">
+    <section class="panel">
+        <h2>Accounts</h2>
+        {% for a in customer_accounts(c.customer_id) %}
+        <div class="mini-row"><div><strong translate="no">{{ a.number }}</strong><small>{{ a.currency }} &middot; {{ a.type }}{{ ' · main, card' if loop.first }} &middot; opened {{ a.opened_at[:10] }}</small></div><div class="right"><strong>{{ a.balance|money(a.currency) }}</strong><br><span class="badge {{ 'ok' if a.status == 'Active' else 'st-pending' }}">{{ a.status }}</span></div></div>
+        {% endfor %}
+        {% set flags = customer_flags(c.customer_id) %}
+        {% if flags %}<h2 style="margin-top:16px">Suspicious-activity flags</h2>
+        {% for f in flags %}<div class="mini-row"><div><strong>{{ aml_rules[f.rule] }}</strong><small>{{ f.details|truncate(80) }}</small></div>{% if can('compliance') %}<a href="{{ url_for('office_flag', flag_id=f.id) }}" class="badge {{ 'st-pending' if f.status == 'Open' else 'ok' }}">{{ f.status }}</a>{% else %}<span class="badge {{ 'st-pending' if f.status == 'Open' else 'ok' }}">{{ f.status }}</span>{% endif %}</div>{% endfor %}{% endif %}
+    </section>
+    <section class="panel" id="card">
+        {% set card = customer_card(c.customer_id) %}
+        <h2>Debit card</h2>
+        {% if card %}
+        <p class="small">XX{{ card.last4 }} &middot; <span class="badge {{ 'ok' if card.status == 'Active' else 'st-rejected' }}">{{ card.status }}</span> &middot; online {{ 'on' if card.online else 'off' }} &middot; abroad {{ 'on' if card.abroad else 'off' }} &middot; contactless {{ 'on' if card.contactless else 'off' }} &middot; ATM {{ card.atm_limit|money(card.currency) }} / shops {{ card.pos_limit|money(card.currency) }} a day</p>
+        {% if can('customers.edit') %}
+        <form method="post" action="{{ url_for('office_card_test', cid=c.customer_id) }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="ct-ch" class="sr-only">Channel</label><select id="ct-ch" name="channel">{% for k, v in card_channels.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+            <label for="ct-amt" class="sr-only">Amount</label><input id="ct-amt" name="amount" type="number" min="1" step="0.01" placeholder="Amount" required style="max-width:110px">
+            <label for="ct-m" class="sr-only">Shop</label><input id="ct-m" name="merchant" placeholder="Shop" maxlength="40" style="max-width:130px">
+            <label for="ct-c" class="sr-only">Country</label><input id="ct-c" name="country" value="{{ c.country }}" maxlength="2" style="max-width:60px">
+            <button class="btn btn-outline btn-sm">Test card payment</button>
+        </form>
+        <p class="small muted">Sandbox card network: the answer follows the customer's own controls, limits and balance.</p>
+        {% endif %}
+        {% else %}<p class="muted small">No card.</p>{% endif %}
+        <h2 style="margin-top:16px">Passport / ID check (MRZ)</h2>
+        {% for m in mrz_checks(c.customer_id) %}<div class="mini-row"><div><strong>{{ m.doc_type }} ...{{ m.doc_end }} ({{ m.nationality }})</strong><small>{{ m.checked_at|nicedate }} by {{ m.checked_by }}{% if m.problems %} &middot; {{ m.problems }}{% endif %}</small></div><span class="badge {{ 'ok' if m.ok else 'st-rejected' }}">{{ 'Correct' if m.ok else 'Problems' }}</span></div>
+        {% else %}<p class="muted small">Not checked.</p>{% endfor %}
+        {% if can('applications') %}{% set mrz_next = request.path %}{% include "admin/_mrz_form.html" %}{% endif %}
+    </section>
+</div>
 <section class="panel">
-    <div class="panel-head"><h2>Transactions (last 40)</h2><a class="link-arrow" href="{{ url_for('office_transactions', q=account.number) }}">Search all &rarr;</a></div>
+    <div class="panel-head"><h2>Transactions (last 40)</h2>{% if can('transactions.view') %}<a class="link-arrow" href="{{ url_for('office_transactions', q=account.number) }}">Search all &rarr;</a>{% endif %}</div>
     {% include "admin/_tx_table.html" %}
 </section>
 
 <div class="dash-grid">
-    <section class="panel"><div class="panel-head"><h2>Deposit / withdrawal requests</h2><a class="link-arrow" href="{{ url_for('office_approvals') }}">Approvals &rarr;</a></div>
+    <section class="panel"><div class="panel-head"><h2>Deposit / withdrawal requests</h2>{% if can('cash.approve') %}<a class="link-arrow" href="{{ url_for('office_approvals') }}">Approvals &rarr;</a>{% endif %}</div>
         {% for r in cash %}<div class="mini-row"><div><strong>{{ r.kind }} {{ r.ref }}</strong><small>{{ r.created_at|nicedate }}{% if r.decided_by %} &middot; {{ r.decided_by }}{% endif %}{% if r.reason %} &middot; {{ r.reason }}{% endif %}</small></div><div class="right"><strong>{{ r.amount|money }}</strong><br><span class="badge st-{{ r.status|lower }}">{{ r.status }}</span></div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
     </section>
-    <section class="panel"><div class="panel-head"><h2>Loans</h2><a class="link-arrow" href="{{ url_for('office_loans') }}">All loans &rarr;</a></div>
+    <section class="panel"><div class="panel-head"><h2>Loans</h2>{% if can('loans.decide') %}<a class="link-arrow" href="{{ url_for('office_loans') }}">All loans &rarr;</a>{% endif %}</div>
         {% for ln in loans %}<div class="mini-row"><div><strong>{{ ln.product }} {{ ln.loan_number }}</strong><small>{{ ln.principal|money }} &middot; {{ ln.months }} m @ {{ '%.2f'|format(ln.rate) }}% &middot; EMI {{ ln.emi|money }}{% if ln.status == 'Active' %} &middot; {{ ln.emis_paid }} paid, next {{ ln.next_due }}{% endif %}</small></div><div class="right">{% if ln.status == 'Active' %}<strong>{{ ln.outstanding|money }}</strong><br>{% endif %}<span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span>{% if ln.overdue %} <span class="badge bad">Overdue</span>{% endif %}</div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
     </section>
 </div>
@@ -94,7 +127,7 @@
         <h2 style="margin-top:16px">Changes of personal data</h2>
         {% for p in changes %}<div class="mini-row"><div><strong>{% for k in p.changes %}{{ labels[k] }}{{ ', ' if not loop.last }}{% endfor %}</strong><small>{{ p.created_at|nicedate }}{% if p.decided_by %} &middot; {{ p.decided_by }}{% endif %}{% if p.reason %} &middot; {{ p.reason }}{% endif %}</small></div><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></div>{% else %}<p class="muted small">None.</p>{% endfor %}
     </section>
-    <section class="panel"><div class="panel-head"><h2>Payments to other banks</h2><a class="link-arrow" href="{{ url_for('office_payments') }}">All &rarr;</a></div>
+    <section class="panel"><div class="panel-head"><h2>Payments to other banks</h2>{% if can('payments.view') %}<a class="link-arrow" href="{{ url_for('office_payments') }}">All &rarr;</a>{% endif %}</div>
         {% for p in payments %}<div class="mini-row"><div><strong>{{ p.rail }} {{ p.ref }}</strong><small>{{ p.beneficiary_name }} &middot; {{ p.bank_name }} &middot; {{ p.created_at|nicedate }}</small></div><div class="right"><strong>{{ p.amount|money(p.currency) }}</strong><br><span class="badge st-{{ p.status|lower }}">{{ p.status }}</span></div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
     </section>
 </div>
@@ -106,7 +139,7 @@
     </section>
     <section class="panel"><h2>Service requests</h2>
         {% for r in reqs %}<div class="mini-row"><div><strong>#{{ r.id }} {{ r.type }}</strong><small>{{ r.details|truncate(70) }}</small></div><span class="badge st-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></div>{% else %}<p class="muted small">None.</p>{% endfor %}
-        <a href="{{ url_for('office_requests') }}" class="link-arrow">Answer requests &rarr;</a>
+        {% if can('requests.answer') %}<a href="{{ url_for('office_requests') }}" class="link-arrow">Answer requests &rarr;</a>{% endif %}
     </section>
 </div>
 {% endblock %}

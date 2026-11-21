@@ -2,23 +2,33 @@
 {% block title %}Personal Banking, Savings Accounts &amp; Loans{% endblock %}
 {% block content %}
 {% if NOTICES %}<div class="notice-strip">{% for n in NOTICES %}<div class="wrap notice notice-{{ n.level }}"><strong>{{ n.title }}</strong> {{ n.body }}</div>{% endfor %}</div>{% endif %}
+{% set banners = site_banners() %}
+{% set b = banners[0] if banners else None %}
 <section class="hero">
     <div class="wrap hero-grid">
         <div class="hero-text">
-            <span class="eyebrow">Zero-paperwork digital account</span>
-            <h1>Open a savings account in <span class="accent">5 minutes</span></h1>
-            <p>Earn up to <strong>3.5% p.a.</strong> interest, get a free debit card and bank 24x7 with PyBank Net Banking &mdash; transfers, statements and more.</p>
+            {% if b %}
+            {% if b.eyebrow %}<span class="eyebrow">{{ b.eyebrow }}</span>{% endif %}
+            <h1>{{ b.title }}</h1>
+            {% if b.text %}<p>{{ b.text }}</p>{% endif %}
             <div class="hero-buttons">
-                <a href="{{ url_for('register') }}" class="btn btn-gold btn-lg">Open Account Now</a>
+                {% if b.button and b.link %}<a href="{{ b.link }}" class="btn btn-gold btn-lg">{{ b.button }}</a>{% endif %}
                 <a href="{{ url_for('login') }}" class="btn btn-ghost btn-lg">Net Banking Login</a>
             </div>
+            {% else %}
+            <h1>Simple, secure banking</h1>
+            <div class="hero-buttons"><a href="{{ url_for('register') }}" class="btn btn-gold btn-lg">Open Account Now</a></div>
+            {% endif %}
             <ul class="hero-points">
                 <li>&#10003; Instant account number</li>
                 <li>&#10003; Free IMPS transfers</li>
                 <li>&#10003; 24x7 support</li>
             </ul>
+            {% if banners|length > 1 %}
+            <div class="banner-more">{% for x in banners[1:3] %}<a href="{{ x.link or '#' }}" class="banner-chip"><strong>{{ x.title }}</strong>{% if x.text %}<span>{{ x.text }}</span>{% endif %}</a>{% endfor %}</div>
+            {% endif %}
         </div>
-        <img src="{{ url_for('static', filename='images/hero.png') }}" alt="PyBank mobile banking app and debit card" class="hero-img">
+        <img src="{{ picture_url(b.image) if b and picture_url(b.image) else url_for('static', filename='images/hero.png') }}" alt="PyBank mobile banking app and debit card" class="hero-img">
     </div>
 </section>
 
@@ -37,20 +47,14 @@
             <p>From your first savings account to your dream home &mdash; we are with you.</p>
         </div>
         <div class="product-grid">
-            {% for img, title, text, stat in [
-                ('savings.jpg', 'Savings Account', 'Grow your money safely with quarterly interest and a free debit card.', '3.5% p.a. interest'),
-                ('current.jpg', 'Current Account', 'For shops and businesses: unlimited transactions and bulk payments.', 'Min. balance ₹5,000'),
-                ('deposits.jpg', 'Fixed Deposits', 'Lock in high returns for 7 days to 10 years. Extra 0.5% for seniors.', 'Up to 7.25% p.a.'),
-                ('loans.jpg', 'Home &amp; Car Loans', 'Low interest rates, quick approval and flexible EMIs.', 'From 8.40% p.a.'),
-                ('cards.jpg', 'Debit &amp; Credit Cards', 'Contactless cards with reward points and fraud protection.', 'Zero joining fee'),
-                ('app.jpg', 'Mobile &amp; UPI', 'Pay bills, scan QR codes and transfer money in seconds.', 'Free UPI payments')] %}
+            {% for pr in site_products() %}
             <article class="product">
-                <img src="{{ url_for('static', filename='images/' + img) }}" alt="">
+                {% if picture_url(pr.image) %}<img src="{{ picture_url(pr.image) }}" alt="" loading="lazy">{% endif %}
                 <div class="product-body">
-                    <span class="tag">{{ stat }}</span>
-                    <h3>{{ title|safe }}</h3>
-                    <p>{{ text }}</p>
-                    <a href="{{ url_for('register') if loop.index <= 2 else url_for('rates') }}" class="link-arrow">{{ 'Open now' if loop.index <= 2 else 'Know more' }} &rarr;</a>
+                    {% if pr.stat %}<span class="tag">{{ pr.stat }}</span>{% endif %}
+                    <h3>{{ pr.title }}</h3>
+                    <p>{{ pr.text }}</p>
+                    <a href="{{ pr.link }}" class="link-arrow">{{ pr.button }} &rarr;</a>
                 </div>
             </article>
             {% endfor %}
@@ -85,11 +89,10 @@
             <table class="data">
                 <thead><tr><th>Tenure</th><th class="num">General (p.a.)</th><th class="num">Senior citizen (p.a.)</th></tr></thead>
                 <tbody>
-                    <tr><td>7 days &ndash; 45 days</td><td class="num">3.50%</td><td class="num">4.00%</td></tr>
-                    <tr><td>46 days &ndash; 179 days</td><td class="num">5.00%</td><td class="num">5.50%</td></tr>
-                    <tr><td>180 days &ndash; 1 year</td><td class="num">6.25%</td><td class="num">6.75%</td></tr>
-                    <tr><td>1 year &ndash; 3 years</td><td class="num"><strong>7.25%</strong></td><td class="num"><strong>7.75%</strong></td></tr>
-                    <tr><td>3 years &ndash; 10 years</td><td class="num">6.75%</td><td class="num">7.25%</td></tr>
+                    {% set extra = SETTINGS.fd_senior_extra|float %}
+                    {% for m, r in FD_RATES.items() %}
+                    <tr><td>{{ m }} months{% if m >= 12 %} ({{ m // 12 }} year{{ 's' if m > 12 }}){% endif %}</td><td class="num">{{ '%.2f'|format(r) }}%</td><td class="num">{{ '%.2f'|format(r + extra) }}%</td></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -102,13 +105,15 @@
         <div>
             <span class="eyebrow eyebrow-light">Safe banking</span>
             <h2>Your security is our priority</h2>
-            <p>PyBank will <strong>never</strong> ask for your password, transaction PIN or OTP by phone, SMS or email.</p>
+            <p>{{ SITE.security_line }}</p>
             <ul class="check-list light">
                 <li>Passwords and PINs are stored encrypted (hashed)</li>
                 <li>Automatic logout after 10 minutes of inactivity</li>
                 <li>Login locked after 5 wrong attempts</li>
                 <li>Every transaction needs your secret PIN</li>
+                <li>Block your card or switch off online payments yourself in Net Banking</li>
             </ul>
+            <a href="{{ url_for('site_page', slug='security-tips') }}" class="link-arrow light">Safe banking tips &rarr;</a>
         </div>
         <img src="{{ url_for('static', filename='images/secure.jpg') }}" alt="Secure banking shield" class="rounded">
     </div>

@@ -1,0 +1,24 @@
+{% extends "admin/layout.html" %}
+{% block title %}Translate{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Translate</h1><p class="muted small"><a href="{{ url_for('office_content') }}">&larr; Website content</a> &middot; {{ kind }} <code>{{ ref }}</code>. Leave a field empty to show the English text in that language.</p></div></div>
+<nav class="tabs" aria-label="Language">
+    {% for code, name in LANGUAGES.items() if code != 'en' %}<a href="{{ url_for('office_translate', kind=kind, ref=ref, lang=code) }}" class="{{ 'active' if code == lang }}" lang="{{ code }}" translate="no">{{ name }}{% if code in done %} &#10003;{% endif %}</a>{% endfor %}
+</nav>
+<form method="post" class="panel">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="lang" value="{{ lang }}">
+    <table class="data translate-table">
+        <thead><tr><th>Field</th><th>English</th><th>{{ LANGUAGES[lang] }}</th></tr></thead>
+        <tbody>
+        {% for name, (label, size, required) in fields %}
+        <tr><th scope="row">{{ label }}</th>
+            <td class="small" translate="no">{{ item[name] }}</td>
+            <td><label for="tr-{{ name }}" class="sr-only">{{ label }} ({{ LANGUAGES[lang] }})</label>
+                {% if size > 120 %}<textarea id="tr-{{ name }}" name="{{ name }}" rows="{{ 12 if name == 'body' else 3 }}" maxlength="{{ size }}" lang="{{ lang }}" dir="{{ 'rtl' if lang == 'ar' else 'ltr' }}">{{ tr.get(name, '') }}</textarea>
+                {% else %}<input id="tr-{{ name }}" name="{{ name }}" value="{{ tr.get(name, '') }}" maxlength="{{ size }}" lang="{{ lang }}" dir="{{ 'rtl' if lang == 'ar' else 'ltr' }}">{% endif %}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn btn-primary">Save the translation</button>
+</form>
+{% endblock %}

@@ -1,0 +1,134 @@
+My Card | PyBank	Моя карта | PyBank	Ma carte | PyBank	Mi tarjeta | PyBank	بطاقتي | PyBank	我的卡 | PyBank
+My Card	Моя карта	Ma carte	Mi tarjeta	بطاقتي	我的卡
+My debit card	Моя дебетовая карта	Ma carte de débit	Mi tarjeta de débito	بطاقة الخصم الخاصة بي	我的借记卡
+Your controls work at once, at every shop, ATM and website.	Настройки действуют сразу — в любом магазине, банкомате и на любом сайте.	Vos réglages s'appliquent tout de suite, dans chaque magasin, DAB et site.	Sus controles funcionan al instante, en cada tienda, cajero y sitio web.	تعمل إعداداتك فورًا في كل متجر وصراف آلي وموقع.	您的设置立即在所有商店、ATM 和网站生效。
+VALID THRU {0}	ДЕЙСТВУЕТ ДО {0}	VALABLE JUSQU'À {0}	VÁLIDA HASTA {0}	صالحة حتى {0}	有效期至 {0}
+Status:	Статус:	Statut :	Estado:	الحالة:	状态：
+Blocked	Заблокирована	Bloquée	Bloqueada	محظورة	已冻结
+Lost	Утеряна	Perdue	Perdida	مفقودة	已挂失
+🔒 Block the card for now	🔒 Временно заблокировать карту	🔒 Bloquer la carte pour l'instant	🔒 Bloquear la tarjeta por ahora	🔒 احظر البطاقة مؤقتًا	🔒 暂时冻结卡片
+🔓 Unblock the card	🔓 Разблокировать карту	🔓 Débloquer la carte	🔓 Desbloquear la tarjeta	🔓 ألغِ حظر البطاقة	🔓 解冻卡片
+Card lost or stolen?	Карта утеряна или украдена?	Carte perdue ou volée ?	¿Tarjeta perdida o robada?	هل فُقدت البطاقة أو سُرقت؟	卡片丢失或被盗？
+The card is blocked for ever and a new card with a new number is sent to you.	Карта блокируется навсегда, и вам отправляют новую карту с новым номером.	La carte est bloquée définitivement et une nouvelle carte avec un nouveau numéro vous est envoyée.	La tarjeta se bloquea para siempre y se le envía una nueva con otro número.	تُحظر البطاقة نهائيًا وتُرسل إليك بطاقة جديدة برقم جديد.	卡片将被永久冻结，并向您寄送新号码的新卡。
+Block for ever and order a new card	Заблокировать навсегда и заказать новую	Bloquer définitivement et commander une nouvelle carte	Bloquear para siempre y pedir una tarjeta nueva	احظر نهائيًا واطلب بطاقة جديدة	永久冻结并申请新卡
+Online payments	Онлайн-платежи	Paiements en ligne	Pagos en línea	الدفع عبر الإنترنت	网上付款
+Shopping on websites and in apps	Покупки на сайтах и в приложениях	Achats sur les sites et dans les applications	Compras en sitios web y aplicaciones	التسوق على المواقع وفي التطبيقات	在网站和应用中购物
+Payments abroad	Платежи за границей	Paiements à l'étranger	Pagos en el extranjero	الدفع في الخارج	境外付款
+Shops and ATMs outside your country	Магазины и банкоматы за пределами вашей страны	Magasins et DAB hors de votre pays	Tiendas y cajeros fuera de su país	المتاجر والصرافات خارج بلدك	您所在国家以外的商店和 ATM
+Contactless (tap to pay)	Бесконтактно (оплата касанием)	Sans contact (payer en approchant)	Sin contacto (pagar acercando)	لاتلامسي (ادفع باللمس)	非接触（轻触付款）
+ATM cash a day ({0})	Наличные в банкомате в день ({0})	Retrait au DAB par jour ({0})	Efectivo en cajero al día ({0})	السحب من الصراف يوميًا ({0})	每日 ATM 取现（{0}）
+Shops and online a day ({0})	Магазины и онлайн в день ({0})	Magasins et en ligne par jour ({0})	Tiendas y en línea al día ({0})	المتاجر والإنترنت يوميًا ({0})	每日商店与网上消费（{0}）
+max {0}	максимум {0}	max {0}	máx. {0}	الحد الأقصى {0}	最多 {0}
+Save controls	Сохранить настройки	Enregistrer les réglages	Guardar controles	احفظ الإعدادات	保存设置
+Recent card activity	Последние операции по карте	Activité récente de la carte	Actividad reciente de la tarjeta	آخر نشاط للبطاقة	最近卡片活动
+Where	Где	Où	Dónde	أين	地点
+Result	Результат	Résultat	Resultado	النتيجة	结果
+Declined	Отклонено	Refusé	Rechazado	مرفوض	已拒绝
+Approved	Одобрено	Approuvé	Aprobado	مقبول	已批准
+Email:	E-mail:	E-mail :	Correo:	البريد:	邮件：
+SMS:	SMS:	SMS :	SMS:	الرسائل:	短信：
+An app signed in to your account	Приложение вошло в ваш аккаунт	Une application s'est connectée à votre compte	Una aplicación inició sesión en su cuenta	سجّل تطبيق الدخول إلى حسابك	有应用登录了您的账户
+"{0}" signed in to your PyBank account on {1}. If this was not you, sign it out in Net Banking > Security.	«{0}» вошло в ваш аккаунт PyBank {1}. Если это были не вы, завершите сеанс в разделе «Интернет-банк > Безопасность».	« {0} » s'est connecté à votre compte PyBank le {1}. Si ce n'était pas vous, déconnectez-le dans Banque en ligne > Sécurité.	«{0}» inició sesión en su cuenta PyBank el {1}. Si no fue usted, ciérrela en Banca en línea > Seguridad.	سجّل «{0}» الدخول إلى حسابك في PyBank في {1}. إذا لم تكن أنت، فسجّل خروجه من الخدمات المصرفية > الأمان.	“{0}”于 {1} 登录了您的 PyBank 账户。如果不是您本人，请在“网上银行 > 安全”中让其退出登录。
+Standing instruction created	Регулярный платёж создан	Ordre permanent créé	Orden permanente creada	تم إنشاء أمر دائم	定期付款指令已创建
+{0}: {1} every month from {2} (A/c {3}).	{0}: {1} каждый месяц с {2} (счёт {3}).	{0} : {1} chaque mois à partir du {2} (compte {3}).	{0}: {1} cada mes desde el {2} (cuenta {3}).	{0}: {1} كل شهر اعتبارًا من {2} (الحساب {3}).	{0}：自 {2} 起每月 {1}（账户 {3}）。
+{0}: {1} every week from {2} (A/c {3}).	{0}: {1} каждую неделю с {2} (счёт {3}).	{0} : {1} chaque semaine à partir du {2} (compte {3}).	{0}: {1} cada semana desde el {2} (cuenta {3}).	{0}: {1} كل أسبوع اعتبارًا من {2} (الحساب {3}).	{0}：自 {2} 起每周 {1}（账户 {3}）。
+{0}: {1} every quarter from {2} (A/c {3}).	{0}: {1} каждый квартал с {2} (счёт {3}).	{0} : {1} chaque trimestre à partir du {2} (compte {3}).	{0}: {1} cada trimestre desde el {2} (cuenta {3}).	{0}: {1} كل ربع سنة اعتبارًا من {2} (الحساب {3}).	{0}：自 {2} 起每季度 {1}（账户 {3}）。
+Transaction dispute	Спор по операции	Contestation d'opération	Disputa de un movimiento	نزاع على معاملة	交易争议
+Activate dormant account	Активировать неактивный счёт	Réactiver un compte dormant	Activar cuenta inactiva	تفعيل حساب خامل	激活休眠账户
+Signed-in devices	Устройства с выполненным входом	Appareils connectés	Dispositivos conectados	الأجهزة المسجّلة	已登录设备
+Device	Устройство	Appareil	Dispositivo	الجهاز	设备
+Network	Сеть	Réseau	Red	الشبكة	网络
+Signed in	Вход	Connecté le	Conectado	تسجيل الدخول	登录时间
+Last seen	Последняя активность	Vu la dernière fois	Visto por última vez	آخر ظهور	最近活动
+Browser on unknown system	Браузер на неизвестной системе	Navigateur sur un système inconnu	Navegador en sistema desconocido	متصفح على نظام غير معروف	未知系统上的浏览器
+This device	Это устройство	Cet appareil	Este dispositivo	هذا الجهاز	本设备
+Sign out	Выйти	Déconnecter	Cerrar sesión	تسجيل الخروج	退出登录
+Sign out all other devices	Выйти на всех других устройствах	Déconnecter tous les autres appareils	Cerrar sesión en todos los demás dispositivos	سجّل خروج كل الأجهزة الأخرى	让其他所有设备退出登录
+Apps signed in with the API	Приложения, вошедшие через API	Applications connectées par l'API	Aplicaciones conectadas con la API	التطبيقات المسجّلة عبر الواجهة البرمجية	通过 API 登录的应用
+since {0} · last used never · valid until {1}	с {0} · ещё не использовалось · действует до {1}	depuis le {0} · jamais utilisée · valable jusqu'au {1}	desde el {0} · nunca usada · válida hasta el {1}	منذ {0} · لم يُستخدم بعد · صالح حتى {1}	自 {0} · 从未使用 · 有效期至 {1}
+since {0} · last used {1} · valid until {2}	с {0} · последнее использование {1} · действует до {2}	depuis le {0} · dernière utilisation {1} · valable jusqu'au {2}	desde el {0} · último uso {1} · válida hasta el {2}	منذ {0} · آخر استخدام {1} · صالح حتى {2}	自 {0} · 上次使用 {1} · 有效期至 {2}
+My data	Мои данные	Mes données	Mis datos	بياناتي	我的数据
+Download everything PyBank keeps about you: personal details, accounts, transactions, payees, deposits, loans, requests, alerts, logins and devices (one JSON file). Passwords, PINs and document files are not in it.	Скачайте всё, что PyBank хранит о вас: личные данные, счета, операции, получателей, вклады, кредиты, заявки, уведомления, входы и устройства (один файл JSON). Пароли, PIN-коды и файлы документов в него не входят.	Téléchargez tout ce que PyBank conserve sur vous : données personnelles, comptes, opérations, bénéficiaires, dépôts, prêts, demandes, alertes, connexions et appareils (un fichier JSON). Les mots de passe, codes PIN et fichiers de documents n'y sont pas.	Descargue todo lo que PyBank guarda sobre usted: datos personales, cuentas, movimientos, beneficiarios, depósitos, préstamos, solicitudes, avisos, accesos y dispositivos (un archivo JSON). No incluye contraseñas, PIN ni archivos de documentos.	نزّل كل ما يحتفظ به PyBank عنك: البيانات الشخصية والحسابات والمعاملات والمستفيدين والودائع والقروض والطلبات والتنبيهات وعمليات الدخول والأجهزة (ملف JSON واحد). لا يتضمن كلمات المرور ورموز PIN وملفات المستندات.	下载 PyBank 保存的关于您的全部信息：个人资料、账户、交易、收款人、存款、贷款、申请、提醒、登录记录和设备（一个 JSON 文件）。不含密码、PIN 和证件文件。
+⬇ Download my data	⬇ Скачать мои данные	⬇ Télécharger mes données	⬇ Descargar mis datos	⬇ نزّل بياناتي	⬇ 下载我的数据
+Privacy notice →	Уведомление о конфиденциальности →	Avis de confidentialité →	Aviso de privacidad →	إشعار الخصوصية ←	隐私声明 →
+A sign-in from a new device sends you an alert. If it was not you, sign the device out above and change your password.	При входе с нового устройства вы получаете уведомление. Если это были не вы, завершите сеанс устройства выше и смените пароль.	Une connexion depuis un nouvel appareil vous envoie une alerte. Si ce n'était pas vous, déconnectez l'appareil ci-dessus et changez votre mot de passe.	Un inicio de sesión desde un dispositivo nuevo le envía un aviso. Si no fue usted, cierre la sesión del dispositivo arriba y cambie su contraseña.	يرسل لك تسجيل الدخول من جهاز جديد تنبيهًا. إذا لم تكن أنت، فسجّل خروج الجهاز أعلاه وغيّر كلمة المرور.	新设备登录会向您发送提醒。如果不是您本人，请在上方让该设备退出登录并修改密码。
+Beneficiary account is closed (sandbox test account)	Счёт получателя закрыт (тестовый счёт песочницы)	Le compte du bénéficiaire est fermé (compte de test)	La cuenta del beneficiario está cerrada (cuenta de prueba)	حساب المستفيد مغلق (حساب اختبار تجريبي)	收款账户已关闭（沙盒测试账户）
+⚠ Report a problem with this transaction	⚠ Сообщить о проблеме с этой операцией	⚠ Signaler un problème avec cette opération	⚠ Reportar un problema con este movimiento	⚠ أبلغ عن مشكلة في هذه المعاملة	⚠ 报告此交易的问题
+What is wrong?	Что не так?	Qu'est-ce qui ne va pas ?	¿Qué está mal?	ما المشكلة؟	有什么问题？
+What is wrong? e.g. I did not make this payment	Что не так? напр. Я не совершал этот платёж	Qu'est-ce qui ne va pas ? p. ex. Je n'ai pas fait ce paiement	¿Qué está mal? p. ej. Yo no hice este pago	ما المشكلة؟ مثل: لم أقم بهذه الدفعة	有什么问题？例如：这笔付款不是我做的
+Send to the bank	Отправить в банк	Envoyer à la banque	Enviar al banco	أرسل إلى البنك	发送给银行
+If someone else used your card, block it first in My Card.	Если вашей картой воспользовался кто-то другой, сначала заблокируйте её в разделе «Моя карта».	Si quelqu'un d'autre a utilisé votre carte, bloquez-la d'abord dans Ma carte.	Si otra persona usó su tarjeta, bloquéela primero en Mi tarjeta.	إذا استخدم شخص آخر بطاقتك، فاحظرها أولًا من بطاقتي.	如有他人使用了您的卡，请先在“我的卡”中冻结。
+{0} (Debit)	{0} (списание)	{0} (débit)	{0} (cargo)	{0} (خصم)	{0}（借记）
+{0} (Credit)	{0} (зачисление)	{0} (crédit)	{0} (abono)	{0} (إيداع)	{0}（贷记）
+Card payment	Оплата картой	Paiement par carte	Pago con tarjeta	الدفع بالبطاقة	刷卡付款
+Bill payment	Оплата счёта	Paiement de facture	Pago de factura	دفع فاتورة	账单缴费
+Operations	Операции	Opérations	Operaciones	العمليات	业务
+New accounts & data	Новые счета и данные	Nouveaux comptes et données	Cuentas nuevas y datos	الحسابات الجديدة والبيانات	新账户与资料
+Cash approvals	Одобрение наличных	Approbations d'espèces	Aprobaciones de efectivo	موافقات النقد	现金审批
+Second approvals	Второе одобрение	Secondes approbations	Segundas aprobaciones	الموافقات الثانية	第二人审批
+Other-bank payments	Платежи в другие банки	Paiements interbancaires	Pagos a otros bancos	المدفوعات إلى بنوك أخرى	跨行付款
+Compliance	Комплаенс	Conformité	Cumplimiento	الامتثال	合规
+Website	Сайт	Site web	Sitio web	الموقع	网站
+Website content	Содержимое сайта	Contenu du site	Contenido del sitio	محتوى الموقع	网站内容
+Pictures	Картинки	Images	Imágenes	الصور	图片
+Notices	Объявления	Avis	Avisos	الإشعارات	公告
+Administration	Администрирование	Administration	Administración	الإدارة	管理
+Staff & roles	Сотрудники и роли	Personnel et rôles	Personal y puestos	الموظفون والأدوار	员工与角色
+Bank settings	Настройки банка	Paramètres de la banque	Ajustes del banco	إعدادات البنك	银行设置
+System health	Состояние системы	Santé du système	Salud del sistema	صحة النظام	系统健康
+Backups	Резервные копии	Sauvegardes	Copias de seguridad	النسخ الاحتياطية	备份
+Audit log	Журнал аудита	Journal d'audit	Registro de auditoría	سجل التدقيق	审计日志
+Me	Я	Moi	Yo	أنا	我
+➕ Open account	➕ Открыть счёт	➕ Ouvrir un compte	➕ Abrir cuenta	➕ افتح حسابًا	➕ 开户
+Requests ({0})	Заявки ({0})	Demandes ({0})	Solicitudes ({0})	الطلبات ({0})	申请（{0}）
+📝 Website content	📝 Содержимое сайта	📝 Contenu du site	📝 Contenido del sitio	📝 محتوى الموقع	📝 网站内容
+Total deposits (balances)	Всего депозитов (остатки)	Total des dépôts (soldes)	Total de depósitos (saldos)	إجمالي الودائع (الأرصدة)	存款总额（余额）
+Active fixed deposits	Действующие вклады	Dépôts à terme actifs	Depósitos a plazo activos	الودائع الثابتة النشطة	有效定期存款
+New accounts · data changes to approve	Новые счета · изменения данных на одобрение	Nouveaux comptes · modifications à approuver	Cuentas nuevas · cambios de datos por aprobar	حسابات جديدة · تغييرات بيانات بانتظار الموافقة	待审批的新账户 · 资料变更
+Transactions today	Операции сегодня	Opérations aujourd'hui	Movimientos hoy	معاملات اليوم	今日交易
+all currencies	все валюты	toutes devises	todas las monedas	كل العملات	所有货币
+Deposits / withdrawals to approve	Взносы / снятия на одобрение	Dépôts / retraits à approuver	Depósitos / retiros por aprobar	إيداعات / سحوبات بانتظار الموافقة	待审批的存取款
+Entries waiting for a second approval	Записи, ожидающие второго одобрения	Écritures en attente de seconde approbation	Asientos que esperan segunda aprobación	قيود بانتظار الموافقة الثانية	等待第二人审批的分录
+Loans: active · applications	Кредиты: действующие · заявки	Prêts : actifs · demandes	Préstamos: activos · solicitudes	القروض: نشطة · طلبات	贷款：有效 · 申请
+Suspicious-activity flags · dormant accounts	Подозрительные операции · неактивные счета	Alertes suspectes · comptes dormants	Alertas sospechosas · cuentas inactivas	تنبيهات مشبوهة · حسابات خاملة	可疑活动标记 · 休眠账户
+SWIFT / SEPA payments waiting for a file	Платежи SWIFT / SEPA, ожидающие файла	Paiements SWIFT / SEPA en attente d'un fichier	Pagos SWIFT / SEPA esperando un archivo	مدفوعات SWIFT / SEPA بانتظار ملف	等待文件的 SWIFT / SEPA 付款
+Frozen accounts	Замороженные счета	Comptes gelés	Cuentas congeladas	الحسابات المجمّدة	冻结账户
+Locked logins · failed today	Заблокированные входы · неудачные сегодня	Connexions verrouillées · échecs aujourd'hui	Accesos bloqueados · fallidos hoy	عمليات دخول مقفلة · فاشلة اليوم	已锁定登录 · 今日失败
+Latest transactions	Последние операции	Dernières opérations	Últimos movimientos	أحدث المعاملات	最新交易
+All →	Все →	Tout →	Todo →	الكل ←	全部 →
+← All customers	← Все клиенты	← Tous les clients	← Todos los clientes	→ كل العملاء	← 所有客户
+Account active	Счёт активен	Compte actif	Cuenta activa	الحساب نشط	账户正常
+Credit score	Кредитный рейтинг	Score de crédit	Puntuación de crédito	التصنيف الائتماني	信用评分
+Customer details (KYC)	Данные клиента (KYC)	Informations du client (KYC)	Datos del cliente (KYC)	بيانات العميل (اعرف عميلك)	客户信息（KYC）
+Save details	Сохранить данные	Enregistrer	Guardar datos	احفظ البيانات	保存信息
+Account actions	Действия со счётом	Actions sur le compte	Acciones de la cuenta	إجراءات الحساب	账户操作
+Reset login password	Сбросить пароль входа	Réinitialiser le mot de passe	Restablecer la contraseña	أعد تعيين كلمة مرور الدخول	重置登录密码
+New password (8+, letters and numbers)	Новый пароль (8+, буквы и цифры)	Nouveau mot de passe (8+, lettres et chiffres)	Nueva contraseña (8+, letras y números)	كلمة مرور جديدة (8+، حروف وأرقام)	新密码（8 位以上，含字母和数字）
+Reset transaction PIN	Сбросить PIN-код операций	Réinitialiser le code PIN	Restablecer el PIN	أعد تعيين رمز PIN	重置交易 PIN
+Change account type	Изменить тип счёта	Changer le type de compte	Cambiar tipo de cuenta	غيّر نوع الحساب	更改账户类型
+Manual entry (cash at counter, charge, correction)	Ручная проводка (наличные в кассе, комиссия, исправление)	Écriture manuelle (espèces au guichet, frais, correction)	Asiento manual (efectivo en ventanilla, cargo, corrección)	قيد يدوي (نقد عند الشباك، رسوم، تصحيح)	手工分录（柜台现金、收费、更正）
+Credit (money in)	Зачисление (приход)	Crédit (entrée d'argent)	Abono (entrada)	إيداع (دخول مال)	贷记（入账）
+Debit (money out)	Списание (расход)	Débit (sortie d'argent)	Cargo (salida)	خصم (خروج مال)	借记（出账）
+e.g. Cash deposit at counter	напр. Взнос наличных в кассе	p. ex. Dépôt d'espèces au guichet	p. ej. Depósito en efectivo en ventanilla	مثل إيداع نقدي عند الشباك	例如 柜台现金存款
+Post entry	Провести	Comptabiliser	Contabilizar	سجّل القيد	入账
+Freeze account	Заморозить счёт	Geler le compte	Congelar cuenta	جمّد الحساب	冻结账户
+Reason (e.g. lost card, court order)	Причина (напр. утеря карты, решение суда)	Motif (p. ex. carte perdue, décision de justice)	Motivo (p. ej. tarjeta perdida, orden judicial)	السبب (مثل فقدان البطاقة، أمر محكمة)	原因（例如卡片丢失、法院命令）
+Freeze	Заморозить	Geler	Congelar	تجميد	冻结
+Account is frozen.	Счёт заморожен.	Le compte est gelé.	La cuenta está congelada.	الحساب مجمّد.	账户已冻结。
+No money can move.	Деньги не двигаются.	Aucun argent ne peut bouger.	No se puede mover dinero.	لا يمكن تحريك المال.	资金无法变动。
+Close & delete customer	Закрыть и удалить клиента	Fermer et supprimer le client	Cerrar y eliminar cliente	أغلق واحذف العميل	销户并删除客户
+Allowed only when the balance is 0 and no FD or loan is active. All records of this customer are deleted.	Возможно только при нулевом остатке и без действующих вкладов и кредитов. Все записи клиента удаляются.	Permis seulement si le solde est 0 et qu'aucun dépôt ou prêt n'est actif. Toutes les données du client sont supprimées.	Solo se permite con saldo 0 y sin depósitos ni préstamos activos. Se eliminan todos los registros del cliente.	مسموح فقط عندما يكون الرصيد 0 ولا توجد وديعة أو قرض نشط. تُحذف كل سجلات هذا العميل.	仅当余额为 0 且无有效定期存款或贷款时允许。将删除该客户的全部记录。
+Delete customer	Удалить клиента	Supprimer le client	Eliminar cliente	احذف العميل	删除客户
+Recent logins	Последние входы	Connexions récentes	Accesos recientes	آخر عمليات الدخول	最近登录
+Transactions (last {0})	Операции (последние {0})	Opérations ({0} dernières)	Movimientos (últimos {0})	المعاملات (آخر {0})	交易（最近 {0} 笔）
+Search all →	Искать все →	Tout rechercher →	Buscar todo →	ابحث في الكل ←	搜索全部 →
+Approvals →	Одобрения →	Approbations →	Aprobaciones →	الموافقات ←	审批 →
+All loans →	Все кредиты →	Tous les prêts →	Todos los préstamos →	كل القروض ←	全部贷款 →
+Saved beneficiaries	Сохранённые получатели	Bénéficiaires enregistrés	Beneficiarios guardados	المستفيدون المحفوظون	已保存的收款人
+Answer requests →	Ответить на заявки →	Répondre aux demandes →	Responder solicitudes →	أجب عن الطلبات ←	答复申请 →
+None uploaded.	Ничего не загружено.	Rien n'a été envoyé.	Nada subido.	لم يُرفع شيء.	未上传。
+No logins yet.	Входов пока нет.	Pas encore de connexion.	Aún no hay accesos.	لا توجد عمليات دخول بعد.	尚无登录记录。
+No transactions.	Операций нет.	Aucune opération.	No hay movimientos.	لا توجد معاملات.	无交易。
+Account opening deposit	Первоначальный взнос	Dépôt d'ouverture	Depósito de apertura	إيداع فتح الحساب	开户存款
+Pay interest now	Выплатить проценты сейчас	Verser les intérêts maintenant	Pagar intereses ahora	ادفع الفائدة الآن	立即付息
+Nothing waiting - every finished quarter is paid.	Ничего не ожидает — все завершённые кварталы оплачены.	Rien en attente - chaque trimestre terminé est payé.	Nada pendiente: cada trimestre terminado está pagado.	لا شيء بالانتظار - تم دفع كل ربع منتهٍ.	无待付——所有已结束季度均已付息。

@@ -2,7 +2,7 @@
 {% block title %}Customers{% endblock %}
 {% block office_content %}
 <div class="nb-title"><div><h1>Customers</h1><p class="muted small">{{ rows|length }} found</p></div>
-    <a href="{{ url_for('office_customer_new') }}" class="btn btn-primary">&#10133; Open new account</a></div>
+    {% if can('customers.edit') %}<a href="{{ url_for('office_customer_new') }}" class="btn btn-primary">&#10133; Open new account</a>{% endif %}</div>
 <form class="panel filters filters-2" method="get">
     <div><label for="q">Search</label><input id="q" name="q" value="{{ args.get('q', '') }}" placeholder="Name, customer ID, email, mobile or account number"></div>
     <div><label for="status">Show</label><select id="status" name="status">
@@ -18,7 +18,7 @@
     <tr>
         <td><strong>{{ c.full_name }}</strong><br><small class="muted">{{ c.occupation }} &middot; {{ c.city }}</small></td>
         <td>{{ c.customer_id }}</td>
-        <td>{{ c.number }}<br><small class="muted">{{ c.account_type }}</small></td>
+        <td>{{ c.number }}<br><small class="muted">{{ c.account_type }}{% if c.extra_accounts %} · <span>+{{ c.extra_accounts }} currency account(s)</span>{% endif %}</small></td>
         <td class="small">{{ c.email }}<br>{{ c.mobile }}</td>
         <td class="num"><strong>{{ c.balance|money(c.currency) }}</strong></td>
         <td>{% if c.account_status == 'Active' %}<span class="badge ok">Active</span>{% else %}<span class="badge bad">{{ c.account_status }}</span>{% endif %}

@@ -15,7 +15,7 @@
 
 <div class="topbar">
     <div class="wrap">
-        <span>&#9742; Customer care: <strong>1800-000-7926</strong> (24x7)</span>
+        <span>&#9742; Customer care: <strong translate="no">{{ SITE.care_phone }}</strong> ({{ SITE.care_hours }})</span>
         <span class="hide-sm">IFSC {{ BRANCH.ifsc }} &middot; {{ BRANCH.name }}</span>
         <a href="{{ url_for('contact') }}" class="hide-sm">Branch &amp; ATM locator</a>
         {% if not request.path.startswith('/admin') %}
@@ -36,7 +36,7 @@
     <div class="wrap header-row">
         <a href="{{ url_for('index') }}" class="brand">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
-            <span>PyBank<small>Banking made simple</small></span>
+            <span>PyBank<small>{{ SITE.tagline }}</small></span>
         </a>
         <nav class="main-nav">
             {% for ep, label in [('index', 'Home'), ('rates', 'Interest Rates'), ('about', 'About Us'), ('faq', 'Help & FAQ'), ('contact', 'Contact')] %}
@@ -74,7 +74,7 @@
             <a href="{{ url_for('index') }}" class="brand brand-light">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt=""> <span>PyBank</span>
             </a>
-            <p>Simple, secure banking for everyone. Savings, current accounts, deposits and loans with easy net banking.</p>
+            <p>{{ SITE.footer_about }}</p>
         </div>
         <div>
             <h4>Products</h4>
@@ -82,6 +82,7 @@
             <a href="{{ url_for('index') }}#products">Current Account</a>
             <a href="{{ url_for('rates') }}">Fixed Deposits</a>
             <a href="{{ url_for('index') }}#products">Loans &amp; Cards</a>
+            <a href="{{ url_for('developers') }}">API for developers</a>
         </div>
         <div>
             <h4>Help</h4>
@@ -89,10 +90,12 @@
             <a href="{{ url_for('rates') }}">Interest rates &amp; charges</a>
             <a href="{{ url_for('contact') }}">Contact us</a>
             <a href="{{ url_for('login') }}">Net banking login</a>
+            {% for pg in FOOTER_PAGES if pg.slug != 'about' %}<a href="{{ url_for('site_page', slug=pg.slug) }}">{{ pg.title }}</a>{% endfor %}
+            <a href="{{ url_for('status_page') }}">System status</a>
         </div>
         <div>
             <h4>Head Office</h4>
-            <p>{{ BRANCH.address }}<br>care@pybank.example<br>Mon-Sat, 9:30 AM - 4:30 PM</p>
+            <p>{{ BRANCH.address }}<br><span translate="no">{{ SITE.care_email }}</span><br>{{ SITE.office_hours }}</p>
         </div>
     </div>
     <div class="footer-bottom">

@@ -1,0 +1,37 @@
+{% extends "admin/layout.html" %}
+{% block title %}Flag #{{ f.id }}{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Flag #{{ f.id }}: {{ RULES[f.rule] }}</h1><p class="muted small"><a href="{{ url_for('office_compliance') }}">&larr; Suspicious activity</a></p></div>
+    <span class="badge {{ 'st-pending' if f.status == 'Open' else 'ok' if f.status == 'Cleared' else 'st-rejected' }}">{{ f.status }}</span></div>
+<div class="dash-grid">
+    <section class="panel">
+        <table class="details">
+            <tr><th>Customer</th><td><a href="{{ url_for('office_customer', cid=f.customer_id) }}">{{ f.full_name }}</a> ({{ f.customer_id }})</td></tr>
+            <tr><th>Account</th><td translate="no">{{ f.account_number }} ({{ f.currency }})</td></tr>
+            <tr><th>What happened</th><td>{{ f.details }}</td></tr>
+            <tr><th>Transaction</th><td><code>{{ f.tx_ref }}</code></td></tr>
+            <tr><th>Flagged</th><td>{{ f.created_at|nicedate }}</td></tr>
+            {% if f.status != 'Open' %}<tr><th>Reviewed</th><td>{{ f.reviewed_at|nicedate }} by {{ f.reviewed_by }}<br>{{ f.note }}</td></tr>{% endif %}
+        </table>
+        {% if f.status == 'Open' %}
+        <form method="post" style="margin-top:14px">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="note">What did you check?</label>
+            <textarea id="note" name="note" rows="3" maxlength="500" required placeholder="e.g. Salary of the month and rent - normal for this customer."></textarea>
+            <div class="btn-row"><button name="action" value="clear" class="btn btn-primary">Clear the flag</button><button name="action" value="report" class="btn btn-danger" onclick="return confirm('Make a suspicious transaction report?')">Report</button></div>
+        </form>
+        {% endif %}
+        {% if f.report %}<h2>Report (sandbox - not sent)</h2><pre class="code-block" translate="no">{{ f.report }}</pre>{% endif %}
+    </section>
+    <section class="panel">
+        <h2>Last transactions of the account</h2>
+        <ul class="tx-list">
+        {% for t in recent %}
+            <li class="{{ 'hl' if t.ref == f.tx_ref }}"><span class="tx-icon {{ 'in' if t.type == 'CR' else 'out' }}">{{ '&#8601;'|safe if t.type == 'CR' else '&#8599;'|safe }}</span>
+                <div class="tx-main"><strong>{{ t.category }}</strong><small>{{ t.created_at|nicedate }} &middot; {{ t.description|truncate(50) }}</small></div>
+                <div class="tx-amt {{ 'in' if t.type == 'CR' else 'out' }}">{{ '+' if t.type == 'CR' else '-' }}{{ t.amount|money(f.currency) }}</div></li>
+        {% endfor %}
+        </ul>
+    </section>
+</div>
+{% endblock %}
