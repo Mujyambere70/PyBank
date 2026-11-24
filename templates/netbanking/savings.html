@@ -1,0 +1,71 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}RD & Goals{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Recurring deposits &amp; savings goals</h1><p class="muted small">Save a fixed amount every month (RD) with the fixed-deposit rate, or put money aside for a goal - a laptop, fees, a trip - and see how much is left.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel" autocomplete="off" id="rd-form">
+        <h2>Open a recurring deposit</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="rd-acc">Pay from</label>
+        <select id="rd-acc" name="account">{% for a in accounts %}<option value="{{ a.number }}" {{ 'selected' if a.number == (form.get('account') or account.number) }}>{{ a.currency }} &middot; XX{{ a.number[-4:] }} &middot; {{ a.balance|money(a.currency) }}</option>{% endfor %}</select>
+        <label for="rd-inst">Every month <small class="muted">min {{ min_rd|money(account.currency) }}</small></label>
+        <input type="number" id="rd-inst" name="instalment" value="{{ form.get('instalment', '') }}" min="1" step="1" required>
+        <label>Period</label>
+        <div class="choice-grid fd-choices">
+            {% for m in RD_TENURES %}<label class="choice"><input type="radio" name="months" value="{{ m }}" {{ 'checked' if form.get('months', '12') == m|string }}>
+                <span><strong>{{ m }} months</strong><br><small>{{ '%.2f'|format(rd_rates[m]) }}% a year</small></span></label>{% endfor %}
+        </div>
+        {% if quote %}
+        <div class="notice notice-info"><strong>You pay {{ quote.paid|money(quote.currency) }}</strong> in {{ quote.months }} months and get about <strong>{{ quote.value|money(quote.currency) }}</strong> at the end (interest {{ quote.interest|money(quote.currency) }} at {{ '%.2f'|format(quote.rate) }}%).</div>
+        {% endif %}
+        <label for="rd-pin">Transaction PIN (only to open)</label>
+        <input type="password" id="rd-pin" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
+        <div class="btn-row"><button class="btn btn-outline" name="action" value="rd_quote">Show what I get</button>
+            <button class="btn btn-primary" name="action" value="rd_open">Open RD (pay first instalment)</button></div>
+        <p class="small muted">The next instalments are taken from this account on the same day each month. After {{ 3 }} missed instalments the RD stops; you keep what you saved and its interest.</p>
+    </form>
+    <form method="post" class="panel" autocomplete="off">
+        <h2>New savings goal</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="goal_new">
+        <label for="g-name">What are you saving for?</label><input id="g-name" name="name" maxlength="40" placeholder="e.g. New laptop" required>
+        <div class="form-grid">
+            <div><label for="g-target">Target amount</label><input id="g-target" type="number" name="target" min="1" step="1" required></div>
+            <div><label for="g-date">By</label><input id="g-date" type="date" name="target_date" min="{{ today.isoformat() }}" required></div>
+        </div>
+        <label for="g-acc">Account</label>
+        <select id="g-acc" name="account">{% for a in accounts %}<option value="{{ a.number }}">{{ a.currency }} &middot; XX{{ a.number[-4:] }}</option>{% endfor %}</select>
+        <button class="btn btn-primary btn-block">Create goal</button>
+        <p class="small muted">Money in a goal stays yours and does not earn extra interest; it is kept aside so you do not spend it by mistake.</p>
+    </form>
+</div>
+
+<section class="panel">
+    <h2>My goals</h2>
+    {% for g in goals %}
+    <div class="goal-card">
+        <div class="mini-row"><div><strong>{{ g.name }}</strong><small>{{ g.saved|money(g.currency) }} of {{ g.target|money(g.currency) }} &middot; by {{ g.target_date }}{% if g.left %} &middot; save {{ g.per_month|money(g.currency) }} a month to reach it{% else %} &middot; reached!{% endif %}</small></div>
+            <span class="badge {{ 'bad' if g.late else 'ok' }}">{{ g.percent }}%</span></div>
+        <div class="progress"><span style="width: {{ g.percent }}%"></span></div>
+        <form method="post" class="inline-form" autocomplete="off"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ g.id }}">
+            <input type="number" name="amount" min="1" step="1" placeholder="Amount" aria-label="Amount for {{ g.name }}">
+            <input type="password" name="pin" inputmode="numeric" maxlength="4" placeholder="PIN" aria-label="PIN">
+            <button class="btn btn-primary btn-sm" name="action" value="goal_in">Add</button>
+            <button class="btn btn-outline btn-sm" name="action" value="goal_out">Take out</button>
+            <button class="btn btn-outline btn-sm" name="action" value="goal_close">Close goal</button></form>
+    </div>
+    {% else %}<p class="muted">No goal yet.</p>{% endfor %}
+</section>
+
+<section class="panel">
+    <h2>My recurring deposits</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>RD</th><th class="num">Monthly</th><th>Paid</th><th>Next due</th><th>Matures</th><th class="num">Saved</th><th class="num">Value now</th><th class="num">At maturity</th><th>Status</th><th></th></tr></thead>
+        <tbody>{% for r in rds %}<tr><td translate="no">{{ r.rd_number }}<br><small class="muted">{{ '%.2f'|format(r.rate) }}%</small></td><td class="num">{{ r.instalment|money(r.currency) }}</td>
+            <td>{{ r.paid_count }}/{{ r.months }}{% if r.missed %} <small class="out">({{ r.missed }} missed)</small>{% endif %}</td><td>{{ r.next_due if r.status == 'Active' else '—' }}</td><td>{{ r.matures_on }}</td>
+            <td class="num">{{ r.saved|money(r.currency) }}</td><td class="num">{{ r.value_now|money(r.currency) }}</td><td class="num">{{ (r.payout if r.status != 'Active' and r.payout else r.maturity_value)|money(r.currency) }}</td>
+            <td><span class="badge {{ 'ok' if r.status == 'Active' else '' }}">{{ r.status }}</span></td>
+            <td>{% if r.status in ('Active', 'Stopped') %}<details><summary class="small">Close</summary><form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="rd_close"><input type="hidden" name="id" value="{{ r.id }}"><input type="password" name="pin" maxlength="4" placeholder="PIN" aria-label="PIN" required><button class="btn btn-outline btn-sm">Close now</button></form><small class="muted">Early closing: 1% less interest.</small></details>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="10" class="muted">No recurring deposit yet.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}

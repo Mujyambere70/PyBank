@@ -1,0 +1,53 @@
+{% extends "admin/layout.html" %}
+{% block title %}{{ s.full_name }} · details & abilities{% endblock %}
+{% block office_content %}
+<p class="small"><a href="{{ url_for('office_staff') }}">&larr; Staff</a></p>
+<div class="nb-title"><div class="profile-top" style="margin:0">
+    {% if s.photo %}<img class="avatar big photo" src="{{ url_for('staff_photo', sid=s.staff_id) }}" alt="">{% else %}<div class="avatar big">{{ s.full_name.split()[0][0] }}{{ s.full_name.split()[-1][0] }}</div>{% endif %}
+    <div><h1>{{ s.full_name }}</h1><p class="muted small">{{ s.staff_id }} &middot; {{ s._job_label }} &middot; {{ 'active' if s.active else 'stopped' }}</p></div></div></div>
+<div class="dash-grid">
+<form method="post" class="panel">
+    <h2>Personal and work details</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="details">
+    <div class="form-grid">
+        <div><label for="sa-name">Full name</label><input id="sa-name" name="full_name" value="{{ s.full_name }}" required></div>
+        <div><label for="sa-email">Email (sign-in)</label><input id="sa-email" type="email" name="email" value="{{ s.email }}" required></div>
+        <div><label for="sa-phone">Phone</label><input id="sa-phone" name="phone" value="{{ s.phone or '' }}"></div>
+        <div><label for="sa-des">Designation</label><input id="sa-des" name="designation" value="{{ s.designation or '' }}"></div>
+        <div><label for="sa-dob">Date of birth</label><input id="sa-dob" type="date" name="dob" value="{{ s.dob or '' }}"></div>
+        <div><label for="sa-branch">Branch</label><input id="sa-branch" name="branch" value="{{ s.branch or '' }}"></div>
+        <div><label for="sa-em">Emergency contact</label><input id="sa-em" name="emergency_contact" value="{{ s.emergency_contact or '' }}"></div>
+        <div><label for="sa-role">Access</label><select id="sa-role" name="role"><option value="staff" {{ 'selected' if s.role == 'staff' }}>Staff (by abilities)</option><option value="admin" {{ 'selected' if s.role == 'admin' }}>Administrator (everything)</option></select></div>
+    </div>
+    <label for="sa-addr">Address</label><textarea id="sa-addr" name="address" rows="2">{{ s.address or '' }}</textarea>
+    <button class="btn btn-primary btn-block">Save details</button>
+</form>
+<section class="panel">
+    <h2>How abilities work</h2>
+    <p class="small">The person gets the abilities of his job role. Below you can give an ability that the role does not have (Yes) or take one away (No) for this person only. “Role” means: as the role says.</p>
+    <p class="small">The own limit stops this person from finishing large counter operations alone: above it the work waits for a second person, even when it is below the bank-wide limit.</p>
+    {% if s.role == 'admin' %}<div class="notice notice-info small">This person is an administrator and may do everything; the settings below are kept for when the access goes back to staff.</div>{% endif %}
+    {% if s.staff_id == me.staff_id %}<div class="notice notice-info small">You cannot change your own abilities - another administrator must do it.</div>{% endif %}
+</section>
+</div>
+<form method="post" class="panel" id="abilities">
+    <h2>Job role and abilities</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="abilities">
+    <div class="form-grid">
+        <div><label for="sa-job">Job role</label><select id="sa-job" name="job_role">{% for code, r in job_roles.items() %}<option value="{{ code }}" {{ 'selected' if (s.job_role or 'officer') == code }}>{{ r.label }}</option>{% endfor %}</select></div>
+        <div><label for="sa-max">Own limit per counter operation, INR (0 = bank limit only)</label><input id="sa-max" type="number" name="max_amount" min="0" step="1" value="{{ ((s.max_amount or 0) / 100)|int }}"></div>
+    </div>
+    <div class="table-wrap"><table class="data compact abilities">
+        <thead><tr><th>Ability</th><th class="center">In the role</th><th class="center">Role</th><th class="center">Yes</th><th class="center">No</th><th class="center">Now</th></tr></thead>
+        {% for group, items in ABILITY_GROUPS %}
+        <tbody><tr class="group-row"><th colspan="6">{{ group }}</th></tr>
+        {% for code, text in items %}{% set v = 'yes' if code in extra else ('no' if code in denied else 'role') %}
+        <tr><td>{{ text }} <code class="small">{{ code }}</code></td><td class="center">{{ '✓' if code in base else '' }}</td>
+            {% for opt in ['role', 'yes', 'no'] %}<td class="center"><input type="radio" name="ab_{{ code }}" value="{{ opt }}" aria-label="{{ {'role': 'Role', 'yes': 'Yes', 'no': 'No'}[opt] }}" {{ 'checked' if v == opt }}></td>{% endfor %}
+            <td class="center">{{ '✓' if code in (s._abilities or []) else '—' }}</td></tr>
+        {% endfor %}</tbody>
+        {% endfor %}
+    </table></div>
+    <button class="btn btn-primary" {{ 'disabled' if s.staff_id == me.staff_id }}>Save abilities</button>
+</form>
+{% endblock %}

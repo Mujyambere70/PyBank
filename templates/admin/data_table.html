@@ -1,0 +1,26 @@
+{% extends "admin/layout.html" %}
+{% block title %}Data · {{ info.label }}{% endblock %}
+{% block office_content %}
+<p class="small"><a href="{{ url_for('office_data') }}">&larr; Data manager</a></p>
+<div class="nb-title"><div><h1>{{ info.label }}</h1>{% if info.note %}<p class="muted small">{{ info.note }}</p>{% endif %}</div></div>
+<form class="panel inline-form" method="get" role="search"><label for="dt-q">Find</label><input id="dt-q" type="search" name="q" value="{{ q }}" placeholder="Any value"><button class="btn btn-outline btn-sm">Find</button>{% if q %}<a href="?" class="small">Clear</a>{% endif %}</form>
+<section class="panel">
+    <p class="small muted">{{ rows|length }} record(s){{ ' (first 200)' if rows|length >= 200 }}. Click a record to change it.</p>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr>{% for c in cols[:8] %}<th translate="no">{{ c }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for r in rows %}<tr>{% for c in cols[:8] %}<td class="small">{% if loop.first %}<a href="{{ url_for('office_data_row', table=t, key=r[info.key]) }}">{% endif %}{{ (r[c]|string)[:40] if r[c] is not none else '' }}{% if loop.first %}</a>{% endif %}</td>{% endfor %}</tr>
+        {% else %}<tr><td colspan="8" class="muted">No record.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% if info.add %}
+<form method="post" class="panel">
+    <h2>Add a record</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid">
+    {% if t == 'settings' %}<div><label for="add-key">Setting name</label><input id="add-key" name="key" required pattern="[a-z0-9_]{2,60}"></div>{% endif %}
+    {% for c in info.edit %}<div><label for="add-{{ c }}" translate="no">{{ c }}</label>{% if c in ('body', 'answer', 'value', 'address', 'aliases') %}<textarea id="add-{{ c }}" name="{{ c }}" rows="2"></textarea>{% else %}<input id="add-{{ c }}" name="{{ c }}">{% endif %}</div>{% endfor %}
+    </div>
+    <button class="btn btn-primary">Add</button>
+</form>
+{% endif %}
+{% endblock %}

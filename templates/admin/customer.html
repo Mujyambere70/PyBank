@@ -6,7 +6,9 @@
     <div class="profile-top" style="margin:0"><div class="avatar big">{{ c.initials }}</div>
         <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; {{ country_name(c.country) }} &middot; {{ LANGUAGES.get(c.lang, c.lang) }} &middot; customer since {{ c.created_at|nicedate(false) }} &middot; last login {{ c.last_login|nicedate if c.last_login else 'never' }}</p></div></div>
     <div>{% if c.status == 'Pending' %}{% if can('applications') %}<a class="badge st-pending" href="{{ url_for('office_applications') }}">Application waiting</a>{% else %}<span class="badge st-pending">Application waiting</span>{% endif %}{% elif c.status == 'Rejected' %}<span class="badge bad">Application rejected</span>{% elif account.status == 'Active' %}<span class="badge ok">Account active</span>{% else %}<span class="badge bad">Account {{ account.status }}</span>{% endif %}
-        {% if locked %}<span class="badge bad">Login locked</span>{% endif %}</div>
+        {% if locked %}<span class="badge bad">Login locked</span>{% endif %}
+        <span class="badge risk-{{ c.risk_rating|lower }}" title="{{ c.risk_reasons }}">Risk: {{ c.risk_rating }}</span>
+        {% if c.status == 'Active' and (can('counter.deposit') or can('counter.withdraw') or can('counter.transfer')) %}<a class="btn btn-primary btn-sm" href="{{ url_for('office_counter_customer', cid=c.customer_id) }}">&#128181; Counter</a>{% endif %}</div>
 </div>
 
 <div class="kpi-grid">
@@ -28,6 +30,7 @@
     <section class="panel">
         <h2>Account actions</h2>
         <div class="action-list">
+            {% if can('customers.security') %}
             {% if locked %}
             <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='unlock') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <b>Login is locked</b> after wrong passwords. <button class="btn btn-primary btn-sm">Unlock now</button></form>
@@ -42,11 +45,15 @@
             <details><summary>Reset transaction PIN</summary>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='pin') }}" class="inline-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input name="pin" placeholder="New 4-digit PIN" pattern="[0-9]{4}" maxlength="4" required><button class="btn btn-outline btn-sm">Set</button></form></details>
+            {% endif %}
+            {% if can('customers.status') %}
             <details><summary>Change account type</summary>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='type') }}" class="inline-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <select name="type">{% for t in ACCOUNT_TYPES %}<option {% if account.type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select><button class="btn btn-outline btn-sm">Save</button></form></details>
-            <details open><summary>Manual entry (cash at counter, charge, correction)</summary>
+            {% endif %}
+            {% if can('entries.manual') %}
+            <details><summary>Manual entry (charge, correction)</summary>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='entry') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="form-grid">
@@ -55,6 +62,8 @@
                         <div class="full"><label for="customer-description">Reason</label><input id="customer-description" name="description" placeholder="e.g. Cash deposit at counter" required></div>
                     </div>
                     <button class="btn btn-primary btn-sm" style="margin-top:10px">Post entry</button></form></details>
+            {% endif %}
+            {% if can('customers.status') %}
             {% if account.status == 'Active' %}
             <details><summary class="out">Freeze account</summary>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='freeze') }}" class="inline-form">
@@ -63,7 +72,8 @@
             <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='activate') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 {% if account.status == 'Dormant' %}<b>Account is dormant.</b> No money can move. {% if can('compliance') %}<a class="btn btn-primary btn-sm" href="{{ url_for('office_dormant') }}">Check &amp; activate</a>{% endif %}{% else %}<b>Account is frozen.</b> No money can move. <button class="btn btn-primary btn-sm">Activate</button>{% endif %}</form>
             {% endif %}
-            {% if me.role == 'admin' %}
+            {% endif %}
+            {% if can('customers.delete') %}
             <details><summary class="out">Close &amp; delete customer</summary>
                 <p class="small muted">Allowed only when the balance is 0 and no FD or loan is active. All records of this customer are deleted.</p>
                 <form method="post" action="{{ url_for('office_customer_action', cid=c.customer_id, action='delete') }}" onsubmit="return confirm('Delete {{ c.full_name }} and ALL records? This cannot be undone.')">
@@ -142,4 +152,24 @@
         {% if can('requests.answer') %}<a href="{{ url_for('office_requests') }}" class="link-arrow">Answer requests &rarr;</a>{% endif %}
     </section>
 </div>
+
+<section class="panel" id="risk">
+    <h2>Risk and sanctions screening</h2>
+    <div class="mini-row"><div><strong>Risk rating: {{ c.risk_rating }}</strong>{% if c.risk_manual %} <span class="badge">set by staff</span>{% endif %}
+        <small>{{ c.risk_points }} points &middot; {{ c.risk_reasons or 'nothing special' }}{% if c.pep %} &middot; politically exposed person{% endif %}</small></div>
+        <span class="badge risk-{{ c.risk_rating|lower }}">{{ c.risk_rating }}</span></div>
+    {% if can('screening') %}
+    <div class="btn-row">
+        <form method="post" action="{{ url_for('office_customer_screen', cid=c.customer_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm">Screen against the sanctions list now</button></form>
+    </div>
+    <details><summary>Set the rating myself / politically exposed person</summary>
+        <form method="post" action="{{ url_for('office_customer_risk', cid=c.customer_id) }}" class="form-grid">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div><label for="risk-rating">Rating</label><select id="risk-rating" name="rating"><option value="auto">Automatic (from the points)</option>{% for r in ['Low', 'Medium', 'High'] %}<option {{ 'selected' if c.risk_manual and c.risk_rating == r }}>{{ r }}</option>{% endfor %}</select></div>
+            <div><label for="risk-pep">Politically exposed person</label><select id="risk-pep" name="pep"><option value="0">No</option><option value="1" {{ 'selected' if c.pep }}>Yes</option></select></div>
+            <div class="full"><label for="risk-reason">Reason</label><input id="risk-reason" name="reason" placeholder="Why (needed when you set the rating yourself)"></div>
+            <div class="full"><button class="btn btn-primary btn-sm">Save</button></div>
+        </form></details>
+    {% endif %}
+</section>
 {% endblock %}

@@ -1,0 +1,34 @@
+# version 5 texts (d) - messages with gaps
+Cash deposit	Взнос наличных	Versement d'espèces	Ingreso en efectivo	إيداع نقدي	现金存款
+Exchange between own accounts	Обмен между своими счетами	Change entre ses propres comptes	Cambio entre cuentas propias	صرف بين الحسابات الخاصة	本人账户间兑换
+{0} done.	Готово: {0}.	{0} : terminé.	{0}: hecho.	تم: {0}.	{0}：已完成。
+Your {0} cash drawer is open.	Ваша касса {0} открыта.	Votre caisse {0} est ouverte.	Su caja en {0} está abierta.	درج النقد {0} الخاص بك مفتوح.	您的 {0} 钱箱已开启。
+Your {0} cash drawer is already open today.	Ваша касса {0} уже открыта сегодня.	Votre caisse {0} est déjà ouverte aujourd'hui.	Su caja en {0} ya está abierta hoy.	درج النقد {0} الخاص بك مفتوح بالفعل اليوم.	您的 {0} 钱箱今天已开启。
+Please open your {0} cash drawer first (Counter > My cash drawer).	Сначала откройте кассу {0} (Касса > Моя касса).	Ouvrez d'abord votre caisse {0} (Guichet > Ma caisse).	Abra primero su caja en {0} (Ventanilla > Mi caja).	افتح أولًا درج النقد {0} (الشباك > درج النقد الخاص بي).	请先开启您的 {0} 钱箱（柜台 > 我的钱箱）。
+Not enough cash in your {0} drawer ({1}). Ask the vault for more cash first.	В кассе {0} недостаточно наличных ({1}). Сначала получите наличные из хранилища.	Pas assez d'espèces dans votre caisse {0} ({1}). Demandez d'abord des espèces au coffre.	No hay suficiente efectivo en su caja en {0} ({1}). Pida primero más efectivo a la cámara.	لا يوجد نقد كافٍ في درج {0} ({1}). اطلب المزيد من الخزنة أولًا.	您的 {0} 钱箱现金不足（{1}）。请先向金库领取现金。
+Cash drawer closed with a difference of {0}. A supervisor must accept it.	Касса закрыта с расхождением {0}. Его должен подтвердить руководитель.	Caisse fermée avec un écart de {0}. Un responsable doit le valider.	Caja cerrada con una diferencia de {0}. Un supervisor debe aceptarla.	أُغلق الدرج بفرق قدره {0}. يجب أن يقبله المشرف.	钱箱已关闭，差额 {0}，须由主管确认。
+Recurring deposit {0} is open. The first instalment was paid.	Пополняемый вклад {0} открыт. Первый взнос внесён.	L'épargne mensuelle {0} est ouverte. La première mensualité a été payée.	El depósito mensual {0} está abierto. Se pagó la primera cuota.	تم فتح الوديعة المتكررة {0}. دُفع القسط الأول.	零存整取 {0} 已开立，首期已缴。
+Recurring deposit closed. {0} was paid into your account.	Пополняемый вклад закрыт. На ваш счёт зачислено {0}.	Épargne mensuelle clôturée. {0} a été versé sur votre compte.	Depósito mensual cerrado. Se abonaron {0} en su cuenta.	أُغلقت الوديعة المتكررة. دُفع {0} إلى حسابك.	零存整取已关闭，{0} 已转入您的账户。
+Possible matches: {0}.	Возможных совпадений: {0}.	Correspondances possibles : {0}.	Posibles coincidencias: {0}.	المطابقات المحتملة: {0}.	疑似匹配：{0}。
+Possible match: {0}	Возможное совпадение: {0}	Correspondance possible : {0}	Posible coincidencia: {0}	مطابقة محتملة: {0}	疑似匹配：{0}
+No match on the sanctions list.	Совпадений в санкционном списке нет.	Aucune correspondance dans la liste des sanctions.	Sin coincidencias en la lista de sanciones.	لا توجد مطابقة في قائمة العقوبات.	制裁名单中无匹配。
+The monthly amount must be at least {0}.	Ежемесячная сумма должна быть не меньше {0}.	Le montant mensuel doit être d'au moins {0}.	El importe mensual debe ser al menos {0}.	يجب ألا يقل المبلغ الشهري عن {0}.	每月金额至少为 {0}。
+You can have at most {0} goals.	У вас может быть не больше {0} целей.	Vous pouvez avoir au plus {0} objectifs.	Puede tener como máximo {0} metas.	يمكنك امتلاك {0} أهداف كحد أقصى.	最多可设 {0} 个目标。
+The goal has only {0}.	В цели только {0}.	L'objectif ne contient que {0}.	La meta solo tiene {0}.	يحتوي الهدف على {0} فقط.	目标中只有 {0}。
+Loan EMI	Платёж по кредиту	Mensualité de prêt	Cuota del préstamo	قسط القرض	贷款月供
+Payment to another bank	Платёж в другой банк	Paiement vers une autre banque	Pago a otro banco	دفعة إلى بنك آخر	他行汇款
+Cash moved	Движение наличных	Espèces mouvementées	Efectivo movido	حركة النقد	现金收付
+opened {0}	открыто с {0}	ouverte avec {0}	abierta con {0}	فُتح بـ {0}	开箱 {0}
+in {0} · out {1}	приход {0} · расход {1}	entrées {0} · sorties {1}	entradas {0} · salidas {1}	وارد {0} · صادر {1}	收入 {0} · 支出 {1}
+Waiting for you and your colleagues: {0}.	Ждут вас и ваших коллег: {0}.	En attente pour vous et vos collègues : {0}.	Pendiente para usted y sus compañeros: {0}.	بانتظارك أنت وزملائك: {0}.	待您和同事处理：{0}。
+Cash drawers with a difference: {0}	Кассы с расхождением: {0}	Caisses avec un écart : {0}	Cajas con diferencia: {0}	أدراج نقد بها فرق: {0}	有差额的钱箱：{0}
+Open sanctions matches: {0}	Открытые санкционные совпадения: {0}	Correspondances de sanctions ouvertes : {0}	Coincidencias de sanciones abiertas: {0}	مطابقات العقوبات المفتوحة: {0}	未处理的制裁匹配：{0}
+Open sanctions matches: {0}.	Открытые санкционные совпадения: {0}.	Correspondances de sanctions ouvertes : {0}.	Coincidencias de sanciones abiertas: {0}.	مطابقات العقوبات المفتوحة: {0}.	未处理的制裁匹配：{0}。
+Your cash drawer today:	Ваша касса сегодня:	Votre caisse aujourd'hui :	Su caja hoy:	درج النقد الخاص بك اليوم:	您今天的钱箱：
+Your cash drawer is not open today. Open it in Counter > My cash drawer with the cash you received from the vault.	Ваша касса сегодня не открыта. Откройте её в разделе «Касса > Моя касса» с наличными из хранилища.	Votre caisse n'est pas ouverte aujourd'hui. Ouvrez-la dans Guichet > Ma caisse avec les espèces reçues du coffre.	Su caja no está abierta hoy. Ábrala en Ventanilla > Mi caja con el efectivo recibido de la cámara.	درج النقد غير مفتوح اليوم. افتحه من الشباك > درج النقد الخاص بي بالنقد المستلم من الخزنة.	您今天的钱箱尚未开启。请在“柜台 > 我的钱箱”中用从金库领取的现金开启。
+Your abilities do not include this list.	Ваши права не включают этот список.	Vos droits n'incluent pas cette liste.	Sus permisos no incluyen esta lista.	لا تشمل صلاحياتك هذه القائمة.	您的权限不包括此列表。
+Your abilities do not include cash drawers.	Ваши права не включают кассы.	Vos droits n'incluent pas les caisses.	Sus permisos no incluyen las cajas.	لا تشمل صلاحياتك أدراج النقد.	您的权限不包括钱箱。
+Your abilities do not include any approval list.	Ваши права не включают списков одобрения.	Vos droits n'incluent aucune liste de validation.	Sus permisos no incluyen ninguna lista de aprobación.	لا تشمل صلاحياتك أي قائمة موافقات.	您的权限不包括任何审批列表。
+These pages may help:	Эти страницы могут помочь:	Ces pages peuvent vous aider :	Estas páginas pueden ayudar:	قد تساعدك هذه الصفحات:	这些页面可能有帮助：
+Here is where you can do that:	Вот где это можно сделать:	Voici où vous pouvez le faire :	Aquí puede hacerlo:	إليك أين يمكنك القيام بذلك:	您可以在这里办理：
+Your balance:	Ваш баланс:	Votre solde :	Su saldo:	رصيدك:	您的余额：

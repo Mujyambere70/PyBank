@@ -1,0 +1,25 @@
+{% extends "admin/layout.html" %}
+{% block title %}All cash drawers{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>All cash drawers</h1><p class="muted small">Every teller's drawer by day. A drawer closed with a difference waits here until a supervisor (not the teller himself) accepts it with a note.</p></div></div>
+<form class="panel" method="get">
+    <div class="form-grid filter-grid">
+        <div><label for="tills-day">Day</label><input id="tills-day" type="date" name="day" value="{{ day }}"></div>
+        <div><label for="tills-status">Status</label><select id="tills-status" name="status"><option value="">All</option>{% for s in ['Open', 'Closed', 'Difference', 'Accepted'] %}<option {{ 'selected' if status == s }}>{{ s }}</option>{% endfor %}</select></div>
+        <div class="filter-btn"><button class="btn btn-outline">Show</button></div>
+    </div>
+</form>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Day</th><th>Teller</th><th>Cash moved</th><th class="num">Expected</th><th class="num">Counted</th><th class="num">Difference</th><th>Status</th></tr></thead>
+        <tbody>{% for t in rows %}
+        <tr><td class="nowrap">{{ t.day }}</td><td>{{ t.full_name }}<br><small class="muted">{{ t.staff_id }}</small></td><td class="small">opened {{ t.opening|money(t.currency) }}<br>in {{ t.cash_in|money(t.currency) }} &middot; out {{ t.cash_out|money(t.currency) }}</td>
+            <td class="num">{{ t.expected|money(t.currency) }}</td><td class="num">{{ t.counted|money(t.currency) if t.counted is not none else '—' }}</td><td class="num {{ 'out' if t.difference < 0 else '' }}">{{ t.difference|money(t.currency) }}</td>
+            <td><span class="badge {{ 'bad' if t.status == 'Difference' else 'ok' }}">{{ t.status }}</span>
+            {% if t.status == 'Difference' and t.staff_id != me.staff_id %}
+            <details><summary class="small">Accept</summary><form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ t.id }}"><input name="note" placeholder="What was done" required aria-label="What was done"><button class="btn btn-primary btn-sm">Accept</button></form></details>{% endif %}
+            {% if t.note %}<br><small class="muted">{{ t.note }}</small>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="7" class="muted">No cash drawers.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}

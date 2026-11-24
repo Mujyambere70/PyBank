@@ -312,6 +312,12 @@ class CheckerOffice:
                 self.audit(conn, by, "Second approval refused", p["customer_id"] or str(p["tx_id"]), reason)
             return None
         try:
+            if p["kind"].startswith("Counter"):                           # v5: counter work (teller.py)
+                op = self.run_counter_pending(maker, by, p)
+                with self._connect() as conn:
+                    conn.execute("UPDATE pending_entries SET tx_ref = ? WHERE id = ?", (op["tx_ref"], pid))
+                    self.audit(conn, by, "Second approval given", p["customer_id"], f"receipt {op['receipt_no']}")
+                return op
             if p["kind"] == "Manual entry":
                 t = self.manual_entry(maker, p["customer_id"], p["entry_type"], p["amount"], p["description"], checked=True)
             else:

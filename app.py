@@ -31,6 +31,7 @@ import mrz
 import otp
 import roles
 import v4_views
+import v5_views
 import world
 from admin import NOTICE_LEVELS, REQUEST_STATUSES, InternationalOffice
 from bank import (ACCOUNT_TYPES, BRANCH, FD_TENURES, LOAN_PRODUCTS, LOAN_TENURES, REQUEST_TYPES, Bank, BankError,
@@ -57,6 +58,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     target = db_path or os.environ.get("DATABASE_URL") or os.path.join(app.root_path, "bank.db")
     bank = Bank(target, notifier=notifier, driver=driver, fx_fetch=fx_fetch)
     office = v4_views.Office(bank)
+    office.ensure_roles()                       # v5: job roles live in the database
     # the key that signs login cookies must stay the same after a restart and for every worker
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or bank.secret_key()
     if seed:
@@ -153,8 +155,8 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
 
     @app.before_request
     def security_checks():
-        if request.path.startswith("/api/"):
-            return                                    # the JSON API uses tokens, not cookies (api.py)
+        if request.path.startswith(("/api/", "/oauth/token", "/openbanking/")):
+            return                                    # the JSON API and open banking use tokens, not cookies
         if request.method == "POST":
             sent = request.form.get("csrf_token", "") or request.headers.get("X-CSRF-Token", "")
             if not sent or not secrets.compare_digest(sent, session.get("csrf_token", "")):
@@ -317,6 +319,11 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                                    customer=bank.get_customer(cid))
         return page()
 
+    def after_login():
+        """v5: back to the open-banking consent page when the login started there, else the dashboard."""
+        nxt = str(session.pop("after_login", "") or "")
+        return nxt if nxt.startswith("/oauth/authorize?") else url_for("dashboard")
+
     @app.route("/login", methods=["GET", "POST"])
     def login():
         if "cid" in session:
@@ -331,7 +338,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             except BankError as e:
                 flash(str(e), "error")
                 return render_template("public/login.html", login=request.form.get("login", "")), 401
-            keep = {k: session[k] for k in ("csrf_token", "staff_id", "staff_active") if k in session}
+            keep = {k: session[k] for k in ("csrf_token", "staff_id", "staff_active", "after_login") if k in session}
             lang = session.get("lang")
             session.clear()                    # new session after login
             session.update(**keep)
@@ -346,7 +353,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 return redirect(url_for("login_verify"))
             session.update(cid=c.customer_id, last_active=time.time(), previous_login=c.last_login,
                            sid=bank.start_session(c.customer_id, client_ip(), request.user_agent.string))
-            return redirect(url_for("dashboard"))
+            return redirect(after_login())
         return render_template("public/login.html", login="")
 
     @app.route("/login/verify", methods=["GET", "POST"])
@@ -372,7 +379,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                 session.pop(k, None)
             session.update(cid=cid, last_active=time.time(), previous_login=previous,
                            sid=bank.start_session(cid, client_ip(), request.user_agent.string))
-            return redirect(url_for("dashboard"))
+            return redirect(after_login())
         return render_template("public/verify.html", who="customer")
 
     @app.route("/logout")
@@ -1479,8 +1486,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                     office.change_own_password(me, f.get("old"), f.get("new"))
                     flash("Your password was changed.", "success")
                 else:
-                    office.update_staff(me, me["staff_id"], f.get("full_name"), f.get("email"), f.get("phone"),
-                                        f.get("designation"))
+                    office.update_own_details(me, f)                      # v5: also address, birthday, contact
                     flash("Your details were saved.", "success")
                 return redirect(url_for("office_profile"))
             except BankError as e:
@@ -1522,6 +1528,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     helpers = {"login_required": login_required, "current": current, "current_main": current_main,
                "staff_required": staff_required, "office_page": office_page, "client_ip": client_ip}
     v4_views.register(app, bank, office, helpers)
+    v5_views.register(app, bank, office, helpers)
     api.register(app, bank)
 
     return app

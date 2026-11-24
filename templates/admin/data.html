@@ -1,0 +1,14 @@
+{% extends "admin/layout.html" %}
+{% block title %}Data manager{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Data manager</h1><p class="muted small">Every piece of data of the site, table by table: find a record, change it, add or delete one. Money (balances, amounts, transactions) and secrets (passwords, PINs) are never edited here - money moves only through entries with a reference. Every change goes into the audit log with the old and the new value.</p></div></div>
+<div class="card-grid">
+{% for t in tables %}
+<a class="panel data-card" href="{{ url_for('office_data_table', table=t.name) }}">
+    <strong>{{ t.label }}</strong><span class="big-num">{{ t.count }}</span>
+    <small class="muted">{{ 'add' if t.add }}{{ ' · ' if t.add and t.delete }}{{ 'delete' if t.delete }}{{ ' · ' if t.add or t.delete }}edit</small>
+    {% if t.note %}<small>{{ t.note }}</small>{% endif %}
+</a>
+{% endfor %}
+</div>
+{% endblock %}

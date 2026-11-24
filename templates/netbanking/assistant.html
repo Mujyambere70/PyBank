@@ -1,0 +1,10 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Ask PyBank{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Ask PyBank</h1><p class="muted small">Ask in your own words: “how much did I spend on food last month?”, “payments to Priya”, “my balance”, “EMI for 2 lakh for 2 years”, “100 USD in rupees”. It answers from your own account and never moves money.</p></div></div>
+<section class="panel chat" data-chat="{{ url_for('site_assistant') }}" data-first="{{ request.args.get('q', '') }}">
+    <div class="chat-log" aria-live="polite"><div class="chat-msg bot">Hello {{ customer.full_name.split()[0] }}! What would you like to know?</div></div>
+    <form class="chat-form"><input name="q" aria-label="Your question" placeholder="Type your question" autocomplete="off" required><button class="btn btn-primary">Ask</button></form>
+    <div class="chat-chips small">{% for s in ['my balance', 'spent on food this month', 'money in last month', 'payments over 5000', 'FD rates', '100 USD in INR', 'how do I block my card'] %}<button type="button" class="chip" data-ask="{{ s }}">{{ s }}</button>{% endfor %}</div>
+</section>
+{% endblock %}

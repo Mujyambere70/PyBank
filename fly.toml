@@ -1,12 +1,15 @@
-# fly.toml app configuration file generated for michel-pybank on 2026-10-31T13:41:29Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# Fly.io settings for PyBank (version 4).
+# The data lives in Neon PostgreSQL: set it once with
+#     fly secrets set DATABASE_URL="postgresql://..." --app michel-pybank
+# (type it in your own terminal - never paste the address in a chat or a file).
 
 app = 'michel-pybank'
 primary_region = 'sin'
 
 [build]
+
+[env]
+  PORT = '8080'
 
 [http_service]
   internal_port = 8080
@@ -16,8 +19,14 @@ primary_region = 'sin'
   min_machines_running = 0
   processes = ['app']
 
+  [[http_service.checks]]
+    grace_period = '20s'
+    interval = '30s'
+    method = 'GET'
+    timeout = '5s'
+    path = '/health'
+
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 512

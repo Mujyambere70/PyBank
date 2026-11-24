@@ -1,0 +1,15 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Connected apps{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Connected apps</h1><p class="muted small">Apps you allowed to read your account (open banking). They can only read - never move money. Withdraw a permission at any time; it also ends by itself after 90 days.</p></div></div>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>App</th><th>May see</th><th>Allowed on</th><th>Until</th><th>Last used</th><th>Status</th><th></th></tr></thead>
+        <tbody>{% for c in rows %}<tr><td><strong>{{ c.app_name }}</strong><br><small class="muted">{{ c.company }}</small></td>
+            <td class="small">{% for s in c.scopes.split() %}{{ SCOPES.get(s, s) }}{{ '; ' if not loop.last }}{% endfor %}</td>
+            <td>{{ c.created_at|nicedate }}</td><td>{{ c.expires_at[:10] }}</td><td>{{ c.last_used|nicedate if c.last_used else 'never' }}</td><td>{{ c.status }}</td>
+            <td>{% if c.status == 'Active' %}<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ c.id }}"><button class="btn btn-danger btn-sm">Withdraw</button></form>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="7" class="muted">You have not connected any app.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+{% endblock %}

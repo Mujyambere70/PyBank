@@ -7,8 +7,11 @@
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
             <span>PyBank<small>Back Office &middot; {{ BRANCH.name }}</small></span>
         </a>
+        <form class="top-search" action="{{ url_for('office_search') }}" role="search">
+            <input type="search" name="q" value="{{ request.args.get('q', '') if request.endpoint == 'office_search' else '' }}" placeholder="Search customers, pages, references…" aria-label="Search the back office" data-suggest="{{ url_for('office_suggest') }}" autocomplete="off">
+        </form>
         <div class="nb-user">
-            <a href="{{ url_for('office_profile') }}" class="avatar" title="My profile">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</a>
+            <a href="{{ url_for('office_profile') }}" class="avatar{{ ' has-photo' if me.photo }}" title="My profile">{% if me.photo %}<img src="{{ url_for('staff_photo', sid=me.staff_id) }}" alt="">{% else %}{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}{% endif %}</a>
             <div class="hide-sm">
                 <strong>{{ me.full_name }}</strong>
                 <small>{{ me.staff_id }} &middot; {{ me.designation or me.role|capitalize }} &middot; {{ job_label }}</small>
@@ -23,6 +26,9 @@
 <div class="nb-layout">
     <aside class="nb-side">
         {% set groups = [
+            ('Counter', [('office_counter', '&#128181;', 'Counter', None, 'customers.view'),
+                ('office_till', '&#129534;', 'My cash drawer', None, 'till.own'),
+                ('office_tills', '&#128230;', 'All cash drawers', counts.till_differences, 'till.supervise')]),
             ('Operations', [('office_dashboard', '&#128200;', 'Dashboard', None, None),
                 ('office_customers', '&#128101;', 'Customers', None, 'customers.view'),
                 ('office_customer_new', '&#10133;', 'Open account', None, 'customers.edit'),
@@ -35,11 +41,15 @@
                 ('office_iso', '&#128228;', 'ISO 20022 files', counts.iso_waiting, 'payments.view'),
                 ('office_requests', '&#128172;', 'Service requests', counts.open_requests, 'requests.answer')]),
             ('Compliance', [('office_compliance', '&#128681;', 'Suspicious activity', counts.aml_open, 'compliance'),
+                ('office_screening', '&#128737;', 'Sanctions & risk', counts.screening_open, 'screening'),
                 ('office_dormant', '&#128164;', 'Dormant accounts', counts.dormant, 'compliance')]),
             ('Website', [('office_content', '&#128221;', 'Website content', None, 'content.manage'),
                 ('office_media', '&#128444;', 'Pictures', None, 'content.manage'),
                 ('office_notices', '&#128227;', 'Notices', None, 'notices.manage')]),
-            ('Administration', [('office_staff', '&#129489;', 'Staff & roles', None, 'staff.manage'),
+            ('Administration', [('office_staff', '&#129489;', 'Staff & abilities', None, 'staff.manage'),
+                ('office_roles', '&#128273;', 'Job roles', None, 'roles.manage'),
+                ('office_openbanking', '&#128279;', 'Open banking', None, 'openbanking.manage'),
+                ('office_data', '&#128452;', 'Data manager', None, 'data.manage'),
                 ('office_settings', '&#9881;', 'Bank settings', None, 'settings.manage'),
                 ('office_health', '&#129658;', 'System health', None, 'reports.view'),
                 ('office_backups', '&#128190;', 'Backups', None, 'backups'),
@@ -50,11 +60,12 @@
         {% if ns.any %}
         <div class="side-label">{{ label }}</div>
         {% for ep, icon, text, badge, ability in items %}{% if ability is none or can(ability) %}
-            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') or (ep == 'office_content' and request.endpoint and request.endpoint.startswith(('office_page', 'office_item', 'office_translate', 'office_billers'))) or (ep == 'office_compliance' and request.endpoint == 'office_flag') %}class="active" aria-current="page"{% endif %}><span>{{ icon|safe }}</span>{{ text }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
+            <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'office_customers' and request.endpoint == 'office_customer') or (ep == 'office_content' and request.endpoint and request.endpoint.startswith(('office_page', 'office_item', 'office_translate', 'office_billers'))) or (ep == 'office_compliance' and request.endpoint == 'office_flag') or (ep == 'office_counter' and request.endpoint in ('office_counter_customer', 'office_receipt')) or (ep == 'office_staff' and request.endpoint == 'office_staff_access') or (ep == 'office_data' and request.endpoint in ('office_data_table', 'office_data_row')) %}class="active" aria-current="page"{% endif %}><span>{{ icon|safe }}</span>{{ text }}{% if badge %}<em class="count">{{ badge }}</em>{% endif %}</a>
         {% endif %}{% endfor %}
         {% endif %}
         {% endfor %}
         <div class="side-label">Me</div>
+        <a href="{{ url_for('office_assistant') }}" {% if request.endpoint == 'office_assistant' %}class="active"{% endif %}><span>&#128172;</span>Ask PyBank</a>
         <a href="{{ url_for('office_profile') }}" {% if request.endpoint == 'office_profile' %}class="active"{% endif %}><span>&#128100;</span>My profile</a>
         <details class="lang-menu side-lang" translate="no">
             <summary>&#127760; {{ LANGUAGES[LANG] }}</summary>

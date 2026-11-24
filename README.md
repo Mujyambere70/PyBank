@@ -3,7 +3,20 @@
 A complete **international** online banking web application built with **Python, Flask, HTML and CSS**
 (BCA project, Mujyambere Jean Michel, MMDU Mullana).
 
-**Version 4 (November 2026):** the whole public website is managed by bank staff (contacts, pages, FAQ, products,
+**Version 5 (November 2026):** a **real branch counter** - staff take cash deposits, pay out withdrawals (after
+checking the identity document and the signature), make transfers, pay other banks, exchange money, open FDs and
+RDs and take EMIs **for the customer standing at the counter**, with a printed **counter receipt**, a **cash drawer**
+per teller (opened in the morning, counted in the evening, differences accepted by a supervisor) and the four-eyes
+rule for large amounts; the administrator **creates and edits job roles and gives or takes away every single
+ability** (36 abilities in 6 groups - every page and button needs one) and a personal limit per person; staff keep their own
+**personal details and photo**; the **name of the account holder appears while the account number is typed**
+(PyBank, IMPS / NEFT with IFSC, UPI, SWIFT / SEPA with IBAN and BIC) with a *confirmation of payee* check;
+**one smart search** everywhere (typo correction, *Did you mean*, synonyms in 6 languages, suggestions while
+typing) and the **"Ask PyBank" assistant**; **recurring deposits** and **savings goals**; **sanctions screening**
+and a **risk rating** for every customer; **open banking** (OAuth 2.0 + PKCE, customer consent, read-only API);
+a **data manager** for every table of the site.
+
+**Version 4:** the whole public website is managed by bank staff (contacts, pages, FAQ, products,
 branches & ATMs, banners, charges, pictures - with history and translations in 6 languages); one customer can keep
 **accounts in several currencies** and move money between them at the bank's buy / sell rates; **card controls**;
 **bills & standing instructions**; **insights & budgets**; **ISO 20022** payment files (pain.001 / pain.002) and SEPA;
@@ -60,13 +73,17 @@ Anna also has a **EUR account** with a SEPA payment (when exchange rates are ava
 | EMP006 | `Staff@1234` | Aisha Khan – Website Editor | Staff · website editor |
 | EMP007 | `Staff@1234` | Vikram Singh – Deputy Branch Manager | Staff · branch manager |
 
-Each job role sees only its own pages (see *Staff & roles* → "What each job role can do").
+Each job role sees only its own pages (see *Job roles & abilities*). Ravi (EMP003) has an open cash drawer
+today with three counter operations, a large deposit waiting in *Second approvals* and yesterday's drawer
+200 rupees short, waiting for a supervisor. Kofi Mensah waits in *Screening & risk* (his name is close to a
+made-up name on the demo sanctions list). Rahul has a recurring deposit, two savings goals and the demo
+partner app *Budget Buddy* connected.
 
 To start again with fresh demo data, delete `bank.db` and run `python app.py` again.
 
 ### Tests / Тесты
 ```bash
-python -m unittest discover -s tests -v      # 143 tests, SQLite
+python -m unittest discover -s tests -v      # 202 tests, SQLite
 # the same tests on PostgreSQL (the database is emptied - use a test database only!)
 TEST_DATABASE_URL=postgresql://user:pass@localhost/pybank_test python -m unittest discover -s tests
 python tools/release_check.py               # opens every page as 11 kinds of users and in 6 languages
@@ -107,6 +124,54 @@ restore history.
 
 Without them, alerts are still saved and shown on the customer's **Alerts** page.
 The demo customers have made-up example.com addresses: the app never emails or texts customers on example domains.
+
+## Version 5 / Версия 5
+
+**The counter - staff serve customers / Касса - сотрудники обслуживают клиентов.** Back office → **Counter**:
+find the customer (ID, account number, name with typos, phone), check the ID proof, then: cash **deposit**,
+cash **withdrawal** (document type and number + signature check are required), **transfer** to a PyBank
+account, **payment to another bank** (IMPS / NEFT / UPI / SWIFT / SEPA), **exchange** between own accounts,
+**fixed deposit**, **recurring deposit** and **loan EMI**. Every operation gets a receipt number (`CR...`),
+a printable receipt and a line in the audit log. Cash goes through the teller's **cash drawer** (one per
+currency and day): you cannot pay out more than the drawer holds; in the evening the teller counts the cash -
+a difference needs a note and is accepted by another person (*All cash drawers*). An amount at or above the
+bank's limit, or above the person's own limit, waits in **Second approvals** and is done when someone else
+approves it.
+
+**Abilities for everything / Права на всё.** 36 abilities in 6 groups (customers, counter, money, risk,
+website, administration). **Job roles & abilities**: create a role, tick its abilities, rename, reset a
+starting role, delete an unused role. **Staff → Abilities**: choose the role, then for each ability *Role /
+Yes / No* for this person only, and a personal limit per counter operation. Nobody can change his own
+abilities and the bank always keeps one administrator. A test checks that every back-office address needs
+an ability.
+
+**Personal details / Личные данные.** Every staff member edits his name, e-mail, phone, address, date of
+birth, emergency contact and **photo** (made 160 × 160); the administrator edits everyone's, also the branch.
+The **data manager** shows every table of the site (customers, accounts, staff, settings, notices, FAQ,
+branches, charges, billers, payees, requests, goals, sanctions list, partner apps): search, change, add and
+delete where allowed. Money and secrets are never editable there; every change is in the audit log.
+
+**Name of the account holder / Имя получателя.** While the customer (or the teller) types the account number,
+the name appears under the field: for PyBank accounts from the database, for other banks from a sandbox
+*name enquiry* (IFSC → bank and branch, UPI handle, IBAN check digits, BIC → bank and country); the name and
+the bank are filled in automatically. If the customer typed a name, it is compared: *match*, *close* or
+*different* (confirmation of payee). Lookups are limited to 20 a minute.
+
+**Smart search and the assistant / Умный поиск и помощник.** One search box on the website, in Net Banking and
+in the back office: typing mistakes are corrected ("withdrawl", "Rahul Varma"), words with the same meaning
+are found in 6 languages ("cash out" = "снять" = "retrait" = withdrawal, "FD" = fixed deposit), suggestions
+appear while typing, amounts and references are found. Each person finds only what he may see. **Ask PyBank**
+answers questions in plain words from the bank's own data: balance, spending by category and period, payments
+to a person, rates, currency conversion, EMI; for staff the work lists (approvals, screening, cash drawers).
+A language model can be switched on (`ANTHROPIC_API_KEY` + setting `assistant_llm = 1`); only the question is
+sent, never account data.
+
+**Also new / Также новое:** **recurring deposits** (6-36 months, FD rate, quarterly compounding, instalments
+taken every month, stopped after 3 misses) and **savings goals** with progress; **sanctions screening** of
+every new customer against a list (similar spellings found; a confirmed match freezes the accounts) and a
+nightly **risk rating** (country, PEP, cash use, large transfers) that compliance can set by hand; **open
+banking** - partner apps registered by the bank, the customer agrees in Net Banking, OAuth 2.0 authorization
+code with PKCE (S256), read-only `/openbanking/v1/accounts`, 90-day consent, withdrawn in *Connected apps*.
 
 ## Version 4 / Версия 4
 
@@ -268,22 +333,37 @@ banking_system/
 ├── privacy.py        download my data, interest certificate (v4)
 ├── api.py            JSON API /api/v1 with tokens and the OpenAPI description (v4)
 ├── v4_views.py       the web pages of version 4 (public, Net Banking and back office)
+├── teller.py         the counter: work for the customer, cash drawers, counter receipts (v5)
+├── staffperm.py      job roles in the database, abilities per person, own limits, staff details and photo (v5)
+├── nameenquiry.py    the name of the account holder for PyBank, IMPS / NEFT, UPI, SWIFT, SEPA (v5)
+├── smartsearch.py    search with typo correction, synonyms in 6 languages and suggestions (v5)
+├── assistant.py      "Ask PyBank" - answers questions from the bank's data (v5)
+├── deposits.py       recurring deposits and savings goals (v5)
+├── screening.py      sanctions list, screening and customer risk rating (v5)
+├── openbanking.py    partner apps, consent, OAuth 2.0 + PKCE, read-only API (v5)
+├── datamanager.py    the data manager of the back office (v5)
+├── v5_views.py       the web pages of version 5
+├── demo_v5.py        version 5 demo: cash drawers, counter work, RD and goals, partner app, a sanctions match
 ├── requirements.txt
 ├── Dockerfile, fly.toml, .github/workflows/fly-deploy.yml   Fly.io deployment
 ├── templates/
 │   ├── base.html             header, menu, footer
 │   ├── public/               index, about, rates, contact, faq, login, register, registered, error,
-│   │                         site_page, status, developers (v4)
+│   │                         site_page, status, developers (v4), search (v5)
 │   ├── netbanking/           layout (sidebar), dashboard, account, money (deposit/withdraw),
 │   │                         transfer, transfer_confirm, receipt, statement, profile, security,
 │   │                         payees, fixed_deposits, requests, loans, loan, alerts,
-│   │                         accounts, card, bills, insights (v4)
+│   │                         accounts, card, bills, insights (v4); savings, search, assistant,
+│   │                         connected_apps, consent (v5)
 │   └── admin/                back office: layout, login, dashboard, customers, customer, customer_new,
 │                             transactions, approvals, loans, requests, notices, staff, settings,
 │                             backups, database, audit, profile; v4: content*, media, billers, iso,
-│                             compliance, flag, dormant, checker, health, fx_history
+│                             compliance, flag, dormant, checker, health, fx_history; v5: counter,
+│                             counter_customer, counter_receipt, till, tills, roles, staff_access,
+│                             screening, openbanking, data*, search, assistant
 ├── static/
 │   ├── style.css
+│   ├── v5.js         search suggestions, name of the account holder, the assistant chat (v5)
 │   └── images/       all PNG / JPG (logo, hero, products, card, branch, security)
 └── tests/
     ├── test_bank.py  unit tests (classes, rules, limits, lockout, demo data)
@@ -294,6 +374,8 @@ banking_system/
     │                          credit score, auto-debit, PDF statements, Web Push
     ├── test_v4.py    website content, roles, currencies, cards, ISO 20022, MRZ, Arabic PDF, autopay,
     │                 budgets, compliance, four-eyes, devices & limits, API, privacy, health (42 tests)
+    ├── test_v5.py    every address needs an ability, roles and per-person abilities, counter work and cash
+    │                 drawers, name enquiry, smart search, assistant, RD and goals, screening, OAuth, data (59 tests)
     ├── support.py    test helpers (SQLite or TEST_DATABASE_URL)
     └── pgmini.py     tiny PostgreSQL client used only by the tests when psycopg is not installed
 ```

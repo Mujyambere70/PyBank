@@ -1,0 +1,22 @@
+{% extends "admin/layout.html" %}
+{% block title %}Counter receipt {{ op.receipt_no }}{% endblock %}
+{% block office_content %}
+<p class="small no-print"><a href="{{ url_for('office_counter_customer', cid=op.customer_id) }}">&larr; Back to {{ c.full_name }}</a></p>
+<section class="panel receipt">
+    <div class="receipt-head"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="" width="40" height="40"><div><h1>PyBank &middot; Counter receipt</h1><p class="small muted">{{ BRANCH.name }}</p></div></div>
+    <table class="data compact kv">
+        <tr><th>Receipt number</th><td translate="no"><strong>{{ op.receipt_no }}</strong></td></tr>
+        <tr><th>Operation</th><td>{{ op.kind }}</td></tr>
+        <tr><th>Amount</th><td><strong>{{ op.amount|money(op.currency) }}</strong></td></tr>
+        <tr><th>Customer</th><td>{{ op.full_name }} ({{ op.customer_id }})</td></tr>
+        <tr><th>Account</th><td translate="no">XX{{ op.account_number[-4:] }} &middot; {{ op.currency }}</td></tr>
+        <tr><th>Details</th><td>{{ op.details }}</td></tr>
+        <tr><th>Transaction reference</th><td translate="no">{{ op.tx_ref or '—' }}</td></tr>
+        <tr><th>Date and time</th><td>{{ op.created_at|nicedate }}</td></tr>
+        <tr><th>Served by</th><td>{{ op.staff_name }} ({{ op.staff_id }}){% if op.approved_by %} &middot; approved by {{ op.approved_by }}{% endif %}</td></tr>
+    </table>
+    <div class="sign-row"><div>Customer's signature</div><div>Bank's stamp and signature</div></div>
+    <p class="small muted">PyBank is a fictional bank made for an academic project. No real money is used.</p>
+    <button class="btn btn-primary no-print" onclick="window.print()">Print receipt</button>
+</section>
+{% endblock %}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Personal Banking{% endblock %} | PyBank</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="PyBank - savings accounts, current accounts, deposits, loans and net banking.">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -18,6 +19,11 @@
         <span>&#9742; Customer care: <strong translate="no">{{ SITE.care_phone }}</strong> ({{ SITE.care_hours }})</span>
         <span class="hide-sm">IFSC {{ BRANCH.ifsc }} &middot; {{ BRANCH.name }}</span>
         <a href="{{ url_for('contact') }}" class="hide-sm">Branch &amp; ATM locator</a>
+        {% if not request.path.startswith(('/admin', '/netbanking')) %}
+        <form class="top-search topbar-search" action="{{ url_for('site_search') }}" role="search">
+            <input type="search" name="q" placeholder="Search the site..." aria-label="Search the site" data-suggest="{{ url_for('site_suggest') }}" autocomplete="off">
+        </form>
+        {% endif %}
         {% if not request.path.startswith('/admin') %}
         <details class="lang-menu" translate="no">
             <summary title="Language">&#127760; {{ LANGUAGES[LANG] }}</summary>
@@ -106,9 +112,17 @@
         </div>
     </div>
 </footer>
+<div class="chat-widget" data-chat="{{ url_for('site_assistant') }}">
+    <button type="button" class="chat-toggle" aria-expanded="false" aria-controls="chat-panel">&#129302; Ask PyBank</button>
+    <div class="chat chat-panel" id="chat-panel" hidden>
+        <div class="chat-log" aria-live="polite"><div class="chat-msg bot">Hello! Ask me about accounts, rates, charges, branches or how to do something in Net Banking.</div></div>
+        <form class="chat-form"><input name="q" aria-label="Your question" placeholder="e.g. FD rate for 1 year" autocomplete="off" required><button class="btn btn-primary btn-sm">Ask</button></form>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}{% endblock %}
+<script src="{{ url_for('static', filename='v5.js') }}" defer></script>
 <script>
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }
 </script>

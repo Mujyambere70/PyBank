@@ -6,7 +6,7 @@
     <a href="{{ url_for('transfer') }}" class="btn btn-outline">&#8644; Within PyBank</a></div>
 <div class="steps"><span class="active">1. Details</span><span>2. Confirm</span><span>3. Status</span></div>
 <div class="dash-grid">
-    <form method="post" class="panel" autocomplete="off" id="ext-form">
+    <form method="post" class="panel" autocomplete="off" id="ext-form" data-ne="{{ url_for('nb_name_enquiry') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="step" value="details">
         <div class="balance-line">From: <strong>{{ account.type }} A/c {{ account.number }}</strong> &middot; {{ account.balance|money }}</div>
@@ -22,40 +22,41 @@
 
         <div data-rails="IMPS NEFT SWIFT SEPA">
             <label for="name">Beneficiary full name</label>
-            <input id="name" name="name" value="{{ form.get('name', '') }}" maxlength="60" placeholder="As in the bank account">
+            <input id="name" name="name" data-ne-name value="{{ form.get('name', '') }}" maxlength="60" placeholder="As in the bank account">
         </div>
         <div data-rails="IMPS NEFT">
             <div class="form-grid">
                 <div><label for="account">Account number</label>
-                    <input id="account" name="account" value="{{ form.get('account', '') }}" inputmode="numeric" maxlength="18" placeholder="9 to 18 digits"></div>
+                    <input id="account" name="account" data-ne-field="account" value="{{ form.get('account', '') }}" inputmode="numeric" maxlength="18" placeholder="9 to 18 digits"></div>
                 <div><label for="ifsc">IFSC code</label>
-                    <input id="ifsc" name="ifsc" value="{{ form.get('ifsc', '') }}" maxlength="11" placeholder="e.g. NOVA0001234" style="text-transform:uppercase"></div>
+                    <input id="ifsc" name="ifsc" data-ne-field="ifsc" value="{{ form.get('ifsc', '') }}" maxlength="11" placeholder="e.g. NOVA0001234" style="text-transform:uppercase"></div>
             </div>
         </div>
         <div data-rails="UPI">
             <label for="upi">UPI ID</label>
-            <input id="upi" name="upi" value="{{ form.get('upi', '') }}" maxlength="100" placeholder="name@okbank">
+            <input id="upi" name="upi" data-ne-field="upi" value="{{ form.get('upi', '') }}" maxlength="100" placeholder="name@okbank">
         </div>
         <div data-rails="SWIFT">
             <div class="form-grid">
                 <div><label for="swift_account">IBAN or account number</label>
-                    <input id="swift_account" name="account" value="{{ form.get('account', '') }}" maxlength="40" placeholder="e.g. DE89 3704 0044 0532 0130 00"></div>
+                    <input id="swift_account" name="account" data-ne-field="account" value="{{ form.get('account', '') }}" maxlength="40" placeholder="e.g. DE89 3704 0044 0532 0130 00"></div>
                 <div><label for="bic">SWIFT / BIC code</label>
-                    <input id="bic" name="bic" value="{{ form.get('bic', '') }}" maxlength="11" placeholder="e.g. RHMUDEFF" style="text-transform:uppercase"></div>
+                    <input id="bic" name="bic" data-ne-field="bic" value="{{ form.get('bic', '') }}" maxlength="11" placeholder="e.g. RHMUDEFF" style="text-transform:uppercase"></div>
             </div>
             <label for="bank_name">Beneficiary bank name</label>
-            <input id="bank_name" name="bank_name" value="{{ form.get('bank_name', '') }}" maxlength="60" placeholder="Bank name">
+            <input id="bank_name" name="bank_name" data-ne-bank value="{{ form.get('bank_name', '') }}" maxlength="60" placeholder="Bank name">
         </div>
         <div data-rails="SEPA">
             <div class="form-grid">
                 <div><label for="sepa_iban">IBAN</label>
-                    <input id="sepa_iban" name="account" value="{{ form.get('account', '') }}" maxlength="40" placeholder="e.g. FR76 3000 6000 0112 3456 7890 189"></div>
+                    <input id="sepa_iban" name="account" data-ne-field="account" value="{{ form.get('account', '') }}" maxlength="40" placeholder="e.g. FR76 3000 6000 0112 3456 7890 189"></div>
                 <div><label for="sepa_bic">BIC (optional)</label>
-                    <input id="sepa_bic" name="bic" value="{{ form.get('bic', '') }}" maxlength="11" placeholder="e.g. AGRIFRPP" style="text-transform:uppercase"></div>
+                    <input id="sepa_bic" name="bic" data-ne-field="bic" value="{{ form.get('bic', '') }}" maxlength="11" placeholder="e.g. AGRIFRPP" style="text-transform:uppercase"></div>
             </div>
             <label for="sepa_bank">Beneficiary bank name (optional)</label>
-            <input id="sepa_bank" name="bank_name" value="{{ form.get('bank_name', '') }}" maxlength="60">
+            <input id="sepa_bank" name="bank_name" data-ne-bank value="{{ form.get('bank_name', '') }}" maxlength="60">
         </div>
+        <div class="ne-box" aria-live="polite"></div>
         <label for="amount">Amount ({{ CURRENCY }})</label>
         <input type="number" id="amount" name="amount" value="{{ form.get('amount', '') }}" min="0.01" step="0.01" required>
         <label for="remarks">Remarks (optional)</label>

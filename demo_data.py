@@ -183,6 +183,13 @@ def seed(bank, office=None, months=6, seed_value=42):
             bank.log_error("demo_v4", e)
             if os.environ.get("PYBANK_STRICT_DEMO") == "1":
                 raise
+        import demo_v5                        # version 5: counter, RD and goals, open banking, screening
+        try:
+            demo_v5.seed_v5(bank, office)
+        except Exception as e:
+            bank.log_error("demo_v5", e)
+            if os.environ.get("PYBANK_STRICT_DEMO") == "1":
+                raise
 
 
 def _seed(bank, office, months, seed_value):

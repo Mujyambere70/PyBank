@@ -1,0 +1,43 @@
+{% extends "admin/layout.html" %}
+{% block title %}Open banking{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Open banking</h1><p class="muted small">Other companies' apps may read a customer's accounts only after the customer agrees in Net Banking (OAuth 2.0 with PKCE). Here the bank registers those apps, stops them and sees every consent.</p></div></div>
+{% if secret %}
+<div class="notice notice-warn"><strong>Copy this now - it is shown only once.</strong><br>Client ID: <code>{{ secret.client_id }}</code><br>Client secret: <code>{{ secret.secret }}</code><br><span class="small">The bank keeps only a fingerprint (SHA-256) of the secret. If it is lost, register the app again.</span></div>
+{% endif %}
+<div class="dash-grid">
+<form method="post" class="panel">
+    <h2>Register an app</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="register">
+    <label for="ob-name">App name</label><input id="ob-name" name="name" required maxlength="60">
+    <label for="ob-co">Company</label><input id="ob-co" name="company" maxlength="80">
+    <label for="ob-uri">Return address (redirect URI)</label><input id="ob-uri" name="redirect_uri" type="url" placeholder="https://app.example/callback" required>
+    <button class="btn btn-primary btn-block">Register and show the secret</button>
+</form>
+<section class="panel">
+    <h2>How an app connects</h2>
+    <ol class="small">
+        <li>The app sends the customer to PyBank with its client ID, its return address, the permissions it wants and a PKCE code challenge.</li>
+        <li>The customer signs in to Net Banking and agrees (or refuses).</li>
+        <li>The app changes the one-time code for a token.</li>
+        <li>With the token it can only read, for 90 days or until the customer withdraws the permission.</li>
+    </ol>
+    <p class="small" translate="no"><code>GET /oauth/authorize</code> &middot; <code>POST /oauth/token</code> &middot; <code>GET /openbanking/v1/accounts</code> &middot; scopes: <code>{{ SCOPES|join(' ') }}</code></p>
+</section>
+</div>
+<section class="panel">
+    <h2>Apps ({{ apps|length }})</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>App</th><th>Client ID</th><th>Return address</th><th>Active consents</th><th>Status</th><th></th></tr></thead>
+    <tbody>{% for a in apps %}<tr><td><strong>{{ a.name }}</strong><br><small class="muted">{{ a.company }}</small></td><td><code class="small">{{ a.client_id }}</code></td><td class="small">{{ a.redirect_uri }}</td><td>{{ a.consents }}</td>
+        <td><span class="badge {{ 'ok' if a.active else 'bad' }}">{{ 'Active' if a.active else 'Stopped' }}</span></td>
+        <td><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="client_id" value="{{ a.client_id }}">
+            {% if a.active %}<button class="btn btn-danger btn-sm" name="action" value="stop">Stop (ends all consents)</button>{% else %}<button class="btn btn-outline btn-sm" name="action" value="start">Start again</button>{% endif %}</form></td></tr>
+    {% else %}<tr><td colspan="6" class="muted">No app registered.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="panel">
+    <h2>Customers' consents</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Customer</th><th>App</th><th>Permissions</th><th>Given</th><th>Until</th><th>Last used</th><th>Status</th></tr></thead>
+    <tbody>{% for c in consents %}<tr><td><a href="{{ url_for('office_customer', cid=c.customer_id) }}">{{ c.customer_id }}</a></td><td>{{ c.app_name }}</td><td class="small" translate="no">{{ c.scopes }}</td><td>{{ c.created_at|nicedate }}</td><td>{{ c.expires_at[:10] }}</td><td>{{ c.last_used|nicedate if c.last_used else '—' }}</td><td>{{ c.status }}</td></tr>
+    {% else %}<tr><td colspan="7" class="muted">No consent yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

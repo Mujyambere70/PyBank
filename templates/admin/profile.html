@@ -1,8 +1,8 @@
 {% extends "admin/layout.html" %}
 {% block title %}My profile{% endblock %}
 {% block office_content %}
-<div class="nb-title"><div class="profile-top" style="margin:0"><div class="avatar big">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</div>
-    <div><h1>{{ me.full_name }}</h1><p class="muted small">{{ me.staff_id }} &middot; {{ me.designation }} &middot; {{ me.role|capitalize }} &middot; since {{ me.created_at|nicedate(false) }}</p></div></div></div>
+<div class="nb-title"><div class="profile-top" style="margin:0">{% if me.photo %}<img class="avatar big photo" src="{{ url_for('staff_photo', sid=me.staff_id) }}" alt="">{% else %}<div class="avatar big">{{ me.full_name.split()[0][0] }}{{ me.full_name.split()[-1][0] }}</div>{% endif %}
+    <div><h1>{{ me.full_name }}</h1><p class="muted small">{{ me.staff_id }} &middot; {{ me.designation }} &middot; {{ me._job_label or me.role|capitalize }} &middot; since {{ me.created_at|nicedate(false) }}</p></div></div></div>
 <div class="dash-grid">
     <form method="post" class="panel">
         <h2>My details</h2>
@@ -12,7 +12,10 @@
         <div class="form-grid">
             <div><label for="profile-phone">Phone</label><input id="profile-phone" name="phone" value="{{ me.phone }}"></div>
             <div><label for="profile-designation">Designation</label><input id="profile-designation" name="designation" value="{{ me.designation }}"></div>
+            <div><label for="profile-dob">Date of birth</label><input id="profile-dob" type="date" name="dob" value="{{ me.dob or '' }}"></div>
+            <div><label for="profile-emergency">Emergency contact</label><input id="profile-emergency" name="emergency_contact" value="{{ me.emergency_contact or '' }}" placeholder="Name and phone"></div>
         </div>
+        <label for="profile-address">Home address</label><textarea id="profile-address" name="address" rows="2">{{ me.address or '' }}</textarea>
         <button class="btn btn-primary btn-block">Save my details</button>
     </form>
     <form method="post" class="panel">
@@ -24,6 +27,22 @@
         <button class="btn btn-primary btn-block">Change password</button>
         <p class="small muted">At least 8 characters with letters and numbers. Your role can only be changed by another admin.</p>
     </form>
+</div>
+<div class="dash-grid">
+    <form method="post" action="{{ url_for('office_profile_photo') }}" enctype="multipart/form-data" class="panel">
+        <h2>My photo</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <p class="small muted">Shown at the top of the back office and on your staff card. JPG, PNG or WEBP, at most 2 MB; it is made small (160 &times; 160).</p>
+        <label for="profile-photo">Choose a picture</label><input id="profile-photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" required>
+        <button class="btn btn-primary btn-block">Save photo</button>
+    </form>
+    <section class="panel">
+        <h2>What I may do</h2>
+        <p class="small muted">Your abilities come from your job role{% if me.max_amount %} and your own limit of {{ me.max_amount|money('INR') }} per counter operation{% endif %}. Only an administrator can change them.</p>
+        {% for group, items in ABILITY_GROUPS %}{% set mine = items|selectattr('0', 'in', me._abilities or [])|list %}{% if mine %}
+        <p class="small"><strong>{{ group }}:</strong> {% for code, text in mine %}{{ text }}{{ '; ' if not loop.last }}{% endfor %}</p>{% endif %}{% endfor %}
+        {% if me.photo %}<form method="post" action="{{ url_for('office_profile_photo') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="remove" value="1"><button class="btn btn-outline btn-sm">Remove my photo</button></form>{% endif %}
+    </section>
 </div>
 {% set action_field = 'form' %}{% set totp_enabled = me.totp_enabled %}
 {% include "_totp_setup.html" %}

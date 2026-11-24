@@ -1,0 +1,37 @@
+{% extends "admin/layout.html" %}
+{% block title %}Job roles & abilities{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Job roles &amp; abilities</h1><p class="muted small">Every page and every button of the back office needs an ability. A job role is a named set of abilities. Change a role and all its people get the change at their next click.</p>{% if can('staff.manage') %}<p class="small"><a href="{{ url_for('office_staff') }}">To change the abilities of one person only, open Staff and choose Abilities.</a></p>{% endif %}</div></div>
+{% macro ability_boxes(prefix, chosen) %}
+<div class="ability-grid">
+{% for group, items in ABILITY_GROUPS %}
+    <fieldset><legend>{{ group }}</legend>
+    {% for code, text in items %}<label class="check small"><input type="checkbox" name="abilities" value="{{ code }}" {{ 'checked' if code in chosen }}> {{ text }} <code>{{ code }}</code></label>{% endfor %}
+    </fieldset>
+{% endfor %}
+</div>
+{% endmacro %}
+{% for code, r in job_roles.items() %}
+<details class="panel role-card" id="role-{{ code }}" {{ 'open' if loop.first }}>
+    <summary><strong>{{ r.label }}</strong> <span class="muted small">&middot; {{ r.abilities|length }} abilities &middot; {{ r.people }} person(s){% if r.builtin %} &middot; starting role{% endif %}{% if r.updated_by %} &middot; changed by {{ r.updated_by }} {{ r.updated_at|nicedate }}{% endif %}</span></summary>
+    <form method="post" action="{{ url_for('office_role_action', code=code) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="label-{{ code }}">Name of the role</label><input id="label-{{ code }}" name="label" value="{{ r.label }}" required maxlength="50">
+        {{ ability_boxes(code, r.abilities) }}
+        <div class="btn-row">
+            <button class="btn btn-primary btn-sm" name="action" value="save">Save role</button>
+            {% if r.builtin %}<button class="btn btn-outline btn-sm" name="action" value="reset" formnovalidate>Reset to starting abilities</button>
+            {% elif not r.people %}<button class="btn btn-danger btn-sm" name="action" value="delete" formnovalidate>Delete role</button>
+            {% else %}<span class="small muted">A role with people cannot be deleted - give them another role first.</span>{% endif %}
+        </div>
+    </form>
+</details>
+{% endfor %}
+<form method="post" class="panel" id="new-role">
+    <h2>New job role</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="new-label">Name (e.g. “Head cashier”, “Night teller”)</label><input id="new-label" name="label" required maxlength="50">
+    {{ ability_boxes('new', []) }}
+    <button class="btn btn-primary">Create role</button>
+</form>
+{% endblock %}

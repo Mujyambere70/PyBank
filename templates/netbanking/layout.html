@@ -7,6 +7,9 @@
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PyBank logo">
             <span>PyBank<small>Net Banking</small></span>
         </a>
+        <form class="top-search" action="{{ url_for('nb_search') }}" role="search">
+            <input type="search" name="q" value="{{ request.args.get('q', '') if request.endpoint == 'nb_search' }}" placeholder="Search payments, payees, help..." aria-label="Search" data-suggest="{{ url_for('nb_suggest') }}" autocomplete="off">
+        </form>
         <div class="nb-user">
             <div class="avatar">{{ customer.initials }}</div>
             <div class="hide-sm">
@@ -39,9 +42,10 @@
             ('transfer', '&#8644;', 'Fund Transfer'), ('other_bank', '&#127758;', 'Other Banks & Abroad'), ('bills', '&#129534;', 'Bills & Autopay'),
             ('deposit', '&#11015;', 'Deposit'), ('withdraw', '&#11014;', 'Withdraw'), ('statement', '&#128196;', 'Statement'),
             ('insights', '&#128202;', 'Insights & Budgets'),
-            ('estatements', '&#128462;', 'E-statements'), ('payees', '&#128101;', 'Beneficiaries'), ('fixed_deposits', '&#128181;', 'Fixed Deposits'),
+            ('estatements', '&#128462;', 'E-statements'), ('payees', '&#128101;', 'Beneficiaries'), ('fixed_deposits', '&#128181;', 'Fixed Deposits'), ('savings_plans', '&#127919;', 'RD & Goals'),
             ('loans', '&#127974;', 'Loans'), ('my_card', '&#128179;', 'My Card'), ('alerts', '&#128276;', 'Alerts'),
             ('service_requests', '&#128172;', 'Service Requests'),
+            ('nb_assistant', '&#129302;', 'Ask PyBank'), ('connected_apps', '&#128279;', 'Connected apps'),
             ('profile', '&#128100;', 'My Profile'), ('security', '&#128274;', 'Security')] %}
             <a href="{{ url_for(ep) }}" {% if request.endpoint == ep or (ep == 'transfer' and request.endpoint == 'receipt') or (ep == 'loans' and request.endpoint == 'loan_detail') or (ep == 'other_bank' and request.endpoint == 'payment_detail') %}class="active" aria-current="page"{% endif %}><span>{{ icon|safe }}</span>{{ label }}</a>
         {% endfor %}

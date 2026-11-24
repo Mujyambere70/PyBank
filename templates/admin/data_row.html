@@ -1,0 +1,19 @@
+{% extends "admin/layout.html" %}
+{% block title %}Data · {{ info.label }} · {{ key }}{% endblock %}
+{% block office_content %}
+<p class="small"><a href="{{ url_for('office_data_table', table=t) }}">&larr; {{ info.label }}</a></p>
+<div class="nb-title"><div><h1>{{ info.label }} &middot; {{ key }}</h1>{% if info.note %}<p class="muted small">{{ info.note }}</p>{% endif %}</div></div>
+<form method="post" class="panel">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid">
+    {% for c in cols %}
+        <div class="{{ 'full' if c in ('body', 'answer', 'value', 'address', 'details', 'reply') }}"><label for="row-{{ c }}"><span translate="no">{{ c }}</span>{% if c not in info.edit %} <span class="muted small">(read only)</span>{% endif %}</label>
+        {% if c not in info.edit %}<input id="row-{{ c }}" value="{{ row[c] if row[c] is not none else '' }}" readonly>
+        {% elif c in ('body', 'answer', 'value', 'address', 'details', 'reply') %}<textarea id="row-{{ c }}" name="{{ c }}" rows="4">{{ row[c] if row[c] is not none else '' }}</textarea>
+        {% else %}<input id="row-{{ c }}" name="{{ c }}" value="{{ row[c] if row[c] is not none else '' }}">{% endif %}</div>
+    {% endfor %}
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" name="action" value="save">Save changes</button>
+    {% if info.delete %}<button class="btn btn-danger" name="action" value="delete" formnovalidate>Delete this record</button>{% endif %}</div>
+</form>
+{% endblock %}

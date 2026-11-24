@@ -33,7 +33,7 @@ import credit
 import i18n
 import otp
 import world
-from core import BankError, now
+from core import COUNTER, BankError, now
 from db import Database
 from notify import Notifier
 from onboarding import OnboardingMixin
@@ -53,6 +53,13 @@ from mrz import MRZ_SCHEMA, MrzMixin
 from privacy import PrivacyMixin
 from sitecontent import CONTENT_SCHEMA, CONTENT_TABLES, SiteContentMixin
 from wallets import WALLET_SCHEMA, WalletsMixin
+# version 5
+from deposits import DEPOSIT_SCHEMA, DepositsMixin
+from nameenquiry import NameEnquiryMixin
+from openbanking import OB_SCHEMA, OpenBankingMixin
+from screening import CUSTOMER_COLUMNS, SCREEN_SCHEMA, ScreeningMixin
+from staffperm import ROLE_SCHEMA, STAFF_COLUMNS
+from teller import TELLER_SCHEMA
 
 # ---------- bank settings ----------
 
@@ -162,6 +169,11 @@ class Customer:
     decided_by: str = ""
     decided_at: str = ""
     estatement: int = 1
+    risk_rating: str = "Low"        # v5 (screening.py)
+    risk_points: int = 0
+    risk_reasons: str = ""
+    risk_manual: int = 0
+    pep: int = 0
 
     @property
     def first_name(self):
@@ -557,9 +569,13 @@ MIGRATIONS = {
     "fixed_deposits": [("compounding", "TEXT NOT NULL DEFAULT 'simple'"),                                    # v4
                        ("senior", "INTEGER NOT NULL DEFAULT 0")],
     "external_transfers": [("iso_file", "TEXT NOT NULL DEFAULT ''")],                                       # v4
+    "pending_entries": [("payload", "TEXT NOT NULL DEFAULT ''")],                                            # v5
 }
+MIGRATIONS["staff"] = MIGRATIONS["staff"] + STAFF_COLUMNS                                                     # v5
+MIGRATIONS["customers"] = MIGRATIONS["customers"] + CUSTOMER_COLUMNS                                         # v5
 V4_SCHEMA = (CONTENT_SCHEMA + WALLET_SCHEMA + CARD_SCHEMA + ISO_SCHEMA + MRZ_SCHEMA + AUTOPAY_SCHEMA +
              INSIGHT_SCHEMA + COMPLIANCE_SCHEMA + DEVICE_SCHEMA + API_SCHEMA)
+V5_SCHEMA = ROLE_SCHEMA + TELLER_SCHEMA + DEPOSIT_SCHEMA + SCREEN_SCHEMA + OB_SCHEMA
 
 # tables in the order they can be filled (parents before children) - used by backups
 DATA_TABLES = ["customers", "accounts", "transactions", "login_history", "beneficiaries", "fixed_deposits",
@@ -569,7 +585,10 @@ DATA_TABLES = ["customers", "accounts", "transactions", "login_history", "benefi
                # version 4
                *CONTENT_TABLES, "fx_history", "cards", "card_events", "iso_files", "mrz_checks", "billers",
                "bill_payments", "standing_instructions", "budgets", "aml_flags", "pending_entries", "sessions",
-               "api_tokens"]
+               "api_tokens",
+               # version 5
+               "job_roles", "tills", "counter_ops", "recurring_deposits", "goals", "sanctions_list", "screening_hits",
+               "ob_apps", "ob_consents"]
 
 # Bank-wide settings the admin can change (stored in the settings table)
 DEFAULT_SETTINGS = {
@@ -585,6 +604,10 @@ DEFAULT_SETTINGS = {
     "fd_senior_extra": "0.50",           # extra FD interest for customers aged 60 or more
     "fx_margin": "1.00",                 # bank's margin on currency exchange, %
     "payments_mode": "sandbox",          # SWIFT / SEPA: "sandbox" (answers by itself) or "iso_files" (pain.001 / pain.002)
+    # version 5
+    "high_risk_countries": "IR,KP,MM",   # customers from these countries get a higher risk rating
+    "assistant_llm": "0",                # 1 = questions the assistant does not understand go to a language model
+    "name_enquiry": "1",                 # show the receiver's name while a transfer is typed
 }
 SENIOR_AGE = 60
 FD_TENURES = (6, 12, 24, 36)                 # months
@@ -598,7 +621,7 @@ REQUEST_TYPES = ["Cheque book", "Debit card block", "New debit card", "Account s
                  "Update nominee", "Address proof letter", "Account closure", "Complaint", "Other"]
 
 
-class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, AutopayMixin, InsightsMixin,
+class Bank(NameEnquiryMixin, DepositsMixin, ScreeningMixin, OpenBankingMixin, SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, AutopayMixin, InsightsMixin,
            ComplianceMixin, DevicesMixin, PrivacyMixin, ApiTokensMixin,
            OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
     """Keeps all customers, accounts and transactions in a database (SQLite file or PostgreSQL)."""
@@ -609,7 +632,7 @@ class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, Autop
         self.notifier = notifier or Notifier()
         self.fx_fetch = fx_fetch                 # function that downloads exchange rates (None = internet)
         self.alerts_on = True
-        self.db.init_schema(SCHEMA + V4_SCHEMA)
+        self.db.init_schema(SCHEMA + V4_SCHEMA + V5_SCHEMA)
         with self._connect() as conn:
             for table, cols in MIGRATIONS.items():
                 have = conn.columns(table)
@@ -618,6 +641,7 @@ class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, Autop
                         conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}")
         self.ensure_site_content()                     # v4: the website texts of version 3 go into the database once
         self.ensure_billers()
+        self.ensure_sanctions_list()                   # v5: the made-up demo sanctions list
 
     # ----- settings -----
 
@@ -794,6 +818,8 @@ class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, Autop
                             f"documents and tell you when your account is ready.")
             elif initial:
                 self._save(conn, account.credit(initial, "Deposit", "Account opening deposit", when))
+        if self.alerts_on:
+            self.screen_customer(cid)                # v5: sanctions screening of every new customer
         return cid, account
 
     # ----- login -----
@@ -933,6 +959,8 @@ class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, Autop
     # ----- money operations -----
 
     def _check_pin(self, cid, pin):
+        if pin is COUNTER:                 # v5: done by a bank worker at the counter (teller.py)
+            return
         if not check_password_hash(self.get_customer(cid).pin_hash, pin):
             raise BankError("Incorrect transaction PIN.")
 
@@ -1903,6 +1931,9 @@ class Bank(SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, Autop
                           ("statements", lambda: self.monthly_estatements(today)),
                           ("standing", lambda: self.run_instructions(today)),          # v4
                           ("dormant", lambda: self.mark_dormant(today)),               # v4
+                          ("rd", lambda: self.collect_rd_instalments(today)),          # v5
+                          ("screening", self.screen_all),                              # v5
+                          ("risk", lambda: len(self.update_all_risks())),              # v5
                           ("rate_hits", self.clean_rate_hits)):                         # v4
             try:
                 done[name] = job()

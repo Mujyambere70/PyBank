@@ -1,0 +1,10 @@
+{% extends "admin/layout.html" %}
+{% block title %}Ask PyBank{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Ask PyBank</h1><p class="muted small">Write a question in plain words, for example: “approvals waiting”, “customers of Ravi”, “EMI for 5 lakh at 9% for 5 years”, “USD rate”, “how do I reverse a transaction”. The assistant answers from the bank's own data, only what your abilities allow.</p></div></div>
+<section class="panel chat" data-chat="{{ url_for('office_assistant') }}" data-first="{{ request.args.get('q', '') }}">
+    <div class="chat-log" aria-live="polite"><div class="chat-msg bot">Hello {{ me.full_name.split()[0] }}. What do you need?</div></div>
+    <form class="chat-form"><input name="q" aria-label="Your question" placeholder="Type your question" autocomplete="off" required><button class="btn btn-primary">Ask</button></form>
+    <div class="chat-chips small">{% for s in ['approvals waiting', 'my cash drawer', 'open screening matches', 'USD rate', 'EMI 500000 at 9% for 60 months', 'how to open a cash drawer'] %}<button type="button" class="chip" data-ask="{{ s }}">{{ s }}</button>{% endfor %}</div>
+</section>
+{% endblock %}

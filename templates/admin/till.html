@@ -1,0 +1,39 @@
+{% extends "admin/layout.html" %}
+{% block title %}My cash drawer{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>My cash drawer</h1><p class="muted small">Open the drawer in the morning with the cash you received from the vault. Deposits add to it and withdrawals take from it. In the evening count the cash: if it does not match, write what happened and a supervisor accepts it.</p></div></div>
+<div class="dash-grid">
+    <form method="post" class="panel">
+        <h2>Open a drawer for today</h2>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="open">
+        <div class="form-grid"><div><label for="till-cur">Currency</label><select id="till-cur" name="currency">{% for cur in CURRENCIES %}<option>{{ cur }}</option>{% endfor %}</select></div>
+            <div><label for="till-open">Cash received from the vault</label><input id="till-open" type="number" name="opening" min="0" step="0.01" value="0" required></div></div>
+        <button class="btn btn-primary btn-block">Open drawer</button>
+    </form>
+    <section class="panel">
+        <h2>{{ 'Today' if day == today.isoformat() else day }}</h2>
+        {% for t in tills %}
+        <div class="till-card">
+            <div class="mini-row"><div><strong>{{ t.currency }} &middot; in the drawer now: {{ t.expected|money(t.currency) }}</strong>
+                <small>opened {{ t.opened_at|nicedate }} with {{ t.opening|money(t.currency) }} &middot; cash in {{ t.cash_in|money(t.currency) }} &middot; cash out {{ t.cash_out|money(t.currency) }}</small>
+                {% if t.status != 'Open' %}<small>counted {{ t.counted|money(t.currency) }} &middot; difference {{ t.difference|money(t.currency) }}{% if t.note %} &middot; {{ t.note }}{% endif %}</small>{% endif %}</div>
+                <span class="badge {{ 'ok' if t.status in ('Open', 'Closed', 'Accepted') else 'bad' }}">{{ t.status }}</span></div>
+            {% if t.status == 'Open' %}
+            <details><summary>Count and close</summary>
+            <form method="post" class="form-grid"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="close"><input type="hidden" name="id" value="{{ t.id }}">
+                <div><label for="cnt-{{ t.id }}">Cash counted</label><input id="cnt-{{ t.id }}" type="number" name="counted" min="0" step="0.01" required></div>
+                <div><label for="note-{{ t.id }}">Note (needed if it does not match)</label><input id="note-{{ t.id }}" name="note"></div>
+                <div class="full"><button class="btn btn-primary btn-sm">Close drawer</button></div></form></details>
+            {% endif %}
+        </div>
+        {% else %}<p class="muted">No drawer for this day.</p>{% endfor %}
+        <form method="get" class="inline-form"><label for="till-day">Another day</label><input id="till-day" type="date" name="day" value="{{ day }}"><button class="btn btn-outline btn-sm">Show</button></form>
+    </section>
+</div>
+<section class="panel">
+    <h2>My counter work ({{ ops|length }})</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Time</th><th>Receipt</th><th>Operation</th><th>Customer</th><th class="num">Amount</th></tr></thead>
+    <tbody>{% for o in ops %}<tr><td>{{ o.created_at[11:16] }}</td><td><a href="{{ url_for('office_receipt', op_id=o.id) }}" translate="no">{{ o.receipt_no }}</a></td><td>{{ o.kind }}</td><td>{{ o.full_name }}</td><td class="num">{{ o.amount|money(o.currency) }}</td></tr>
+    {% else %}<tr><td colspan="5" class="muted">Nothing on this day.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

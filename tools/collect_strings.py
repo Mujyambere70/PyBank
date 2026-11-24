@@ -99,18 +99,22 @@ def crawl(lang):
                     todo.append(link)
 
     c = app.test_client()
-    walk(c, ["/", "/about", "/rates", "/faq", "/contact", "/status", "/developers", "/login", "/open-account"], "/",
-         80)
+    walk(c, ["/", "/about", "/rates", "/faq", "/contact", "/status", "/developers", "/login", "/open-account",
+              "/search?q=fixd+deposit"], "/", 80)
     c = app.test_client()
     with c.session_transaction() as s:
         s["csrf_token"] = "t"
     c.post("/login", data={"login": "PB10000001", "password": "Demo@1234", "csrf_token": "t"})
-    walk(c, ["/netbanking"], "/netbanking", 120)
+    walk(c, ["/netbanking", "/netbanking/savings", "/netbanking/connected-apps", "/netbanking/assistant",
+             "/netbanking/search?q=swigy"], "/netbanking", 140)
     c = app.test_client()
     with c.session_transaction() as s:
         s["csrf_token"] = "t"
     c.post("/admin/login", data={"login": "admin@pybank.demo", "password": "Admin@1234", "csrf_token": "t"})
-    walk(c, ["/admin"], "/admin", 300)
+    walk(c, ["/admin", "/admin/counter", "/admin/counter/PB10000001", "/admin/till", "/admin/tills", "/admin/roles",
+             "/admin/staff/EMP003/access", "/admin/screening", "/admin/openbanking", "/admin/data",
+             "/admin/data/customers", "/admin/data/customers/PB10000001", "/admin/search?q=rahul+varma",
+             "/admin/assistant"], "/admin", 340)
     return found
 
 

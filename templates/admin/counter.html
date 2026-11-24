@@ -1,0 +1,38 @@
+{% extends "admin/layout.html" %}
+{% block title %}Counter{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Counter</h1><p class="muted small">Find the customer who stands at your counter, check the identity document, then do the work for him: cash in and out, transfers, other banks, exchange, deposits and EMIs.</p></div></div>
+<form class="panel search-panel" method="get" role="search">
+    <label for="counter-q">Customer ID, account number, name, phone or email</label>
+    <div class="inline-form"><input id="counter-q" type="search" name="q" value="{{ q }}" placeholder="e.g. PB10000001, 502100000001, Rahul Varma" data-suggest="{{ url_for('office_suggest') }}" autocomplete="off" autofocus>
+    <button class="btn btn-primary">Find</button></div>
+    <p class="small muted">Small typing mistakes are corrected (“Rahul Varma” finds Rahul Verma).</p>
+</form>
+{% if res %}
+<section class="panel">
+    <h2>Customers found ({{ res.results|length }})</h2>
+    {% if res.did_you_mean %}<p class="small">Did you mean <a href="?q={{ res.did_you_mean|urlencode }}">{{ res.did_you_mean }}</a>?</p>{% endif %}
+    {% for d in res.results %}
+    {% set cid = d.url.rstrip('/').split('/')[-1] %}
+    <div class="mini-row"><div><strong>{{ d.title }}</strong><small>{{ d.text }}</small></div>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('office_counter_customer', cid=cid) }}">Serve</a></div>
+    {% else %}<p class="muted">No customer found. Check the spelling or search by Customer ID.</p>{% endfor %}
+</section>
+{% endif %}
+<div class="dash-grid">
+    <section class="panel">
+        <div class="panel-head"><h2>My cash drawer today</h2>{% if can('till.own') %}<a href="{{ url_for('office_till') }}" class="small">Open / close &rarr;</a>{% endif %}</div>
+        {% for t in tills %}
+        <div class="mini-row"><div><strong>{{ t.currency }}: {{ t.expected|money(t.currency) }}</strong><small>opened with {{ t.opening|money(t.currency) }} &middot; in {{ t.cash_in|money(t.currency) }} &middot; out {{ t.cash_out|money(t.currency) }}</small></div>
+            <span class="badge {{ 'ok' if t.status == 'Open' else 'st-pending' }}">{{ t.status }}</span></div>
+        {% else %}<p class="muted small">{% if can('till.own') %}Your cash drawer is not open today. Open it before taking or giving cash.{% else %}You do not handle cash. Transfers and other work do not need a drawer.{% endif %}</p>{% endfor %}
+    </section>
+    <section class="panel">
+        <h2>My counter work today</h2>
+        {% for o in today_ops %}
+        <div class="mini-row"><div><strong>{{ o.kind }} &middot; {{ o.amount|money(o.currency) }}</strong><small>{{ o.full_name }} ({{ o.customer_id }}) &middot; {{ o.created_at|nicedate }}</small></div>
+            <a class="small" href="{{ url_for('office_receipt', op_id=o.id) }}">{{ o.receipt_no }}</a></div>
+        {% else %}<p class="muted small">Nothing yet today.</p>{% endfor %}
+    </section>
+</div>
+{% endblock %}

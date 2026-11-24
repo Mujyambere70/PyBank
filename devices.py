@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS error_log (
 """
 # name -> (requests, window in seconds)
 LIMITS = {"login": (10, 600), "staff_login": (10, 600), "register": (5, 3600), "api_token": (10, 600),
-          "api": (120, 60), "mrz": (20, 600)}
+          "api": (120, 60), "mrz": (20, 600),
+          "name_enquiry": (20, 60), "assistant": (30, 60)}                   # v5
 
 
 def device_name(user_agent):

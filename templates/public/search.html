@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="wrap narrow">
+        <h1>Search PyBank</h1>
+        <form class="search-panel" role="search"><div class="inline-form">
+            <input type="search" name="q" value="{{ q }}" aria-label="Search" placeholder="e.g. fixed deposit rate, lost card, branch in Delhi" data-suggest="{{ url_for('site_suggest') }}" autocomplete="off" autofocus>
+            <button class="btn btn-primary">Search</button></div></form>
+        <p class="small muted">Small typing mistakes are corrected and words with the same meaning are found (“FD” = fixed deposit, “virement” = transfer).</p>
+        {% if res %}
+            {% if res.did_you_mean %}<p>Did you mean <a href="?q={{ res.did_you_mean|urlencode }}"><strong>{{ res.did_you_mean }}</strong></a>?</p>{% endif %}
+            <h2>{{ res.results|length }} result(s) for “{{ res.query }}”</h2>
+            {% for d in res.results %}<a class="search-hit" href="{{ d.url }}"><span class="badge">{{ d.kind }}</span><strong>{{ d.title }}</strong><small>{{ d.text|truncate(220) }}</small></a>
+            {% else %}<p class="muted">Nothing found. Try other words, or ask the assistant at the bottom right.</p>{% endfor %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

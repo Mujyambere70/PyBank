@@ -5,7 +5,7 @@
     <a href="{{ url_for('other_bank') }}" class="btn btn-outline">&#127758; To another bank / abroad</a></div>
 <div class="steps"><span class="active">1. Details</span><span>2. Confirm</span><span>3. Receipt</span></div>
 <div class="dash-grid">
-    <form method="post" class="panel" autocomplete="off">
+    <form method="post" class="panel" autocomplete="off" data-ne="{{ url_for('nb_name_enquiry') }}" data-ne-rail="PYBANK">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="step" value="details">
         <div class="balance-line">From: <strong>{{ account.type }} A/c {{ account.number }}</strong> &middot; Balance {{ account.balance|money }}</div>
@@ -18,7 +18,8 @@
         {% endif %}
 
         <label for="to_account">Beneficiary account number</label>
-        <input type="text" id="to_account" name="to_account" value="{{ form.get('to_account', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="12-digit account number" required>
+        <input type="text" id="to_account" name="to_account" data-ne-field="account" value="{{ form.get('to_account', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="12-digit account number" required>
+        <div class="ne-box" aria-live="polite"></div>
 
         <label for="to_account2">Re-enter account number</label>
         <input type="password" id="to_account2" name="to_account2" value="{{ form.get('to_account2', '') }}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" placeholder="Re-enter to confirm" required>
@@ -36,7 +37,7 @@
         <ul class="check-list">
             <li>Up to <strong>{{ DAILY_TRANSFER_LIMIT|money }}</strong> per day.</li>
             <li>Transfers are instant and free of charge.</li>
-            <li>You will see the beneficiary's name before you confirm.</li>
+            <li>The name of the account holder appears as soon as you type the 12 digits - check it before you go on.</li>
         </ul>
         <p class="small">Send money often to the same person? <a href="{{ url_for('payees') }}">Save them as a beneficiary &rarr;</a></p>
     </aside>

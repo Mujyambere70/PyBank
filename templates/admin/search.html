@@ -1,0 +1,19 @@
+{% extends "admin/layout.html" %}
+{% block title %}Search{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Search</h1><p class="muted small">Customers, accounts, transactions, staff and the pages of the back office - only what your abilities allow. Typing mistakes are corrected and words with the same meaning are understood (“cash out” = withdrawal, “FD” = fixed deposit, in six languages).</p></div></div>
+<form class="panel search-panel" method="get" role="search">
+    <div class="inline-form"><input type="search" name="q" value="{{ q }}" aria-label="Search" placeholder="Name, ID, account, reference, amount or a question" data-suggest="{{ url_for('office_suggest') }}" autocomplete="off" autofocus>
+    <button class="btn btn-primary">Search</button><a class="btn btn-outline" href="{{ url_for('office_assistant') }}{{ '?q=' ~ q|urlencode if q }}">Ask PyBank</a></div>
+</form>
+{% if res %}
+<section class="panel">
+    {% if res.did_you_mean %}<p>Did you mean <a href="?q={{ res.did_you_mean|urlencode }}"><strong>{{ res.did_you_mean }}</strong></a>?{% if res.corrected %} <span class="small muted">(results below already use the corrected words)</span>{% endif %}</p>{% endif %}
+    {% if res.concepts %}<p class="small muted">Understood as: {{ res.concepts|join(', ') }}</p>{% endif %}
+    <h2>{{ res.results|length }} result(s) for “{{ res.query }}”</h2>
+    {% for d in res.results %}
+    <a class="search-hit" href="{{ d.url }}"><span class="badge">{{ d.kind }}</span><strong>{{ d.title }}</strong><small>{{ d.text|truncate(220) }}</small></a>
+    {% else %}<p class="muted">Nothing found. Try fewer words, the customer ID, or <a href="{{ url_for('office_assistant') }}?q={{ q|urlencode }}">ask the assistant</a>.</p>{% endfor %}
+</section>
+{% endif %}
+{% endblock %}

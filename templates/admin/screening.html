@@ -1,0 +1,54 @@
+{% extends "admin/layout.html" %}
+{% block title %}Screening & risk{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Sanctions screening &amp; customer risk</h1><p class="muted small">Every new customer and every name change is compared with the sanctions list (similar spellings too). A possible match waits here: a person decides if it is the same person. A confirmed match freezes the accounts. Each night the bank gives every customer a risk rating (country, PEP, cash use, large transfers).</p></div>
+    <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm" name="action" value="run">Screen all customers now</button></form></div>
+<div class="stat-row">
+    {% for r in ['Low', 'Medium', 'High'] %}<div class="stat"><span class="badge risk-{{ r|lower }}">{{ r }} risk</span><strong>{{ summary.get(r, 0) }}</strong><small>customers</small></div>{% endfor %}
+</div>
+<section class="panel">
+    <div class="panel-head"><h2>Possible matches</h2>
+        <div class="tabs small">{% for s in HIT_STATUSES %}<a href="?status={{ s|urlencode }}" class="{{ 'active' if status == s }}">{{ s }}</a>{% endfor %}</div></div>
+    {% for h in hits %}
+    <div class="hit-card">
+        <div class="mini-row"><div><strong><a href="{{ url_for('office_customer', cid=h.customer_id) }}">{{ h.full_name }}</a></strong> ({{ h.customer_id }}, born {{ h.dob }}, {{ h.country }})
+            <small>looks like <strong translate="no">{{ h.list_name }}</strong>{% if h.list_dob %} (born {{ h.list_dob }}){% endif %} &middot; <span translate="no">{{ h.program }}</span> &middot; similarity {{ (h.score * 100)|round|int }}% &middot; found {{ h.created_at|nicedate }}</small>
+            {% if h.note %}<small>{{ h.status }} by {{ h.checked_by }}: {{ h.note }}</small>{% endif %}</div>
+            <span class="badge {{ 'bad' if h.status != 'False positive' else 'ok' }}">{{ h.status }}</span></div>
+        {% if h.status == 'Open' %}
+        <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="decide"><input type="hidden" name="id" value="{{ h.id }}">
+            <input name="note" placeholder="Why (date of birth, country, documents...)" required aria-label="Reason">
+            <button class="btn btn-outline btn-sm" name="status" value="False positive">Not the same person</button>
+            <button class="btn btn-danger btn-sm" name="status" value="Confirmed">Same person - freeze</button></form>
+        {% endif %}
+    </div>
+    {% else %}<p class="muted">Nothing here.</p>{% endfor %}
+</section>
+<div class="dash-grid">
+<section class="panel">
+    <h2>High-risk customers ({{ high|length }})</h2>
+    {% for c in high[:20] %}<div class="mini-row"><div><strong><a href="{{ url_for('office_customer', cid=c.customer_id) }}#risk">{{ c.full_name }}</a></strong><small>{{ c.customer_id }} &middot; {{ c.risk_points }} points &middot; {{ c.risk_reasons }}{% if c.pep %} &middot; PEP{% endif %}</small></div></div>
+    {% else %}<p class="muted small">No high-risk customer.</p>{% endfor %}
+    <form method="post" class="inline-form" style="margin-top:1rem"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="check">
+        <input name="name" placeholder="Check any name" required aria-label="Name to check"><input type="date" name="dob" aria-label="Date of birth"><button class="btn btn-outline btn-sm">Check</button></form>
+</section>
+<form method="post" class="panel">
+    <h2>Add a name to the list</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="save">
+    <div class="form-grid">
+        <div><label for="sl-name">Name</label><input id="sl-name" name="name" required></div>
+        <div><label for="sl-al">Other spellings (; between)</label><input id="sl-al" name="aliases"></div>
+        <div><label for="sl-c">Country code</label><input id="sl-c" name="country" maxlength="2"></div>
+        <div><label for="sl-dob">Date of birth</label><input id="sl-dob" type="date" name="dob"></div>
+    </div>
+    <label for="sl-p">List / programme</label><input id="sl-p" name="program" placeholder="e.g. Demo list - fraud">
+    <button class="btn btn-primary btn-block">Add to list</button>
+</form>
+</div>
+<section class="panel">
+    <h2>Sanctions list ({{ entries|length }})</h2>
+    <p class="small muted">A demo list of made-up names. A real bank loads the official lists here (UN, OFAC, EU) every day.</p>{% if can('data.manage') %}<p class="small"><a href="{{ url_for('office_data_table', table='sanctions_list') }}">To change or stop an entry, open the Data manager.</a></p>{% endif %}
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Name</th><th>Other spellings</th><th>Country</th><th>Born</th><th>List</th><th>Active</th></tr></thead>
+    <tbody>{% for e in entries %}<tr translate="no"><td>{{ e.name }}</td><td class="small">{{ e.aliases }}</td><td>{{ e.country }}</td><td>{{ e.dob }}</td><td class="small">{{ e.program }}</td><td>{{ 'Yes' if e.active else 'No' }}</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

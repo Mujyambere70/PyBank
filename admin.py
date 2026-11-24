@@ -594,6 +594,9 @@ class BackOffice(BankAdmin):
         data = self.bank.unpack(blob)
         self.bank.save_backup("before restore", by["full_name"])     # safety copy of the data we replace
         counts = self.bank.import_data(data)
+        if hasattr(self, "ensure_roles"):
+            self.ensure_roles()                       # v5: an older backup has no job_roles table rows
+        self.bank.ensure_sanctions_list()
         with self._connect() as conn:
             self.audit(conn, by, "Database restored from backup", "", f"backup of {data.get('created_at', '?')}: "
                        f"{counts.get('customers', 0)} customers, {counts.get('transactions', 0)} transactions")

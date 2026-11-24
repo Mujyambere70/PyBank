@@ -1,0 +1,13 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Connect {{ app_.name }}{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>{{ app_.name }} wants to read your account</h1><p class="muted small">{{ app_.company or 'A partner app' }} registered with PyBank. It will send you back to <code>{{ app_.redirect_uri.split('/')[2] }}</code>.</p></div></div>
+<form method="post" class="panel narrow-panel">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for k in ['response_type', 'client_id', 'redirect_uri', 'scope', 'state', 'code_challenge', 'code_challenge_method'] if args.get(k) %}<input type="hidden" name="{{ k }}" value="{{ args.get(k) }}">{% endfor %}
+    <h2>It asks to</h2>
+    <ul class="check-list">{% for s in scopes %}<li>{{ SCOPES[s] }}</li>{% endfor %}</ul>
+    <p class="small">It can <strong>not</strong> move money, see your PIN or password, or change anything. The permission lasts 90 days; you can withdraw it any time in <em>Connected apps</em>.</p>
+    <div class="btn-row"><button class="btn btn-primary" name="decision" value="allow">Allow</button><button class="btn btn-outline" name="decision" value="deny">Do not allow</button></div>
+</form>
+{% endblock %}

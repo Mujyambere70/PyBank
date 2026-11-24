@@ -58,7 +58,7 @@ class TestRoutes(unittest.TestCase):
         for name in os.listdir(folder):
             self.assertRegex(name, r"\.(jpg|png)$")
         html = "".join(self.text(self.client.get(u)) for u in ["/", "/about", "/contact", "/login"])
-        for src in re.findall(r'src="([^"]+)"', html):
+        for src in re.findall(r'<img[^>]*\ssrc="([^"]+)"', html):          # pictures only (v5 adds a script)
             self.assertRegex(src, r"\.(jpg|png)$")
             with self.client.get(src) as r:
                 self.assertEqual(r.status_code, 200, src)

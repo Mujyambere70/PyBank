@@ -1,0 +1,126 @@
+{% extends "admin/layout.html" %}
+{% block title %}Counter · {{ c.full_name }}{% endblock %}
+{% block office_content %}
+<p class="small"><a href="{{ url_for('office_counter') }}">&larr; Counter</a></p>
+<div class="nb-title">
+    <div class="profile-top" style="margin:0"><div class="avatar big">{{ c.initials }}</div>
+        <div><h1>{{ c.full_name }}</h1><p class="muted small">{{ c.customer_id }} &middot; born {{ c.dob }} &middot; {{ c.mobile }} &middot; {{ country_name(c.country) }}</p></div></div>
+    <div><span class="badge risk-{{ c.risk_rating|lower }}">Risk: {{ c.risk_rating }}</span>
+        {% if can('customers.view') %}<a class="btn btn-outline btn-sm" href="{{ url_for('office_customer', cid=c.customer_id) }}">Full customer page</a>{% endif %}</div>
+</div>
+<div class="notice notice-info"><strong>Before any work:</strong> look at the customer's identity document and compare the name, the date of birth and the photo.{% if docs %} <span>ID proof on file:</span> {% for d in docs[:2] %}<a href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank" rel="noopener">{{ d.kind }}</a>{{ ', ' if not loop.last }}{% endfor %}.{% endif %}
+    <br><span>Amounts at or above these limits wait for a second person:</span> <strong translate="no">{% for cur, lim in limits.items() %}{{ lim|money(cur) }}{{ ' / ' if not loop.last }}{% endfor %}</strong>{% if own_limit %}; <span>your own limit:</span> <strong translate="no">{{ own_limit|money('INR') }}</strong>{% endif %}.</div>
+
+<section class="panel">
+    <h2>Accounts</h2>
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Account</th><th>Currency</th><th>Status</th><th class="num">Balance</th><th class="num">Available</th><th>My drawer</th></tr></thead>
+        <tbody>{% for a in accounts %}<tr><td translate="no"><strong>{{ a.number }}</strong>{% if loop.first %} <span class="badge ok">Main</span>{% endif %}</td><td>{{ a.currency }}</td><td>{{ a.status }}</td>
+            <td class="num">{{ a.balance|money(a.currency) }}</td><td class="num">{{ a.available|money(a.currency) }}</td>
+            <td>{% if tills.get(a.currency) %}{{ tills[a.currency].expected|money(a.currency) }}{% else %}<span class="muted small">not open</span>{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+</section>
+
+{% macro acc_select(id, name='account', only=None) %}
+<label for="{{ id }}">Account</label>
+<select id="{{ id }}" name="{{ name }}">{% for a in accounts if a.status == 'Active' and (not only or a.currency in only) %}<option value="{{ a.number }}">{{ a.currency }} &middot; {{ a.number }} &middot; {{ a.available|money(a.currency) }}</option>{% endfor %}</select>
+{% endmacro %}
+{% set csrf %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endset %}
+
+<div class="counter-grid">
+{% if can('counter.deposit') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='deposit') }}" class="panel op" id="op-deposit">
+    {{ csrf }}<h2>&#11015; Cash deposit</h2>
+    {{ acc_select('dep-acc') }}
+    <div class="form-grid"><div><label for="dep-amount">Amount</label><input id="dep-amount" type="number" name="amount" min="0.01" step="0.01" required></div>
+        <div><label for="dep-who">Cash brought by</label><input id="dep-who" name="depositor" value="{{ c.full_name }}" required></div></div>
+    <label for="dep-note">Note (optional)</label><input id="dep-note" name="note" maxlength="80">
+    <button class="btn btn-primary btn-block">Take the cash and credit</button>
+</form>
+{% endif %}
+{% if can('counter.withdraw') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='withdraw') }}" class="panel op" id="op-withdraw">
+    {{ csrf }}<h2>&#11014; Cash withdrawal</h2>
+    {{ acc_select('wd-acc') }}
+    <label for="wd-amount">Amount</label><input id="wd-amount" type="number" name="amount" min="0.01" step="0.01" required>
+    <div class="form-grid"><div><label for="wd-idtype">Identity document</label><select id="wd-idtype" name="id_type">{% for d in ID_DOCUMENTS %}<option>{{ d }}</option>{% endfor %}</select></div>
+        <div><label for="wd-idno">Document number</label><input id="wd-idno" name="id_number" required minlength="4"></div></div>
+    <label class="check"><input type="checkbox" name="id_checked" value="1" required> I checked the document: same name, date of birth and face</label>
+    <label class="check"><input type="checkbox" name="signature" value="1" required> The signature on the slip matches the one on file</label>
+    <button class="btn btn-primary btn-block">Debit and give the cash</button>
+</form>
+{% endif %}
+{% if can('counter.transfer') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='transfer') }}" class="panel op" id="op-transfer" data-ne="{{ url_for('office_name_enquiry') }}" data-ne-rail="PYBANK">
+    {{ csrf }}<h2>&#8644; Transfer to a PyBank account</h2>
+    {{ acc_select('tr-acc') }}
+    <label for="tr-to">To account number</label><input id="tr-to" name="to_account" data-ne-field="account" inputmode="numeric" maxlength="18" required>
+    <div class="ne-box" aria-live="polite"></div>
+    <div class="form-grid"><div><label for="tr-amount">Amount</label><input id="tr-amount" type="number" name="amount" min="0.01" step="0.01" required></div>
+        <div><label for="tr-rem">Remarks</label><input id="tr-rem" name="remarks" maxlength="40"></div></div>
+    <button class="btn btn-primary btn-block">Transfer</button>
+</form>
+{% endif %}
+{% if can('counter.external') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='external') }}" class="panel op" id="op-external" data-ne="{{ url_for('office_name_enquiry') }}">
+    {{ csrf }}<h2>&#127758; Pay another bank</h2>
+    {{ acc_select('ex-acc') }}
+    <label for="ex-rail">Send by</label>
+    <select id="ex-rail" name="rail" data-ne-rail-select>{% for code in RAILS %}<option>{{ code }}</option>{% endfor %}</select>
+    <div class="form-grid">
+        <div><label for="ex-account">Account number or IBAN</label><input id="ex-account" name="account" data-ne-field="account"></div>
+        <div><label for="ex-ifsc">IFSC (IMPS, NEFT)</label><input id="ex-ifsc" name="ifsc" data-ne-field="ifsc" maxlength="11" style="text-transform:uppercase"></div>
+        <div><label for="ex-upi">UPI ID (UPI)</label><input id="ex-upi" name="upi" data-ne-field="upi"></div>
+        <div><label for="ex-bic">SWIFT/BIC (SWIFT, SEPA)</label><input id="ex-bic" name="bic" data-ne-field="bic" maxlength="11" style="text-transform:uppercase"></div>
+    </div>
+    <div class="ne-box" aria-live="polite"></div>
+    <div class="form-grid"><div><label for="ex-name">Beneficiary name</label><input id="ex-name" name="name" data-ne-name></div>
+        <div><label for="ex-bank">Bank name</label><input id="ex-bank" name="bank_name" data-ne-bank></div>
+        <div><label for="ex-amount">Amount</label><input id="ex-amount" type="number" name="amount" min="0.01" step="0.01" required></div>
+        <div><label for="ex-rem">Remarks</label><input id="ex-rem" name="remarks" maxlength="40"></div></div>
+    <button class="btn btn-primary btn-block">Send payment</button>
+</form>
+{% endif %}
+{% if can('counter.fx') and accounts|selectattr('status', 'equalto', 'Active')|list|length > 1 %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='fx') }}" class="panel op" id="op-fx">
+    {{ csrf }}<h2>&#128177; Exchange between own accounts</h2>
+    {{ acc_select('fx-from') }}
+    <label for="fx-to">To</label><select id="fx-to" name="to_account">{% for a in accounts if a.status == 'Active' %}<option value="{{ a.number }}" {{ 'selected' if loop.index == 2 }}>{{ a.currency }} &middot; {{ a.number }}</option>{% endfor %}</select>
+    <label for="fx-amount">Amount</label><input id="fx-amount" type="number" name="amount" min="0.01" step="0.01" required>
+    <button class="btn btn-primary btn-block">Exchange at the bank's rate</button>
+</form>
+{% endif %}
+{% if can('counter.deposits') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='fd') }}" class="panel op" id="op-fd">
+    {{ csrf }}<h2>&#128181; Fixed deposit</h2>
+    <input type="hidden" name="account" value="{{ accounts[0].number }}">
+    <p class="small muted">From the main account {{ accounts[0].number }} ({{ accounts[0].currency }}).</p>
+    <div class="form-grid"><div><label for="fd-amount">Amount</label><input id="fd-amount" type="number" name="amount" min="1" step="0.01" required></div>
+        <div><label for="fd-months">Months</label><select id="fd-months" name="months">{% for m in FD_TENURES %}<option>{{ m }}</option>{% endfor %}</select></div></div>
+    <button class="btn btn-primary btn-block">Book fixed deposit</button>
+</form>
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='rd') }}" class="panel op" id="op-rd">
+    {{ csrf }}<h2>&#128197; Recurring deposit</h2>
+    {{ acc_select('rd-acc') }}
+    <div class="form-grid"><div><label for="rd-amount">Every month</label><input id="rd-amount" type="number" name="amount" min="1" step="0.01" required></div>
+        <div><label for="rd-months">Months</label><select id="rd-months" name="months">{% for m in RD_TENURES %}<option>{{ m }}</option>{% endfor %}</select></div></div>
+    <button class="btn btn-primary btn-block">Open RD (first instalment now)</button>
+</form>
+{% endif %}
+{% if can('counter.loans') and loans %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='emi') }}" class="panel op" id="op-emi">
+    {{ csrf }}<h2>&#127974; Loan EMI</h2>
+    <input type="hidden" name="account" value="{{ accounts[0].number }}">
+    <label for="emi-loan">Loan</label><select id="emi-loan" name="loan_id">{% for l in loans %}<option value="{{ l.id }}">{{ l.loan_number }} &middot; EMI {{ l.emi|money(accounts[0].currency) }} &middot; due {{ l.next_due }}</option>{% endfor %}</select>
+    <p class="small muted">The EMI is taken from the main account; deposit cash first if the balance is low.</p>
+    <button class="btn btn-primary btn-block">Take the EMI</button>
+</form>
+{% endif %}
+</div>
+
+<section class="panel">
+    <h2>Last counter work for this customer</h2>
+    {% for o in ops %}<div class="mini-row"><div><strong>{{ o.kind }} &middot; {{ o.amount|money(o.currency) }}</strong><small>{{ o.created_at|nicedate }} &middot; by {{ o.staff_id }}{% if o.approved_by %} &middot; approved by {{ o.approved_by }}{% endif %} &middot; {{ o.details }}</small></div>
+        <a class="small" href="{{ url_for('office_receipt', op_id=o.id) }}">{{ o.receipt_no }}</a></div>{% else %}<p class="muted small">No counter work yet.</p>{% endfor %}
+</section>
+{% endblock %}

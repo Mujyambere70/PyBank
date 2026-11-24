@@ -30,6 +30,8 @@ from devices import mask_ip
 from insights import NOT_SPENDING, SPENDING
 from iso20022 import OK_CODES, REJECT_REASONS
 from privacy import financial_year
+from staffperm import StaffPermMixin
+from teller import TellerMixin
 from wallets import MAX_EXTRA
 from world import format_money
 
@@ -50,7 +52,7 @@ CONTENT_KINDS = {"faq": "FAQ", "product": "Products", "branch": "Branches & ATMs
                  "charge": "Service charges"}
 
 
-class Office(CheckerOffice, InternationalOffice):
+class Office(TellerMixin, StaffPermMixin, CheckerOffice, InternationalOffice):
     """The back office of version 4: everything of version 3 + the four-eyes rule, job roles, languages."""
 
     def overview(self):
@@ -64,21 +66,14 @@ class Office(CheckerOffice, InternationalOffice):
             o["aml_open"] = q("SELECT COUNT(*) FROM aml_flags WHERE status = 'Open'")
             o["checker_waiting"] = q("SELECT COUNT(*) FROM pending_entries WHERE status = 'Waiting'")
             o["dormant"] = q("SELECT COUNT(*) FROM accounts WHERE status = 'Dormant'")
+            o["till_differences"] = q("SELECT COUNT(*) FROM tills WHERE status = 'Difference'")              # v5
+            o["screening_open"] = q("SELECT COUNT(*) FROM screening_hits WHERE status = 'Open'")            # v5
+            o["counter_today"] = q("SELECT COUNT(*) FROM counter_ops WHERE created_at >= ?", date.today().isoformat())
             o["iso_waiting"] = q("SELECT COUNT(*) FROM external_transfers WHERE status = 'Processing' "
                                  "AND rail IN ('SWIFT', 'SEPA') AND iso_file = ''")
             o["extra_accounts"] = q("SELECT COUNT(*) FROM accounts a WHERE a.opened_at > (SELECT MIN(opened_at) "
                                     "FROM accounts x WHERE x.customer_id = a.customer_id)")
         return o
-
-    def set_job_role(self, by, sid, job):
-        if job not in roles.ROLES:
-            raise BankError("Unknown job role.")
-        if sid == by["staff_id"]:
-            raise BankError("You cannot change your own role.")
-        with self._connect() as conn:
-            if conn.execute("UPDATE staff SET job_role = ? WHERE staff_id = ?", (job, sid)).rowcount == 0:
-                raise BankError("Staff member not found.")
-            self.audit(conn, by, "Job role changed", sid, roles.ROLES[job]["label"])
 
     def set_staff_lang(self, me, lang):
         if lang not in world.LANGUAGES:
@@ -723,7 +718,8 @@ def register(app, bank, office, h):
             try:
                 t = office.decide_entry(request.staff, int(request.form.get("id") or 0),
                                         request.form.get("action") == "approve", request.form.get("reason", ""))
-                flash(f"Approved and posted (ref {t.ref})." if t else "Entry rejected. Nothing was posted.", "success")
+                ref = (t["receipt_no"] if isinstance(t, dict) else t.ref) if t else ""
+                flash(f"Approved and posted (ref {ref})." if t else "Entry rejected. Nothing was posted.", "success")
             except BankError as e:
                 flash(str(e), "error")
             return redirect(url_for("office_checker"))
