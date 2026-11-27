@@ -207,7 +207,7 @@
         root.querySelectorAll('[data-ask]').forEach(function (b) { b.addEventListener('click', function () { send(b.dataset.ask); }); });
         if (root.dataset.first) { send(root.dataset.first); }
     }
-    document.querySelectorAll('.chat').forEach(chat);
+    document.querySelectorAll('.chat:not([data-v6])').forEach(chat);       // v6.js runs the new chat
     document.querySelectorAll('.chat-toggle').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var panel = document.getElementById(btn.getAttribute('aria-controls'));

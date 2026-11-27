@@ -71,6 +71,10 @@ class StaffPermMixin:
         r = conn.execute("SELECT label, abilities FROM job_roles WHERE code = ?", (s.get("job_role") or "officer",)).fetchone()
         base = roles.split_codes(r[1]) if r else roles.default_abilities(s.get("job_role"))
         s["_abilities"] = (base | roles.split_codes(s.get("extra_abilities"))) - roles.split_codes(s.get("denied_abilities"))
+        s["_role_abilities"] = base
+        if hasattr(self, "_grants_of"):                   # v6: temporary abilities that have not ended yet
+            s["_grants"] = self._grants_of(conn, s["staff_id"])
+            s["_abilities"] = s["_abilities"] | s["_grants"]
         s["_job_label"] = r[0] if r else roles.job_label({"job_role": s.get("job_role")})
         return s
 
@@ -162,6 +166,15 @@ class StaffPermMixin:
             raise BankError("You cannot change your own abilities. Ask another administrator.")
         job = form.get("job_role") or target.get("job_role") or "officer"
         extra, denied = set(), set()
+        if form.get("mode") == "ticks":               # v6: one tick box per ability (ticked = has it)
+            ticked = set(form.getlist("abilities") if hasattr(form, "getlist") else form.get("abilities", []))
+            unknown = [c for c in ticked if c not in roles.ABILITIES]
+            if unknown:
+                raise BankError("Unknown ability: " + ", ".join(unknown[:3]))
+            with self._connect() as conn:
+                r = conn.execute("SELECT abilities FROM job_roles WHERE code = ?", (job,)).fetchone()
+            base = roles.split_codes(r[0]) if r else roles.default_abilities(job)
+            extra, denied = ticked - base, base - ticked
         for code in roles.ABILITIES:
             choice = form.get("ab_" + code, "role")
             if choice == "yes":
@@ -217,6 +230,9 @@ class StaffPermMixin:
                          (name, email, phone, designation, address, dob, emergency, me["staff_id"]))
             if photo is not None:
                 conn.execute("UPDATE staff SET photo = ? WHERE staff_id = ?", (photo, me["staff_id"]))
+            if me.get("role") == "admin" and form.get("branch") is not None:      # v6: an administrator sets his own branch too
+                conn.execute("UPDATE staff SET branch = ? WHERE staff_id = ?",
+                             (" ".join((form.get("branch") or "").split())[:80], me["staff_id"]))
             self.audit(conn, me, "Own details changed", me["staff_id"])
 
     def set_own_photo(self, me, photo_b64):

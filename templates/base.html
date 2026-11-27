@@ -112,10 +112,11 @@
         </div>
     </div>
 </footer>
-<div class="chat-widget" data-chat="{{ url_for('site_assistant') }}">
+<div class="chat-widget">
     <button type="button" class="chat-toggle" aria-expanded="false" aria-controls="chat-panel">&#129302; Ask PyBank</button>
-    <div class="chat chat-panel" id="chat-panel" hidden>
-        <div class="chat-log" aria-live="polite"><div class="chat-msg bot">Hello! Ask me about accounts, rates, charges, branches or how to do something in Net Banking.</div></div>
+    <div class="chat chat-panel" id="chat-panel" data-chat="{{ url_for('chat_ask') }}" data-v6 hidden>
+        <div class="chat-head"><strong>Ask PyBank</strong><button type="button" class="btn btn-ghost btn-sm" data-chat-clear>New chat</button></div>
+        <div class="chat-log" aria-live="polite"><div class="chat-msg bot hello">Hello! I can answer questions about accounts, rates, charges and branches{{ ', and do things for you: send money, block your card, open a deposit' if session.cid }}. What do you need?</div></div>
         <form class="chat-form"><input name="q" aria-label="Your question" placeholder="e.g. FD rate for 1 year" autocomplete="off" required><button class="btn btn-primary btn-sm">Ask</button></form>
     </div>
 </div>
@@ -123,6 +124,7 @@
 
 {% block scripts %}{% endblock %}
 <script src="{{ url_for('static', filename='v5.js') }}" defer></script>
+<script src="{{ url_for('static', filename='v6.js') }}" defer></script>
 <script>
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }
 </script>

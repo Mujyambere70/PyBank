@@ -66,6 +66,7 @@ OPS = {
     "fd": ("Fixed deposit", "counter.deposits"),
     "rd": ("Recurring deposit", "counter.deposits"),
     "emi": ("Loan EMI", "counter.loans"),
+    "cheque": ("Cheque deposit", "counter.cheque"),          # v6: credited after clearing (cheques.py)
 }
 ID_DOCUMENTS = ["Passport", "National ID card", "Driving licence", "Aadhaar card", "PAN card", "Residence permit"]
 TILL_STATUSES = ["Open", "Closed", "Difference", "Accepted"]
@@ -87,7 +88,9 @@ class TellerMixin:
         if r is None:
             return None
         t = dict(r)
-        t["expected"] = t["opening"] + t["cash_in"] - t["cash_out"]
+        t["vault_in"], t["vault_out"] = t.get("vault_in") or 0, t.get("vault_out") or 0      # v6 (vault.py)
+        t["expected"] = t["opening"] + t["cash_in"] - t["cash_out"] + t["vault_in"] - t["vault_out"]
+        t["notes"] = json.loads(t["notes_count"]) if t.get("notes_count") else {}
         return t
 
     def my_tills(self, me, day=None):
@@ -119,11 +122,14 @@ class TellerMixin:
             if conn.execute("SELECT 1 FROM tills WHERE staff_id = ? AND day = ? AND currency = ?",
                             (me["staff_id"], date.today().isoformat(), currency)).fetchone():
                 raise BankError(f"Your {currency} cash drawer is already open today.")
+            if hasattr(self, "_vault_change") and opening:          # v6: the opening cash comes out of the vault
+                self._vault_change(conn, currency, -opening, "opening", me, me["staff_id"])
             conn.execute("INSERT INTO tills (staff_id, day, currency, opening, opened_at) VALUES (?, ?, ?, ?, ?)",
                          (me["staff_id"], date.today().isoformat(), currency, opening, now()))
             self.audit(conn, me, "Cash drawer opened", currency, format_money(opening, currency))
 
-    def close_till(self, me, till_id, counted, note=""):
+    def close_till(self, me, till_id, counted, note="", notes=None):
+        """notes (v6): {"500": 12, ...} - the count note by note; the counted cash goes back to the vault."""
         note = " ".join((note or "").split())[:200]
         with self._connect() as conn:
             r = conn.execute("SELECT * FROM tills WHERE id = ? AND staff_id = ?", (till_id, me["staff_id"])).fetchone()
@@ -138,8 +144,10 @@ class TellerMixin:
             if diff and len(note) < 5:
                 raise BankError("The cash does not match. Please write what happened (at least 5 characters).")
             status = "Closed" if diff == 0 else "Difference"
-            conn.execute("UPDATE tills SET counted = ?, difference = ?, status = ?, closed_at = ?, note = ? WHERE id = ?",
-                         (counted, diff, status, now(), note, till_id))
+            conn.execute("UPDATE tills SET counted = ?, difference = ?, status = ?, closed_at = ?, note = ?, notes_count = ? "
+                         "WHERE id = ?", (counted, diff, status, now(), note, json.dumps(notes or {}), till_id))
+            if hasattr(self, "_vault_change") and counted:          # v6: the cash goes back into the vault
+                self._vault_change(conn, t["currency"], counted, "closing", me, me["staff_id"])
             self.audit(conn, me, "Cash drawer closed", t["currency"],
                        f"expected {format_money(t['expected'], t['currency'])}, counted "
                        f"{format_money(counted, t['currency'])}, difference {format_money(diff, t['currency'])}")
@@ -206,6 +214,9 @@ class TellerMixin:
         amount = 0
         if op != "emi":
             amount = data["amount"] if isinstance(data["amount"], int) else parse_amount(data["amount"], acc.currency)
+        if op == "cheque":                                        # v6: no cash, no four-eyes - it waits for clearing
+            for k in ("cheque_no", "drawee_bank", "drawer_name", "cheque_date"):
+                data[k] = (form.get(k) or "").strip()
         if op == "withdraw" and not checked:
             if data["id_checked"] != "1" or data["id_type"] not in ID_DOCUMENTS or len(data["id_number"]) < 4:
                 raise BankError("Check the customer's identity document and write its type and number.")
@@ -213,7 +224,7 @@ class TellerMixin:
                 raise BankError("Compare the customer's signature with the one on file and tick the box.")
         if op == "deposit" and not checked and len(" ".join(data["depositor"].split())) < 3:
             raise BankError("Please write the name of the person who brings the cash.")
-        if not checked and op != "emi" and (amount >= checker_amount(acc.currency) or self.over_own_limit(me, amount, acc.currency)):
+        if not checked and op not in ("emi", "cheque") and (amount >= checker_amount(acc.currency) or self.over_own_limit(me, amount, acc.currency)):
             self._counter_check_now(me, cid, op, acc, amount, data)          # refuse early what cannot work
             data["amount_minor"] = amount
             payload = json.dumps({"op": op, "data": data}, ensure_ascii=False)
@@ -280,6 +291,11 @@ class TellerMixin:
         elif op == "rd":
             rd_no = bank.open_rd(cid, acc.number, amount, data["months"], COUNTER)
             details = f"Recurring deposit {rd_no}, {data['months']} months"
+        elif op == "cheque":
+            cq = bank.deposit_cheque(cid, acc.number, amount, data["cheque_no"], data["drawee_bank"], data["drawer_name"],
+                                     data["cheque_date"], me["staff_id"])
+            ref, details = cq["ref"], (f"Cheque {cq['cheque_no']} of {cq['drawer_name']}, {cq['drawee_bank']} - "
+                                       f"credited after clearing ({cq['clear_on']})")
         elif op == "emi":
             loan_id = int(data["loan_id"]) if data["loan_id"].isdigit() else 0
             ln = bank.get_loan(cid, loan_id)

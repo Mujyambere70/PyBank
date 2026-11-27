@@ -13,7 +13,7 @@
         {% else %}<input id="row-{{ c }}" name="{{ c }}" value="{{ row[c] if row[c] is not none else '' }}">{% endif %}</div>
     {% endfor %}
     </div>
-    <div class="btn-row"><button class="btn btn-primary" name="action" value="save">Save changes</button>
-    {% if info.delete %}<button class="btn btn-danger" name="action" value="delete" formnovalidate>Delete this record</button>{% endif %}</div>
+    {% if not info.readonly %}<div class="btn-row"><button class="btn btn-primary" name="action" value="save">Save changes</button>
+    {% if info.delete %}<button class="btn btn-danger" name="action" value="delete" formnovalidate>Delete this record</button>{% endif %}</div>{% endif %}
 </form>
 {% endblock %}

@@ -190,6 +190,13 @@ def seed(bank, office=None, months=6, seed_value=42):
             bank.log_error("demo_v5", e)
             if os.environ.get("PYBANK_STRICT_DEMO") == "1":
                 raise
+        import demo_v6                        # version 6: vault, cheques, credit card, holds, chat, abilities
+        try:
+            demo_v6.seed_v6(bank, office)
+        except Exception as e:
+            bank.log_error("demo_v6", e)
+            if os.environ.get("PYBANK_STRICT_DEMO") == "1":
+                raise
 
 
 def _seed(bank, office, months, seed_value):

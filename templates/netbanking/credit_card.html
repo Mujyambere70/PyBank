@@ -1,0 +1,54 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Credit card{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Credit card</h1><p class="muted small">Buy now and pay later. Every month on the 5th you get a bill; pay it within 20 days. Pay the full amount and there is no interest; pay less and interest of {{ cc_rate }}% a month is added on what is left.</p></div></div>
+{% if not k %}
+<form method="post" class="panel">
+    <h2>Apply for a credit card</h2>
+    <p class="small muted">The limit depends on your income and your credit score: between {{ LIMIT_MIN|money('INR') }} and {{ LIMIT_MAX|money('INR') }}. You need a monthly income of at least ₹15,000.</p>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="apply">
+    <div class="form-grid"><div><label for="cc-inc">Monthly income (INR)</label><input id="cc-inc" name="income" inputmode="decimal" required></div>
+    <div><label for="cc-req">Limit you would like (optional)</label><input id="cc-req" name="requested" inputmode="decimal"></div></div>
+    <button class="btn btn-primary">Apply</button>
+</form>
+{% elif k.status == 'Applied' %}
+<section class="panel"><h2>Your application is being checked</h2><p>Sent on {{ k.applied_at|nicedate }}. We will tell you in Alerts as soon as the bank decides.</p></section>
+{% else %}
+<div class="dash-grid">
+<section class="panel cc-card {{ 'off' if k.status != 'Active' }}">
+    <div class="cc-face"><span>PyBank Credit</span><strong translate="no">XXXX XXXX XXXX {{ k.last4 }}</strong><small>{{ customer.full_name|upper }} &middot; valid to {{ k.expires }}</small></div>
+    <div class="mini-row"><div><small>Limit</small><strong>{{ k.limit_amount|money('INR') }}</strong></div><div><small>Used</small><strong>{{ k.outstanding|money('INR') }}</strong></div><div><small>Available</small><strong>{{ k.available|money('INR') }}</strong></div></div>
+    <span class="badge {{ 'ok' if k.status == 'Active' else 'bad' }}">{{ k.status }}</span>
+    <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% if k.status == 'Active' %}<button class="btn btn-outline btn-sm" name="action" value="block">Block the card</button>
+        {% elif k.status == 'Blocked' %}<input type="password" name="pin" inputmode="numeric" maxlength="6" placeholder="PIN" aria-label="PIN" required><button class="btn btn-outline btn-sm" name="action" value="unblock">Unblock</button>{% endif %}</form>
+</section>
+<form method="post" class="panel">
+    <h2>Pay the card</h2>
+    {% set last = sts[0] if sts else none %}
+    {% if last %}<p class="small">Last bill {{ last.period_end }}: <strong>{{ last.total|money('INR') }}</strong> &middot; minimum {{ last.minimum|money('INR') }} &middot; due {{ last.due_date }} &middot; paid {{ last.paid|money('INR') }} <span class="badge">{{ last.status }}</span></p>{% endif %}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="pay">
+    <fieldset><legend class="small">How much</legend>
+        <label class="check"><input type="radio" name="how" value="full" checked> All I owe ({{ k.outstanding|money('INR') }})</label>
+        {% if last %}<label class="check"><input type="radio" name="how" value="minimum"> The minimum of the bill</label>{% endif %}
+        <label class="check"><input type="radio" name="how" value="other"> Another amount <input name="amount" inputmode="decimal" aria-label="Other amount" style="max-width:140px"></label></fieldset>
+    <div class="form-grid"><div><label for="cc-from">From</label><select id="cc-from" name="from">{% for a in accounts %}<option value="{{ a.number }}">{{ a.number }} &middot; {{ a.balance|money(a.currency) }}</option>{% endfor %}</select></div>
+    <div><label for="cc-pin">PIN</label><input id="cc-pin" type="password" name="pin" inputmode="numeric" maxlength="6" required></div></div>
+    <button class="btn btn-primary" {{ 'disabled' if not k.outstanding }}>Pay</button>
+</form>
+</div>
+<section class="panel"><h2>Bills</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Period</th><th class="num">Bill</th><th class="num">Minimum</th><th>Due</th><th class="num">Paid</th><th>Status</th></tr></thead><tbody>
+    {% for s in sts %}<tr><td>{{ s.period_start }} – {{ s.period_end }}</td><td class="num">{{ s.total|money('INR') }}</td><td class="num">{{ s.minimum|money('INR') }}</td><td>{{ s.due_date }}</td><td class="num">{{ s.paid|money('INR') }}</td><td>{{ s.status }}</td></tr>
+    {% else %}<tr><td colspan="6" class="muted">No bill yet - the first comes on the 5th.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="panel"><h2>Card transactions</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>When</th><th>What</th><th>Where</th><th class="num">Amount</th></tr></thead><tbody>
+    {% for t in tx %}<tr><td class="small">{{ t.created_at|nicedate }}</td><td>{{ t.kind }}</td><td>{{ t.merchant }}</td><td class="num">{{ t.amount|money('INR') }}</td></tr>
+    {% else %}<tr><td colspan="4" class="muted">No transaction yet.</td></tr>{% endfor %}</tbody></table></div>
+    {% if k.status == 'Active' %}<details><summary class="small">Sandbox: try a purchase</summary>
+    <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="try">
+        <input name="merchant" placeholder="Shop" aria-label="Shop" value="Test shop"><input name="amount" inputmode="decimal" placeholder="Amount" aria-label="Amount" required><button class="btn btn-outline btn-sm">Buy</button></form></details>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

@@ -597,6 +597,10 @@ class BackOffice(BankAdmin):
         if hasattr(self, "ensure_roles"):
             self.ensure_roles()                       # v5: an older backup has no job_roles table rows
         self.bank.ensure_sanctions_list()
+        if hasattr(self, "load_abilities"):           # v6: own abilities, page rules and the vault of the backup
+            self.add_v6_role_abilities()
+            self.load_abilities()
+            self.ensure_vault()
         with self._connect() as conn:
             self.audit(conn, by, "Database restored from backup", "", f"backup of {data.get('created_at', '?')}: "
                        f"{counts.get('customers', 0)} customers, {counts.get('transactions', 0)} transactions")

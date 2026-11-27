@@ -17,8 +17,15 @@ Risk rating (Low / Medium / High) - points from what the bank knows:
     cash in the last 90 days above 10 x the AML amount          +2
     account younger than 90 days                                 +1
   0-2 Low, 3-4 Medium, 5+ High. A compliance officer can set the rating himself, with a reason.
+
+Version 6: payments to other banks are screened too. When the beneficiary's name looks like a name on
+the list, the payment is HELD (the money has left the account but is not sent); a compliance officer
+releases it or stops it (then the money comes back to the customer). The list can also be loaded from
+a CSV file (name, aliases, country, dob, program), as a real bank loads the official lists.
 """
 
+import csv
+import io
 from datetime import date, timedelta
 from difflib import SequenceMatcher
 
@@ -50,6 +57,22 @@ CREATE TABLE IF NOT EXISTS screening_hits (
     checked_at  TEXT NOT NULL DEFAULT ''
 );
 """
+HOLD_SCHEMA = """
+CREATE TABLE IF NOT EXISTS payment_holds (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    ext_ref     TEXT NOT NULL,
+    customer_id TEXT NOT NULL,
+    entry_id    INTEGER NOT NULL,
+    score       REAL NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'Held',
+    note        TEXT NOT NULL DEFAULT '',
+    checked_by  TEXT NOT NULL DEFAULT '',
+    created_at  TEXT NOT NULL,
+    checked_at  TEXT NOT NULL DEFAULT ''
+);
+"""
+HOLD_STATUSES = ["Held", "Released", "Stopped"]
+CSV_COLUMNS = ["name", "aliases", "country", "dob", "program"]
 CUSTOMER_COLUMNS = [("risk_rating", "TEXT NOT NULL DEFAULT 'Low'"), ("risk_points", "INTEGER NOT NULL DEFAULT 0"),
                     ("risk_reasons", "TEXT NOT NULL DEFAULT ''"), ("risk_manual", "INTEGER NOT NULL DEFAULT 0"),
                     ("pep", "INTEGER NOT NULL DEFAULT 0")]
@@ -253,3 +276,94 @@ class ScreeningMixin:
     def risk_summary(self):
         with self._connect() as conn:
             return {r[0]: r[1] for r in conn.execute("SELECT risk_rating, COUNT(*) FROM customers GROUP BY risk_rating")}
+
+    # ===== version 6: payments and list files =====
+
+    def _screen_payment(self, conn, ref, cid, name):
+        """Called inside send_external: hold the payment when the beneficiary looks like a listed name."""
+        hits = self.screen_name(name)
+        if not hits:
+            return False
+        entry, score = hits[0]
+        conn.execute("UPDATE external_transfers SET status = 'Held' WHERE ref = ?", (ref,))
+        conn.execute("INSERT INTO payment_holds (ext_ref, customer_id, entry_id, score, created_at) VALUES (?, ?, ?, ?, ?)",
+                     (ref, cid, entry["id"], score, now()))
+        self._alert(conn, cid, f"Payment {ref} is being checked",
+                    "Your payment to another bank is being checked by our compliance team. This usually takes one "
+                    "working day; the money comes back if the payment cannot be sent.", only_in_app=True)
+        return True
+
+    def payment_holds(self, status="Held"):
+        sql = ("SELECT h.*, e.beneficiary_name, e.amount, e.currency, e.rail, e.bank_name, s.name AS list_name, "
+               "s.program, c.full_name FROM payment_holds h JOIN external_transfers e ON e.ref = h.ext_ref "
+               "LEFT JOIN sanctions_list s ON s.id = h.entry_id LEFT JOIN customers c ON c.customer_id = h.customer_id")
+        args = ()
+        if status:
+            sql += " WHERE h.status = ?"
+            args = (status,)
+        with self._connect() as conn:
+            return [dict(r) for r in conn.execute(sql + " ORDER BY h.id DESC LIMIT 200", args)]
+
+    def decide_payment_hold(self, by, hold_id, release, note=""):
+        note = " ".join((note or "").split())[:200]
+        if len(note) < 5:
+            raise BankError("Please write why (at least 5 characters).")
+        with self._connect() as conn:
+            h = conn.execute("SELECT * FROM payment_holds WHERE id = ?", (hold_id,)).fetchone()
+            if h is None or h["status"] != "Held":
+                raise BankError("This payment is not held.")
+            p = conn.execute("SELECT * FROM external_transfers WHERE ref = ?", (h["ext_ref"],)).fetchone()
+            conn.execute("UPDATE payment_holds SET status = ?, note = ?, checked_by = ?, checked_at = ? WHERE id = ?",
+                         ("Released" if release else "Stopped", note, by["staff_id"], now(), hold_id))
+            if release:
+                conn.execute("UPDATE external_transfers SET status = 'Processing', settle_after = ? WHERE ref = ?",
+                             (now(), h["ext_ref"]))
+            else:
+                acc = self._load(conn, p["account_number"], must_be_active=False)
+                back = acc.credit(p["amount"], "Refund", f"{p['rail']} STOPPED/{p['ref']}/COMPLIANCE CHECK")
+                self._save(conn, back)
+                conn.execute("UPDATE external_transfers SET status = 'Returned', reason = ?, return_ref = ?, settled_at = ? "
+                             "WHERE ref = ?", ("Stopped by the compliance check", back.ref, now(), h["ext_ref"]))
+                self._alert(conn, h["customer_id"], f"Payment {h['ext_ref']} was not sent",
+                            "Your payment to another bank could not be sent after our compliance check. The money is "
+                            "back in your account.")
+            self._audit(conn, by, "Payment " + ("released" if release else "stopped") + " after screening",
+                        h["ext_ref"], note)
+        if release:
+            self.process_external()
+
+    def import_sanctions_csv(self, by, text, replace=False):
+        """Load list entries from CSV text with the columns name, aliases, country, dob, program."""
+        reader = csv.DictReader(io.StringIO(text.lstrip("\ufeff")))
+        cols = [c.strip().lower() for c in (reader.fieldnames or [])]
+        if "name" not in cols:
+            raise BankError("The file needs a header line with at least the column \"name\" "
+                            "(name, aliases, country, dob, program).")
+        rows = []
+        for r in reader:
+            r = {(k or "").strip().lower(): (v or "").strip() for k, v in r.items()}
+            name = " ".join(r.get("name", "").split())[:100]
+            if len(name) >= 3:
+                rows.append((name, r.get("aliases", "")[:300], r.get("country", "").upper()[:2], r.get("dob", "")[:10],
+                             r.get("program", "")[:100] or "Imported list"))
+        if not rows:
+            raise BankError("No names were found in the file.")
+        if len(rows) > 20_000:
+            raise BankError("The file is too big (at most 20,000 names).")
+        with self._connect() as conn:
+            if replace:
+                conn.execute("UPDATE sanctions_list SET active = 0")
+            have = {(r[0].lower(), r[1]) for r in conn.execute("SELECT name, dob FROM sanctions_list")}
+            added = 0
+            for name, aliases, country, dob, program in rows:
+                if (name.lower(), dob) in have:
+                    conn.execute("UPDATE sanctions_list SET active = 1, aliases = ?, country = ?, program = ? "
+                                 "WHERE LOWER(name) = ? AND dob = ?", (aliases, country, program, name.lower(), dob))
+                    continue
+                conn.execute("INSERT INTO sanctions_list (name, aliases, country, dob, program, added_by, added_at) "
+                             "VALUES (?, ?, ?, ?, ?, ?, ?)", (name, aliases, country, dob, program, by["staff_id"], now()))
+                have.add((name.lower(), dob))              # the same name twice in one file is added once
+                added += 1
+            self._audit(conn, by, "Sanctions list loaded from a file", "", f"{len(rows)} names, {added} new"
+                        + (", old entries switched off" if replace else ""))
+        return len(rows), added

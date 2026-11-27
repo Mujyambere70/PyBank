@@ -1,0 +1,21 @@
+{% extends "admin/layout.html" %}
+{% block title %}Ability matrix{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Ability matrix</h1><p class="muted small">All active people and the abilities of one group. Tick or untick and press Save: only the people whose ticks changed are saved. Administrators have every ability and cannot be changed here; nor can you change yourself.</p></div>
+    <div class="btn-row"><a class="btn btn-outline btn-sm" href="{{ url_for('office_abilities') }}">All abilities</a></div></div>
+<nav class="tabs small">{% for g, its in groups %}<a href="{{ url_for('office_ability_matrix', group=g) }}" class="chip{{ ' active' if g == group }}">{{ g }}</a> {% endfor %}</nav>
+<form method="post" class="panel">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="group" value="{{ group }}">
+    {# abilities of the other groups are sent unchanged, so saving one group never removes the others #}
+    <div class="table-wrap matrix"><table class="data compact">
+        <thead><tr><th>Person</th>{% for code, text in items %}<th class="center small rot" title="{{ code }}"><span>{{ text }}</span></th>{% endfor %}</tr></thead>
+        <tbody>{% for p in people %}{% set locked = p.role == 'admin' or p.staff_id == me.staff_id %}
+        <tr><th class="small"><a href="{{ url_for('office_staff_access', sid=p.staff_id) }}#abilities">{{ p.full_name }}</a><br><span class="muted">{{ p._job_label if p.role != 'admin' else 'Administrator' }}</span>
+            {% if not locked %}<input type="hidden" name="rows" value="{{ p.staff_id }}">
+            {% for code in ABILITIES %}{% if code not in items|map('first')|list and code in (p._abilities or []) and code not in grants[p.staff_id] %}<input type="hidden" name="m:{{ p.staff_id }}:{{ code }}" value="1">{% endif %}{% endfor %}{% endif %}</th>
+            {% for code, text in items %}<td class="center">{% if p.role == 'admin' %}✓{% elif code in grants[p.staff_id] %}<span title="temporary">⏳</span>{% else %}<input type="checkbox" name="m:{{ p.staff_id }}:{{ code }}" value="1" aria-label="{{ p.full_name }}: {{ text }}" {{ 'checked' if code in (p._abilities or []) }} {{ 'disabled' if locked }}>{% endif %}</td>{% endfor %}</tr>
+        {% endfor %}</tbody>
+    </table></div>
+    <button class="btn btn-primary">Save</button>
+</form>
+{% endblock %}

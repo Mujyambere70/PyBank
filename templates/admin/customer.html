@@ -131,6 +131,21 @@
         {% for ln in loans %}<div class="mini-row"><div><strong>{{ ln.product }} {{ ln.loan_number }}</strong><small>{{ ln.principal|money }} &middot; {{ ln.months }} m @ {{ '%.2f'|format(ln.rate) }}% &middot; EMI {{ ln.emi|money }}{% if ln.status == 'Active' %} &middot; {{ ln.emis_paid }} paid, next {{ ln.next_due }}{% endif %}</small></div><div class="right">{% if ln.status == 'Active' %}<strong>{{ ln.outstanding|money }}</strong><br>{% endif %}<span class="badge st-{{ ln.status|lower }}">{{ ln.status }}</span>{% if ln.overdue %} <span class="badge bad">Overdue</span>{% endif %}</div></div>{% else %}<p class="muted small">None.</p>{% endfor %}
     </section>
 </div>
+{% set x = customer_extras(c.customer_id) %}
+<div class="dash-grid">
+    <section class="panel"><h2>Nominees</h2>
+        {% for n in x.nominees %}<div class="mini-row"><div><strong>{{ n.name }}</strong><small>{{ n.relation }}{% if n.dob %} &middot; born {{ n.dob }}{% endif %}{% if n.address %} &middot; {{ n.address }}{% endif %}</small></div><span class="badge">{{ n.share }}%</span></div>{% else %}<p class="muted small">No nominee. The customer adds them in Net Banking.</p>{% endfor %}
+        <h2 style="margin-top:16px">Credit card</h2>
+        {% if x.card %}<div class="mini-row"><div><strong>{{ 'XX' ~ x.card.last4 if x.card.last4 else 'Application' }}</strong><small>limit {{ x.card.limit_amount|money('INR') }} &middot; used {{ x.card.outstanding|money('INR') }}</small></div><span class="badge">{{ x.card.status }}</span></div>
+        {% if can('credit.decide') %}<a class="link-arrow small" href="{{ url_for('office_credit_cards', status=x.card.status) }}">Credit cards &rarr;</a>{% endif %}
+        {% else %}<p class="muted small">No credit card.</p>{% endif %}
+    </section>
+    <section class="panel"><div class="panel-head"><h2>Cheques</h2>{% if can('cheques.clear') %}<a class="link-arrow" href="{{ url_for('office_cheques', status='all') }}">All &rarr;</a>{% endif %}</div>
+        {% for q in x.cheques %}<div class="mini-row"><div><strong>{{ q.cheque_no }} &middot; {{ q.amount|money(q.currency) }}</strong><small>{{ q.drawer_name }} &middot; {{ q.drawee_bank }} &middot; clears {{ q.clear_on }}{% if q.reason %} &middot; {{ q.reason }}{% endif %}</small></div><span class="badge">{{ q.status }}</span></div>{% else %}<p class="muted small">No cheque.</p>{% endfor %}
+        {% if x.holds %}<h2 style="margin-top:16px">Held payments</h2>
+        {% for h in x.holds %}<div class="mini-row"><div><strong>{{ h.amount|money(h.currency) }} &rarr; {{ h.beneficiary_name }}</strong><small>{{ h.ext_ref }} &middot; looks like {{ h.list_name }}</small></div><span class="badge">{{ h.status }}</span></div>{% endfor %}{% endif %}
+    </section>
+</div>
 <div class="dash-grid">
     <section class="panel"><h2>Documents</h2>
         {% for d in docs %}<div class="mini-row"><div><strong>{{ d.kind }}</strong><small>{{ d.filename }} &middot; {{ d.purpose }} &middot; {{ d.uploaded_at|nicedate(false) }}</small></div><a class="link-arrow" href="{{ url_for('office_document', doc_id=d.id) }}" target="_blank">Open &rarr;</a></div>{% else %}<p class="muted small">None uploaded.</p>{% endfor %}

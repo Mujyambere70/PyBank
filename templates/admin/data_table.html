@@ -2,25 +2,46 @@
 {% block title %}Data · {{ info.label }}{% endblock %}
 {% block office_content %}
 <p class="small"><a href="{{ url_for('office_data') }}">&larr; Data manager</a></p>
-<div class="nb-title"><div><h1>{{ info.label }}</h1>{% if info.note %}<p class="muted small">{{ info.note }}</p>{% endif %}</div></div>
-<form class="panel inline-form" method="get" role="search"><label for="dt-q">Find</label><input id="dt-q" type="search" name="q" value="{{ q }}" placeholder="Any value"><button class="btn btn-outline btn-sm">Find</button>{% if q %}<a href="?" class="small">Clear</a>{% endif %}</form>
-<section class="panel">
-    <p class="small muted">{{ rows|length }} record(s){{ ' (first 200)' if rows|length >= 200 }}. Click a record to change it.</p>
+<div class="nb-title"><div><h1>{{ info.label }}</h1><p class="muted small">{{ info.note }}{% if info.readonly %} <span class="badge">Read only</span>{% endif %}</p></div>
+    <a class="btn btn-outline btn-sm" href="{{ url_for('office_data_export', table=t, q=q) }}">Download CSV</a></div>
+<form class="panel inline-form" method="get" role="search"><label for="dt-q">Find</label><input id="dt-q" type="search" name="q" value="{{ q }}" placeholder="Any value">
+    {% if sort %}<input type="hidden" name="sort" value="{{ sort }}"><input type="hidden" name="desc" value="{{ '1' if desc else '0' }}">{% endif %}
+    <button class="btn btn-outline btn-sm">Find</button>{% if q %}<a href="?" class="small">Clear</a>{% endif %}</form>
+{% set show = cols[:9] %}
+<form method="post" action="{{ url_for('office_data_delete_many', table=t) if info.delete else '' }}" class="panel" onsubmit="return confirm('Delete the ticked records?')">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p class="small muted">{{ total }} record(s){% if pages > 1 %} &middot; page {{ page }} of {{ pages }}{% endif %}. Click a column name to sort{% if not info.readonly %}, a record to change it{% endif %}.</p>
     <div class="table-wrap"><table class="data compact">
-        <thead><tr>{% for c in cols[:8] %}<th translate="no">{{ c }}</th>{% endfor %}</tr></thead>
-        <tbody>{% for r in rows %}<tr>{% for c in cols[:8] %}<td class="small">{% if loop.first %}<a href="{{ url_for('office_data_row', table=t, key=r[info.key]) }}">{% endif %}{{ (r[c]|string)[:40] if r[c] is not none else '' }}{% if loop.first %}</a>{% endif %}</td>{% endfor %}</tr>
-        {% else %}<tr><td colspan="8" class="muted">No record.</td></tr>{% endfor %}</tbody>
+        <thead><tr>{% if info.delete %}<th><input type="checkbox" aria-label="Tick all" data-tick-all="keys"></th>{% endif %}
+        {% for c in show %}<th translate="no"><a href="?{{ {'q': q, 'sort': c, 'desc': '1' if sort == c and not desc else '0'}|urlencode }}">{{ c }}{{ (' ▼' if desc else ' ▲') if sort == c }}</a></th>{% endfor %}</tr></thead>
+        <tbody>{% for r in rows %}<tr>{% if info.delete %}<td><input type="checkbox" name="keys" value="{{ r[keycol] }}" aria-label="Tick {{ r[keycol] }}"></td>{% endif %}
+        {% for c in show %}<td class="small">{% if loop.first %}<a href="{{ url_for('office_data_row', table=t, key=r[keycol]) }}">{% endif %}{{ (r[c]|string)[:40] if r[c] is not none else '' }}{% if loop.first %}</a>{% endif %}</td>{% endfor %}</tr>
+        {% else %}<tr><td colspan="10" class="muted">No record.</td></tr>{% endfor %}</tbody>
     </table></div>
-</section>
+    {% if pages > 1 %}<nav class="pager small">{% if page > 1 %}<a href="?{{ {'q': q, 'sort': sort, 'desc': '1' if desc else '0', 'page': page - 1}|urlencode }}">&larr; Previous</a>{% endif %}
+        <span>{{ page }} / {{ pages }}</span>{% if page < pages %}<a href="?{{ {'q': q, 'sort': sort, 'desc': '1' if desc else '0', 'page': page + 1}|urlencode }}">Next &rarr;</a>{% endif %}</nav>{% endif %}
+    {% if info.delete %}<button class="btn btn-danger btn-sm">Delete ticked</button>{% endif %}
+</form>
+{% if not info.readonly %}
+<div class="dash-grid">
 {% if info.add %}
 <form method="post" class="panel">
     <h2>Add a record</h2>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="form-grid">
     {% if t == 'settings' %}<div><label for="add-key">Setting name</label><input id="add-key" name="key" required pattern="[a-z0-9_]{2,60}"></div>{% endif %}
-    {% for c in info.edit %}<div><label for="add-{{ c }}" translate="no">{{ c }}</label>{% if c in ('body', 'answer', 'value', 'address', 'aliases') %}<textarea id="add-{{ c }}" name="{{ c }}" rows="2"></textarea>{% else %}<input id="add-{{ c }}" name="{{ c }}">{% endif %}</div>{% endfor %}
+    {% for c in info.edit %}<div><label for="add-{{ c }}" translate="no">{{ c }}</label>{% if c in ('body', 'answer', 'value', 'address', 'aliases', 'text') %}<textarea id="add-{{ c }}" name="{{ c }}" rows="2"></textarea>{% else %}<input id="add-{{ c }}" name="{{ c }}">{% endif %}</div>{% endfor %}
     </div>
     <button class="btn btn-primary">Add</button>
 </form>
+{% endif %}
+<form method="post" action="{{ url_for('office_data_import', table=t) }}" enctype="multipart/form-data" class="panel">
+    <h2>Change many records from a CSV file</h2>
+    <p class="small muted">Download the CSV, change it in a spreadsheet and send it back. A line whose <code>{{ info.key }}</code> exists changes that record (only the columns {{ info.edit|join(', ') }}){% if info.add %}; a line with a new or empty <code>{{ info.key }}</code> adds a record{% endif %}.</p>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="imp-file">CSV file</label><input id="imp-file" type="file" name="file" accept=".csv,text/csv" required>
+    <button class="btn btn-outline">Import</button>
+</form>
+</div>
 {% endif %}
 {% endblock %}

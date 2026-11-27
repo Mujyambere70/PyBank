@@ -6,6 +6,7 @@
     <form method="post" class="panel">
         <h2>Open a drawer for today</h2>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="open">
+        <p class="small muted">The opening cash is taken from the branch vault.</p>
         <div class="form-grid"><div><label for="till-cur">Currency</label><select id="till-cur" name="currency">{% for cur in CURRENCIES %}<option>{{ cur }}</option>{% endfor %}</select></div>
             <div><label for="till-open">Cash received from the vault</label><input id="till-open" type="number" name="opening" min="0" step="0.01" value="0" required></div></div>
         <button class="btn btn-primary btn-block">Open drawer</button>
@@ -15,15 +16,25 @@
         {% for t in tills %}
         <div class="till-card">
             <div class="mini-row"><div><strong>{{ t.currency }} &middot; in the drawer now: {{ t.expected|money(t.currency) }}</strong>
-                <small>opened {{ t.opened_at|nicedate }} with {{ t.opening|money(t.currency) }} &middot; cash in {{ t.cash_in|money(t.currency) }} &middot; cash out {{ t.cash_out|money(t.currency) }}</small>
+                <small>opened {{ t.opened_at|nicedate }} with {{ t.opening|money(t.currency) }} &middot; cash in {{ t.cash_in|money(t.currency) }} &middot; cash out {{ t.cash_out|money(t.currency) }}{% if t.vault_in or t.vault_out %} &middot; from vault {{ t.vault_in|money(t.currency) }} &middot; to vault {{ t.vault_out|money(t.currency) }}{% endif %}</small>
+                {% if t.notes %}<small>Notes: {% for v, n in t.notes.items() %}{{ n }} &times; {{ v }}{{ ', ' if not loop.last }}{% endfor %}</small>{% endif %}
                 {% if t.status != 'Open' %}<small>counted {{ t.counted|money(t.currency) }} &middot; difference {{ t.difference|money(t.currency) }}{% if t.note %} &middot; {{ t.note }}{% endif %}</small>{% endif %}</div>
                 <span class="badge {{ 'ok' if t.status in ('Open', 'Closed', 'Accepted') else 'bad' }}">{{ t.status }}</span></div>
             {% if t.status == 'Open' %}
             <details><summary>Count and close</summary>
-            <form method="post" class="form-grid"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="close"><input type="hidden" name="id" value="{{ t.id }}">
-                <div><label for="cnt-{{ t.id }}">Cash counted</label><input id="cnt-{{ t.id }}" type="number" name="counted" min="0" step="0.01" required></div>
+            <form method="post" class="form-grid" data-count-notes><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="close"><input type="hidden" name="id" value="{{ t.id }}">
+                <div class="full"><p class="small muted">Count note by note (PyBank adds it up), or write only the total.</p>
+                <div class="notes-grid">{% for v in DENOMINATIONS.get(t.currency, []) %}<label class="note-count"><span>{{ v }} &times;</span><input type="number" min="0" step="1" name="n_{{ v }}" data-value="{{ v }}" inputmode="numeric" aria-label="Number of {{ v }} {{ t.currency }}"></label>{% endfor %}</div></div>
+                <div><label for="cnt-{{ t.id }}">Cash counted (total)</label><input id="cnt-{{ t.id }}" type="number" name="counted" min="0" step="0.01" data-total></div>
                 <div><label for="note-{{ t.id }}">Note (needed if it does not match)</label><input id="note-{{ t.id }}" name="note"></div>
                 <div class="full"><button class="btn btn-primary btn-sm">Close drawer</button></div></form></details>
+            <details><summary>Ask the vault for cash / send cash back</summary>
+            <form method="post" action="{{ url_for('office_till_vault') }}" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="currency" value="{{ t.currency }}">
+                <label for="va-{{ t.id }}">Amount</label><input id="va-{{ t.id }}" name="amount" inputmode="decimal" required>
+                <input name="note" placeholder="Note" aria-label="Note">
+                <button class="btn btn-outline btn-sm" name="action" value="topup">Ask for more cash</button>
+                <button class="btn btn-outline btn-sm" name="action" value="return">Send cash back</button></form>
+            <p class="small muted">A vault keeper confirms it in Branch vault; your drawer changes then.</p></details>
             {% endif %}
         </div>
         {% else %}<p class="muted">No drawer for this day.</p>{% endfor %}

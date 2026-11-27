@@ -1,0 +1,42 @@
+{% extends "admin/layout.html" %}
+{% block title %}Train the assistant{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Train the assistant</h1><p class="muted small">Teach “Ask PyBank” your own answers. When a customer's question matches a question or keyword below, this answer is given first. Questions it did not understand, and answers people marked 👎, are listed so you can add a better answer.</p></div></div>
+<div class="stat-row">
+    <div class="panel stat"><span class="big-num">{{ stats.questions }}</span><small>questions asked</small></div>
+    <div class="panel stat"><span class="big-num">{{ stats.today }}</span><small>today</small></div>
+    <div class="panel stat"><span class="big-num">{{ stats.actions }}</span><small>things done in the chat</small></div>
+    <div class="panel stat"><span class="big-num">{{ stats.unknown }}</span><small>not understood</small></div>
+    <div class="panel stat"><span class="big-num">{{ stats.up }} / {{ stats.down }}</span><small>👍 / 👎</small></div>
+</div>
+<div class="dash-grid">
+<form method="post" class="panel" id="new">
+    <h2>New answer</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="ta-q">Question</label><input id="ta-q" name="question" value="{{ ask }}" required>
+    <label for="ta-k">Other words people use (commas)</label><input id="ta-k" name="keywords" placeholder="locker, safe deposit box">
+    <label for="ta-a">Answer</label><textarea id="ta-a" name="answer" rows="4" required></textarea>
+    <label for="ta-l">Link on this site (optional)</label><input id="ta-l" name="link" placeholder="/rates">
+    <button class="btn btn-primary btn-block">Save answer</button>
+</form>
+<section class="panel">
+    <h2>Not understood or 👎 ({{ unanswered|length }})</h2>
+    <ul class="plain-list small">{% for u in unanswered %}<li><strong>{{ u.question or '—' }}</strong> <span class="muted">{{ u.who_kind }} &middot; {{ u.created_at|nicedate }}{{ ' · 👎' if u.feedback and u.feedback < 0 }}</span>
+        {% if u.question %}<a href="{{ url_for('office_assistant_train', q=u.question) }}#new">Teach</a>{% endif %}</li>{% else %}<li class="muted">Nothing - the assistant understood everything.</li>{% endfor %}</ul>
+</section>
+</div>
+<section class="panel"><h2>Your answers ({{ answers|length }})</h2>
+{% for a in answers %}
+<details class="own-tools"><summary><strong>{{ a.question }}</strong> <span class="muted small">used {{ a.hits }} time(s){{ ' · off' if not a.active }}</span></summary>
+    <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ a.id }}">
+        <label for="q-{{ a.id }}">Question</label><input id="q-{{ a.id }}" name="question" value="{{ a.question }}" required>
+        <label for="k-{{ a.id }}">Other words</label><input id="k-{{ a.id }}" name="keywords" value="{{ a.keywords }}">
+        <label for="a-{{ a.id }}">Answer</label><textarea id="a-{{ a.id }}" name="answer" rows="3" required>{{ a.answer }}</textarea>
+        <div class="form-grid"><div><label for="l-{{ a.id }}">Link</label><input id="l-{{ a.id }}" name="link" value="{{ a.link }}"></div>
+        <div><label for="s-{{ a.id }}">In use</label><select id="s-{{ a.id }}" name="active"><option value="1" {{ 'selected' if a.active }}>Yes</option><option value="0" {{ 'selected' if not a.active }}>No</option></select></div></div>
+        <div class="btn-row"><button class="btn btn-primary btn-sm" name="action" value="save">Save</button><button class="btn btn-danger btn-sm" name="action" value="delete" formnovalidate onclick="return confirm('Delete this answer?')">Delete</button></div>
+    </form>
+</details>
+{% else %}<p class="muted small">No own answer yet.</p>{% endfor %}
+</section>
+{% endblock %}

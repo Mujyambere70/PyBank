@@ -1,7 +1,10 @@
 {% extends "admin/layout.html" %}
 {% block title %}Staff{% endblock %}
 {% block office_content %}
-<div class="nb-title"><div><h1>Staff &amp; roles</h1><p class="muted small">An administrator can do everything. Every other staff member has a job role; the role decides which back-office pages he can open.</p></div></div>
+<div class="nb-title"><div><h1>Staff &amp; abilities</h1><p class="muted small">An administrator can do everything. Every other person starts with the abilities of his job role, and you can then tick or untick any ability for that one person, give one for a few days only, or copy the abilities of a colleague.</p></div>
+    <div class="btn-row">{% if can('abilities.manage') %}<a class="btn btn-outline btn-sm" href="{{ url_for('office_abilities') }}">All abilities</a>{% endif %}
+        <a class="btn btn-outline btn-sm" href="{{ url_for('office_ability_matrix') }}">Ability matrix</a>
+        {% if can('roles.manage') %}<a class="btn btn-outline btn-sm" href="{{ url_for('office_roles') }}">Job roles</a>{% endif %}</div></div>
 <div class="dash-grid">
     <section class="panel">
         <h2>Team ({{ rows|length }})</h2>
@@ -11,6 +14,16 @@
                 <small>{{ s.staff_id }} &middot; {{ s.designation or '—' }} &middot; {{ s.email }}{% if s.phone %} &middot; {{ s.phone }}{% endif %}</small>
                 <small>Last sign-in: {{ s.last_login|nicedate if s.last_login else 'never' }}</small></div>
                 <span class="role-badge {{ s.role }}">{{ role_label(s) }}</span>{% if not s.active %}<span class="badge bad">Disabled</span>{% endif %}</div>
+            <div class="ability-line small">
+                {% if s.role == 'admin' %}<span class="chip ok">Every ability (administrator)</span>
+                {% else %}{% set n_extra = (s.extra_abilities or '').split(',')|select|list|length %}{% set n_den = (s.denied_abilities or '').split(',')|select|list|length %}
+                <span class="chip">{{ (s._abilities or [])|length }} of {{ ABILITIES|length }} abilities</span>
+                {% if n_extra %}<span class="chip ok">+{{ n_extra }} given</span>{% endif %}
+                {% if n_den %}<span class="chip bad">&minus;{{ n_den }} taken away</span>{% endif %}
+                {% if s._grants %}<span class="chip warn">temporary: {{ s._grants|length }}</span>{% endif %}
+                {% if s.staff_id != me.staff_id %}<a class="btn btn-primary btn-sm" href="{{ url_for('office_staff_access', sid=s.staff_id) }}#abilities">Abilities &amp; details</a>{% endif %}
+                {% endif %}
+            </div>
             {% if s.staff_id != me.staff_id %}
             <details class="own-tools"><summary class="btn btn-outline btn-sm">Manage</summary>
                 {% if s.role != 'admin' %}
@@ -19,6 +32,7 @@
                     <label for="job-{{ s.staff_id }}">Job role</label>
                     <select id="job-{{ s.staff_id }}" name="job_role">{% for k in JOB_ROLES %}<option value="{{ k }}" {{ 'selected' if (s.job_role or 'officer') == k }}>{{ ROLES[k].label }}</option>{% endfor %}</select>
                     <button class="btn btn-outline btn-sm">Change role</button></form>
+                <p class="small muted">Changing the role gives the role's abilities and keeps this person's own ticks. To add or remove single abilities use <a href="{{ url_for('office_staff_access', sid=s.staff_id) }}#abilities">Abilities &amp; details</a>.</p>
                 {% endif %}
                 <form method="post" action="{{ url_for('office_staff_action', sid=s.staff_id, action='edit') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

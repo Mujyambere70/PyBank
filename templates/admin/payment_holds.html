@@ -1,0 +1,20 @@
+{% extends "admin/layout.html" %}
+{% block title %}Held payments{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Held payments</h1><p class="muted small">Payments to other banks whose receiver looks like a name on the sanctions list are stopped before they leave. Check them: release the payment if it is a different person, or stop it - the money then goes back to the customer.</p></div></div>
+<nav class="tabs small">{% for s in STATUSES + ['all'] %}<a class="chip{{ ' active' if status == s }}" href="{{ url_for('office_payment_holds', status=s) }}">{{ s|capitalize if s == 'all' else s }}</a> {% endfor %}</nav>
+<section class="panel">
+{% for h in rows %}
+<div class="staff-card"><div class="mini-row"><div><strong>{{ h.amount|money(h.currency) }} &rarr; {{ h.beneficiary_name }}</strong>
+    <small>{{ h.ext_ref }} &middot; {{ h.rail }} &middot; {{ h.bank_name }} &middot; from <a href="{{ url_for('office_customer', cid=h.customer_id) }}">{{ h.full_name }}</a> &middot; {{ h.created_at|nicedate }}</small>
+    <small>Looks like list entry <strong>{{ h.list_name }}</strong> ({{ h.program }}) &middot; match {{ (h.score * 100)|round|int }}%</small>
+    {% if h.note %}<small>{{ h.note }} &middot; {{ h.checked_by }}</small>{% endif %}</div>
+    <span class="badge {{ 'warn' if h.status == 'Held' else 'ok' if h.status == 'Released' else 'bad' }}">{{ h.status }}</span></div>
+    {% if h.status == 'Held' %}<form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ h.id }}">
+        <input name="note" placeholder="What you checked" aria-label="Note" required>
+        <button class="btn btn-primary btn-sm" name="action" value="release">Different person - release</button>
+        <button class="btn btn-danger btn-sm" name="action" value="stop">Stop and refund</button></form>{% endif %}
+</div>
+{% else %}<p class="muted">No payment here.</p>{% endfor %}
+</section>
+{% endblock %}

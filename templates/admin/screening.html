@@ -45,6 +45,15 @@
     <button class="btn btn-primary btn-block">Add to list</button>
 </form>
 </div>
+<form method="post" action="{{ url_for('office_screening_import') }}" enctype="multipart/form-data" class="panel inline-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <strong>Load a list from a CSV file</strong>
+    <input type="file" name="file" accept=".csv,text/csv" aria-label="CSV file" required>
+    <label class="check small"><input type="checkbox" name="replace" value="1"> replace the whole list</label>
+    <button class="btn btn-outline btn-sm">Import</button>
+    <a class="small" href="{{ url_for('office_screening_template') }}">Example file</a>
+    <span class="small muted">Payments to other banks are checked against this list too; a match is held in <a href="{{ url_for('office_payment_holds') }}">Held payments</a>.</span>
+</form>
 <section class="panel">
     <h2>Sanctions list ({{ entries|length }})</h2>
     <p class="small muted">A demo list of made-up names. A real bank loads the official lists here (UN, OFAC, EU) every day.</p>{% if can('data.manage') %}<p class="small"><a href="{{ url_for('office_data_table', table='sanctions_list') }}">To change or stop an entry, open the Data manager.</a></p>{% endif %}

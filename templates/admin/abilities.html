@@ -1,0 +1,79 @@
+{% extends "admin/layout.html" %}
+{% block title %}Abilities{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Abilities</h1><p class="muted small">Every ability of the bank, who has it, and which back-office page needs which ability. You can make your own abilities, put any page behind any ability, and then tick abilities for each person or role.</p></div>
+    <div class="btn-row"><a class="btn btn-outline btn-sm" href="{{ url_for('office_ability_matrix') }}">Ability matrix</a><a class="btn btn-outline btn-sm" href="{{ url_for('office_roles') }}">Job roles</a><a class="btn btn-outline btn-sm" href="{{ url_for('office_staff') }}">Staff</a></div></div>
+<nav class="tabs small"><a href="#catalog">All abilities</a> <a href="#own">Own abilities</a> <a href="#new">New ability</a> <a href="#pages">Pages &amp; abilities</a></nav>
+{% if who %}
+<section class="panel"><h2>Who has “{{ ABILITIES[who] }}”</h2>
+    <ul class="plain-list">{% for s in who_rows %}<li><a href="{{ url_for('office_staff_access', sid=s.staff_id) }}#abilities">{{ s.full_name }}</a> <span class="muted small">{{ s.staff_id }} &middot; {{ s._job_label }}{{ ' · administrator' if s.role == 'admin' }}</span></li>{% else %}<li class="muted">Nobody.</li>{% endfor %}</ul>
+    <a class="small" href="{{ url_for('office_abilities') }}">Close</a></section>
+{% endif %}
+<section class="panel" id="catalog">
+    <h2>All abilities ({{ ABILITIES|length }})</h2>
+    <input type="search" placeholder="Find an ability" aria-label="Find an ability" data-filter=".ab-row">
+    <div class="table-wrap"><table class="data compact">
+        <thead><tr><th>Ability</th><th>Code</th><th class="center">People</th>{% for code, r in job_roles.items() %}<th class="center small">{{ r.label }}</th>{% endfor %}</tr></thead>
+        {% for group, items in ABILITY_GROUPS %}
+        <tbody><tr class="group-row"><th colspan="{{ 3 + job_roles|length }}">{{ group }}</th></tr>
+        {% for code, text in items %}
+        <tr class="ab-row" id="ab-{{ code }}"><td>{{ text }}{% if code.startswith('x.') %} <em class="tag ok">own</em>{% endif %}</td><td><code class="small">{{ code }}</code></td>
+            <td class="center"><a href="{{ url_for('office_abilities', who=code) }}">{{ held[code] }}/{{ people }}</a></td>
+            {% for jc, r in job_roles.items() %}<td class="center">{{ '✓' if code in r.abilities else '' }}</td>{% endfor %}</tr>
+        {% endfor %}</tbody>
+        {% endfor %}
+    </table></div>
+</section>
+<div class="dash-grid">
+<section class="panel" id="own">
+    <h2>Own abilities ({{ custom|length }})</h2>
+    <p class="small muted">Abilities you made. Change the name, or delete one: it is then taken away from every role and person.</p>
+    {% for a in custom %}
+    <details class="own-tools"><summary><strong>{{ a.label }}</strong> <code class="small">{{ a.code }}</code> <span class="muted small">{{ a.grp or 'Own abilities' }} &middot; {{ held[a.code] }} people &middot; {{ a.pages|length }} page(s)</span></summary>
+        <form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="code" value="{{ a.code }}">
+            <div class="form-grid"><div><label for="l-{{ a.code }}">Name</label><input id="l-{{ a.code }}" name="label" value="{{ a.label }}" required></div>
+            <div><label for="g-{{ a.code }}">Group</label><input id="g-{{ a.code }}" name="group" value="{{ a.grp }}" list="group-names"></div></div>
+            <label for="d-{{ a.code }}">What it allows</label><input id="d-{{ a.code }}" name="description" value="{{ a.description }}">
+            <div class="btn-row"><button class="btn btn-primary btn-sm" name="action" value="update">Save</button>
+            <button class="btn btn-danger btn-sm" name="action" value="delete" onclick="return confirm('Delete this ability everywhere?')">Delete</button></div>
+        </form>
+        {% if a.pages %}<p class="small">Pages: {% for p in a.pages %}<code>{{ p.method if p.method != 'ANY' }} {{ p.pattern }}</code> {% endfor %}</p>{% endif %}
+    </details>
+    {% else %}<p class="muted small">None yet.</p>{% endfor %}
+</section>
+<form method="post" class="panel" id="new">
+    <h2>New ability</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="create">
+    <label for="na-label">Name</label><input id="na-label" name="label" placeholder="e.g. Approve staff loans" required>
+    <div class="form-grid"><div><label for="na-group">Group</label><input id="na-group" name="group" list="group-names" placeholder="Own abilities"></div>
+    <div><label for="na-desc">What it allows</label><input id="na-desc" name="description"></div></div>
+    <label for="na-pages">Pages that need it (one per line, optional)</label><textarea id="na-pages" name="pages" rows="3" placeholder="/admin/loans&#10;/admin/customers/*/freeze"></textarea>
+    <fieldset class="small"><legend>Give it at once to these job roles</legend>{% for code, r in job_roles.items() %}<label class="check"><input type="checkbox" name="roles" value="{{ code }}"> {{ r.label }}</label> {% endfor %}</fieldset>
+    <button class="btn btn-primary btn-block">Create ability</button>
+    <datalist id="group-names">{% for g, items in ABILITY_GROUPS %}<option value="{{ g }}">{% endfor %}</datalist>
+</form>
+</div>
+<section class="panel" id="pages">
+    <h2>Pages &amp; abilities</h2>
+    <p class="small muted">Which ability opens which back-office page. Choose another ability for a page to change it; “*” stands for any number or code in the address. Pages of staff, roles and abilities keep their own ability so that nobody locks these tools away.</p>
+    <form method="post" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="rule">
+        <label for="r-pattern">Page</label><input id="r-pattern" name="pattern" list="page-list" placeholder="/admin/loans" required>
+        <label for="r-method">Clicks</label><select id="r-method" name="method"><option value="ANY">opening and saving</option><option value="POST">saving only</option></select>
+        <label for="r-ab">Needs</label><select id="r-ab" name="ability">{% for group, items in ABILITY_GROUPS %}<optgroup label="{{ group }}">{% for code, text in items %}<option value="{{ code }}">{{ text }}</option>{% endfor %}</optgroup>{% endfor %}</select>
+        <input name="note" placeholder="Note (optional)" aria-label="Note">
+        <button class="btn btn-primary btn-sm">Save rule</button>
+    </form>
+    <datalist id="page-list">{% for p in pages %}<option value="{{ p.pattern }}">{% endfor %}</datalist>
+    {% if rules %}<h3>Your page rules</h3>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Page</th><th>Clicks</th><th>Needs</th><th>Note</th><th></th></tr></thead><tbody>
+    {% for r in rules %}<tr><td><code>{{ r.pattern }}</code></td><td>{{ 'saving only' if r.method == 'POST' else 'all' }}</td><td>{{ ABILITIES.get(r.ability, r.ability) }}</td><td class="small">{{ r.note }}</td>
+        <td><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="unrule"><input type="hidden" name="id" value="{{ r.id }}"><button class="btn btn-outline btn-sm">Remove</button></form></td></tr>{% endfor %}
+    </tbody></table></div>{% endif %}
+    <details><summary>Every back-office page ({{ pages|length }})</summary>
+    <input type="search" placeholder="Find a page" aria-label="Find a page" data-filter=".page-row">
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Page</th><th>Click</th><th>Needs</th></tr></thead><tbody>
+    {% for p in pages %}<tr class="page-row"><td><code class="small">{{ p.pattern }}</code></td><td class="small">{{ 'open' if p.method == 'GET' else 'save' }}</td><td class="small">{{ p.label }}</td></tr>{% endfor %}
+    </tbody></table></div></details>
+</section>
+{% endblock %}

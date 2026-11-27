@@ -12,7 +12,7 @@ Back office      Website (texts, pages, FAQ, products, branches, banners, charge
 """
 
 import io
-from datetime import date, datetime
+from datetime import date, timedelta, datetime
 
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 
@@ -32,6 +32,8 @@ from iso20022 import OK_CODES, REJECT_REASONS
 from privacy import financial_year
 from staffperm import StaffPermMixin
 from teller import TellerMixin
+from abilities import AbilityAdminMixin          # v6
+from vault import VaultMixin                     # v6
 from wallets import MAX_EXTRA
 from world import format_money
 
@@ -52,7 +54,7 @@ CONTENT_KINDS = {"faq": "FAQ", "product": "Products", "branch": "Branches & ATMs
                  "charge": "Service charges"}
 
 
-class Office(TellerMixin, StaffPermMixin, CheckerOffice, InternationalOffice):
+class Office(VaultMixin, AbilityAdminMixin, TellerMixin, StaffPermMixin, CheckerOffice, InternationalOffice):
     """The back office of version 4: everything of version 3 + the four-eyes rule, job roles, languages."""
 
     def overview(self):
@@ -73,6 +75,12 @@ class Office(TellerMixin, StaffPermMixin, CheckerOffice, InternationalOffice):
                                  "AND rail IN ('SWIFT', 'SEPA') AND iso_file = ''")
             o["extra_accounts"] = q("SELECT COUNT(*) FROM accounts a WHERE a.opened_at > (SELECT MIN(opened_at) "
                                     "FROM accounts x WHERE x.customer_id = a.customer_id)")
+            o["vault_waiting"] = q("SELECT COUNT(*) FROM vault_moves WHERE status = 'Waiting'")              # v6
+            o["cheques_clearing"] = q("SELECT COUNT(*) FROM cheques WHERE status = 'In clearing'")
+            o["cc_applied"] = q("SELECT COUNT(*) FROM credit_cards WHERE status = 'Applied'")
+            o["holds"] = q("SELECT COUNT(*) FROM payment_holds WHERE status = 'Held'")
+            o["bot_unknown"] = q("SELECT COUNT(*) FROM chat_messages WHERE role = 'bot' AND (kind = 'unknown' OR feedback < 0) "
+                                 "AND created_at >= ?", (date.today() - timedelta(days=7)).isoformat())
         return o
 
     def set_staff_lang(self, me, lang):

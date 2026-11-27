@@ -210,6 +210,8 @@ class PaymentsMixin:
                          "settle_after, tx_ref) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                          (ref, cid, acc.number, rail, name, account, code, bank_name, country, acc.currency, amount,
                           remarks, start.strftime("%Y-%m-%d %H:%M:%S"), settle.strftime("%Y-%m-%d %H:%M:%S"), t.ref))
+            if hasattr(self, "_screen_payment"):     # v6: a name like one on the sanctions list -> the payment waits
+                self._screen_payment(conn, ref, cid, name)
         self.process_external()                       # instant payments settle now
         return ref
 

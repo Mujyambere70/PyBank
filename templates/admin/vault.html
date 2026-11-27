@@ -1,0 +1,37 @@
+{% extends "admin/layout.html" %}
+{% block title %}Branch vault{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Branch vault</h1><p class="muted small">The cash of the branch. Opening a drawer takes cash from here and closing it puts the counted cash back. A teller who needs more cash, or has too much, asks from <a href="{{ url_for('office_till') }}">My cash drawer</a>; a second person confirms here that the cash was handed over.</p></div></div>
+<section class="panel">
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>Currency</th><th class="num">In the vault</th><th class="num">In open drawers</th><th class="num">Branch total</th><th>Last change</th></tr></thead><tbody>
+    {% for v in vault %}<tr><td>{{ v.currency }}</td><td class="num">{{ v.balance|money(v.currency) }}</td><td class="num">{{ v.in_drawers|money(v.currency) }}</td><td class="num"><strong>{{ (v.balance + v.in_drawers)|money(v.currency) }}</strong></td><td class="small">{{ v.updated_at|nicedate }}</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+<div class="dash-grid">
+<section class="panel">
+    <h2>Waiting for a second person ({{ waiting|length }})</h2>
+    {% for m in waiting %}
+    <div class="staff-card"><div class="mini-row"><div><strong>{{ m.label }} &middot; {{ m.amount|money(m.currency) }}</strong>
+        <small>{{ m.full_name or m.requested_by }} &middot; asked by {{ m.requested_by }} &middot; {{ m.created_at|nicedate }}</small>{% if m.note %}<small>{{ m.note }}</small>{% endif %}</div></div>
+        {% if me.staff_id in (m.requested_by, m.staff_id) %}<p class="small muted">Another person must confirm this.</p>{% else %}
+        <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ m.id }}">
+            <input name="note" placeholder="Note" aria-label="Note"><button class="btn btn-primary btn-sm" name="action" value="approve">Cash handed over - confirm</button><button class="btn btn-outline btn-sm" name="action" value="reject">Reject</button></form>{% endif %}
+    </div>
+    {% else %}<p class="muted small">Nothing is waiting.</p>{% endfor %}
+</section>
+<form method="post" class="panel">
+    <h2>Cash van (head office)</h2>
+    <p class="small muted">Record cash that arrived from or was sent to the head office. Another vault keeper confirms it.</p>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid"><div><label for="v-cur">Currency</label><select id="v-cur" name="currency">{% for v in vault %}<option>{{ v.currency }}</option>{% endfor %}</select></div>
+    <div><label for="v-amt">Amount</label><input id="v-amt" name="amount" inputmode="decimal" required></div></div>
+    <label for="v-note">Seal or slip number</label><input id="v-note" name="note" required>
+    <div class="btn-row"><button class="btn btn-primary" name="action" value="in">Cash came in</button><button class="btn btn-outline" name="action" value="out">Cash went out</button></div>
+</form>
+</div>
+<section class="panel"><h2>Last moves</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>When</th><th>Move</th><th>Person</th><th class="num">Amount</th><th>Status</th><th>Signatures</th></tr></thead><tbody>
+    {% for m in moves %}<tr><td class="small">{{ m.created_at|nicedate }}</td><td>{{ m.label }}</td><td class="small">{{ m.full_name or '—' }}</td><td class="num">{{ m.amount|money(m.currency) }}</td><td><span class="badge {{ 'ok' if m.status == 'Done' else 'bad' if m.status == 'Rejected' else 'warn' }}">{{ m.status }}</span></td><td class="small">{{ m.requested_by }}{{ ' / ' ~ m.approved_by if m.approved_by }}</td></tr>
+    {% else %}<tr><td colspan="6" class="muted">No move yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

@@ -24,30 +24,60 @@
 </form>
 <section class="panel">
     <h2>How abilities work</h2>
-    <p class="small">The person gets the abilities of his job role. Below you can give an ability that the role does not have (Yes) or take one away (No) for this person only. “Role” means: as the role says.</p>
-    <p class="small">The own limit stops this person from finishing large counter operations alone: above it the work waits for a second person, even when it is below the bank-wide limit.</p>
-    {% if s.role == 'admin' %}<div class="notice notice-info small">This person is an administrator and may do everything; the settings below are kept for when the access goes back to staff.</div>{% endif %}
+    <p class="small">Below, every ability of the bank has a tick box. <strong>Ticked = this person has it.</strong> Tick or untick what you want and press Save - the job role only gives the starting ticks (the grey “role” mark). Changing the job role above the boxes sets new starting ticks and keeps your own changes.</p>
+    <p class="small">Need it for a few days only (holiday cover)? Use <a href="#temporary">Temporary ability</a>: it stops by itself after the last day.</p>
+    <p class="small">The own limit stops this person from finishing large counter operations alone: above it the work waits for a second person.</p>
+    {% if s.role == 'admin' %}<div class="notice notice-info small">This person is an administrator and may do everything; the ticks are kept for when the access goes back to staff.</div>{% endif %}
     {% if s.staff_id == me.staff_id %}<div class="notice notice-info small">You cannot change your own abilities - another administrator must do it.</div>{% endif %}
 </section>
 </div>
-<form method="post" class="panel" id="abilities">
-    <h2>Job role and abilities</h2>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="form" value="abilities">
+{% set mine = s.staff_id == me.staff_id %}
+<form method="post" action="{{ url_for('office_staff_abilities', sid=s.staff_id) }}" class="panel" id="abilities">
+    <div class="nb-title" style="margin:0"><h2>Abilities ({{ (s._abilities or [])|length }} of {{ ABILITIES|length }})</h2>
+        <div class="btn-row small"><button type="button" class="btn btn-outline btn-sm" data-tick="all">Tick all</button><button type="button" class="btn btn-outline btn-sm" data-tick="none">Untick all</button><button type="button" class="btn btn-outline btn-sm" data-tick="role">Only the role</button></div></div>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="ticks"><input type="hidden" name="mode" value="ticks">
     <div class="form-grid">
-        <div><label for="sa-job">Job role</label><select id="sa-job" name="job_role">{% for code, r in job_roles.items() %}<option value="{{ code }}" {{ 'selected' if (s.job_role or 'officer') == code }}>{{ r.label }}</option>{% endfor %}</select></div>
+        <div><label for="sa-job">Job role (starting ticks)</label><select id="sa-job" name="job_role">{% for code, r in job_roles.items() %}<option value="{{ code }}" data-abilities="{{ r.abilities|join(',') }}" {{ 'selected' if (s.job_role or 'officer') == code }}>{{ r.label }}</option>{% endfor %}</select></div>
         <div><label for="sa-max">Own limit per counter operation, INR (0 = bank limit only)</label><input id="sa-max" type="number" name="max_amount" min="0" step="1" value="{{ ((s.max_amount or 0) / 100)|int }}"></div>
+        <div><label for="ab-filter">Find an ability</label><input id="ab-filter" type="search" placeholder="e.g. loan, vault, cheque" data-filter=".ability-tick"></div>
     </div>
-    <div class="table-wrap"><table class="data compact abilities">
-        <thead><tr><th>Ability</th><th class="center">In the role</th><th class="center">Role</th><th class="center">Yes</th><th class="center">No</th><th class="center">Now</th></tr></thead>
-        {% for group, items in ABILITY_GROUPS %}
-        <tbody><tr class="group-row"><th colspan="6">{{ group }}</th></tr>
-        {% for code, text in items %}{% set v = 'yes' if code in extra else ('no' if code in denied else 'role') %}
-        <tr><td>{{ text }} <code class="small">{{ code }}</code></td><td class="center">{{ '✓' if code in base else '' }}</td>
-            {% for opt in ['role', 'yes', 'no'] %}<td class="center"><input type="radio" name="ab_{{ code }}" value="{{ opt }}" aria-label="{{ {'role': 'Role', 'yes': 'Yes', 'no': 'No'}[opt] }}" {{ 'checked' if v == opt }}></td>{% endfor %}
-            <td class="center">{{ '✓' if code in (s._abilities or []) else '—' }}</td></tr>
-        {% endfor %}</tbody>
+    {% for group, items in ABILITY_GROUPS %}
+    <fieldset class="ability-group"><legend>{{ group }}</legend>
+        {% for code, text in items %}{% set have = code in (s._abilities or []) and code not in grant_codes %}
+        <label class="ability-tick{{ ' in-role' if code in base }}" data-code="{{ code }}">
+            <input type="checkbox" name="abilities" value="{{ code }}" {{ 'checked' if have }} {{ 'disabled' if mine }}>
+            <span>{{ text }} <code class="small">{{ code }}</code>
+            {% if code in base %}<em class="tag">role</em>{% endif %}{% if code in extra %}<em class="tag ok">given</em>{% endif %}{% if code in denied %}<em class="tag bad">taken away</em>{% endif %}{% if code in grant_codes %}<em class="tag warn">temporary</em>{% endif %}</span>
+        </label>
         {% endfor %}
-    </table></div>
-    <button class="btn btn-primary" {{ 'disabled' if s.staff_id == me.staff_id }}>Save abilities</button>
+    </fieldset>
+    {% endfor %}
+    <div class="btn-row"><button class="btn btn-primary" {{ 'disabled' if mine }}>Save abilities</button></div>
 </form>
+<div class="dash-grid">
+<form method="post" action="{{ url_for('office_staff_abilities', sid=s.staff_id) }}" class="panel" id="temporary">
+    <h2>Temporary ability</h2>
+    <p class="small muted">Give one ability until a date - for holiday cover or a short project. It ends by itself.</p>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="grant">
+    <label for="tg-code">Ability</label><select id="tg-code" name="code" required>{% for group, items in ABILITY_GROUPS %}<optgroup label="{{ group }}">{% for code, text in items %}{% if code not in (s._abilities or []) %}<option value="{{ code }}">{{ text }}</option>{% endif %}{% endfor %}</optgroup>{% endfor %}</select>
+    <div class="form-grid"><div><label for="tg-until">Last day</label><input id="tg-until" type="date" name="until" value="{{ days_from_today(7) }}" required></div>
+    <div><label for="tg-why">Why</label><input id="tg-why" name="reason" placeholder="Cover for a colleague on leave" required></div></div>
+    <button class="btn btn-primary" {{ 'disabled' if mine }}>Give until that day</button>
+    {% if grants %}<h3>Now</h3><ul class="plain-list">{% for g in grants %}<li><strong>{{ g.label }}</strong> until {{ g.until }} <span class="muted small">({{ g.reason }})</span>
+        <button class="btn btn-outline btn-sm" form="revoke-{{ g.id }}">End now</button></li>{% endfor %}</ul>{% endif %}
+</form>
+<section class="panel">
+    <h2>Quick changes</h2>
+    <form method="post" action="{{ url_for('office_staff_abilities', sid=s.staff_id) }}" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="copy">
+        <label for="cp-from">Copy the abilities of</label><select id="cp-from" name="from">{% for p in colleagues %}<option value="{{ p.staff_id }}">{{ p.full_name }} ({{ p._job_label }})</option>{% endfor %}</select>
+        <button class="btn btn-outline btn-sm" {{ 'disabled' if mine or not colleagues }}>Copy</button></form>
+    <form method="post" action="{{ url_for('office_staff_abilities', sid=s.staff_id) }}" onsubmit="return confirm('Remove every own tick and keep only the job role?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="reset">
+        <button class="btn btn-outline btn-sm" {{ 'disabled' if mine }}>Back to the job role only</button></form>
+    <h3>History</h3>
+    <ul class="plain-list small">{% for h in history %}<li>{{ h.at|nicedate }} &middot; {{ h.action }} by {{ h.staff_id }}<br><span class="muted">{{ h.details }}</span></li>{% else %}<li class="muted">No change yet.</li>{% endfor %}</ul>
+</section>
+</div>
+{% for g in grants %}<form id="revoke-{{ g.id }}" method="post" action="{{ url_for('office_staff_abilities', sid=s.staff_id) }}" hidden><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="revoke"><input type="hidden" name="id" value="{{ g.id }}"></form>{% endfor %}
 {% endblock %}

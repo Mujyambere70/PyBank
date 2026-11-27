@@ -1,0 +1,22 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Nominees{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Nominees</h1><p class="muted small">The people who receive the money of your accounts if something happens to you. Name up to {{ MAX_NOMINEES }} people and the share of each; the shares must add up to 100%. Leave a row empty to remove it.</p></div></div>
+<form method="post" class="panel" data-shares>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for i in range(MAX_NOMINEES) %}{% set n = rows[i] if rows|length > i else {} %}
+    <fieldset class="nominee"><legend>Nominee {{ i + 1 }}</legend>
+        <div class="form-grid">
+            <div><label for="nm-{{ i }}">Full name</label><input id="nm-{{ i }}" name="name_{{ i }}" value="{{ n.name or '' }}"></div>
+            <div><label for="rl-{{ i }}">Relation</label><select id="rl-{{ i }}" name="relation_{{ i }}"><option value="">—</option>{% for r in RELATIONS %}<option {{ 'selected' if n.relation == r }}>{{ r }}</option>{% endfor %}</select></div>
+            <div><label for="db-{{ i }}">Date of birth</label><input id="db-{{ i }}" type="date" name="dob_{{ i }}" value="{{ n.dob or '' }}"></div>
+            <div><label for="sh-{{ i }}">Share %</label><input id="sh-{{ i }}" type="number" min="0" max="100" name="share_{{ i }}" value="{{ n.share or '' }}" data-share></div>
+        </div>
+        <label for="ad-{{ i }}">Address</label><input id="ad-{{ i }}" name="address_{{ i }}" value="{{ n.address or '' }}">
+    </fieldset>
+    {% endfor %}
+    <p class="small">Total: <strong data-share-total>{{ rows|sum(attribute='share') }}</strong>%</p>
+    <div class="form-grid"><div><label for="nm-pin">PIN</label><input id="nm-pin" type="password" name="pin" inputmode="numeric" maxlength="6" required></div></div>
+    <button class="btn btn-primary">Save nominees</button>
+</form>
+{% endblock %}

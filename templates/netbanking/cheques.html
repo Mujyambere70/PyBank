@@ -1,0 +1,10 @@
+{% extends "netbanking/layout.html" %}
+{% block title %}Cheques{% endblock %}
+{% block nb_content %}
+<div class="nb-title"><div><h1>Cheques</h1><p class="muted small">Cheques you deposited at the branch. A cheque is paid after clearing, on the next working day; until then the money is not in your balance. Need a new cheque book? Ask in <a href="{{ url_for('service_requests') }}">Service requests</a> or in the chat.</p></div></div>
+<section class="panel"><div class="table-wrap"><table class="data compact">
+    <thead><tr><th>Cheque</th><th>From</th><th class="num">Amount</th><th>Paid on</th><th>Status</th></tr></thead><tbody>
+    {% for q in rows %}<tr><td><strong>{{ q.cheque_no }}</strong><br><span class="small muted">{{ q.ref }} &middot; dated {{ q.cheque_date }}</span></td><td>{{ q.drawer_name }}<br><span class="small muted">{{ q.drawee_bank }}</span></td>
+        <td class="num">{{ q.amount|money(q.currency) }}</td><td>{{ q.clear_on }}</td><td><span class="badge {{ 'ok' if q.status == 'Cleared' else 'bad' if q.status == 'Returned' else 'warn' }}">{{ q.status }}</span>{% if q.reason %}<br><span class="small">{{ q.reason }}</span>{% endif %}</td></tr>
+    {% else %}<tr><td colspan="5" class="muted">No cheque yet.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

@@ -1,0 +1,146 @@
+# version 6 texts (b) - vault, cheques, credit cards, held payments, data manager, assistant training
+Branch vault	Хранилище отделения	Coffre de l'agence	Bóveda de la sucursal	خزنة الفرع	分行金库
+Vault	Хранилище	Coffre	Bóveda	الخزنة	金库
+The cash of the branch. Opening a drawer takes cash from here and closing it puts the counted cash back. A teller who needs more cash, or has too much, asks from	Наличные отделения. При открытии кассы деньги берутся отсюда, при закрытии пересчитанная сумма возвращается. Кассир, которому нужно больше наличных или у которого их слишком много, запрашивает из раздела	L'argent liquide de l'agence. Ouvrir une caisse prend l'argent ici et la fermer y remet l'argent compté. Un caissier qui a besoin de plus d'argent, ou qui en a trop, demande depuis	El efectivo de la sucursal. Abrir una caja toma el efectivo de aquí y cerrarla devuelve el efectivo contado. Un cajero que necesita más efectivo, o tiene demasiado, lo pide desde	نقد الفرع. فتح الدرج يأخذ النقد من هنا وإغلاقه يعيد النقد المعدود. أمين الصندوق الذي يحتاج نقداً أكثر أو لديه الكثير يطلب من	分行的现金。开钱箱时从这里取现，关钱箱时把清点后的现金放回。需要更多现金或现金过多的柜员，可在此处申请：
+; a second person confirms here that the cash was handed over.	; второй сотрудник подтверждает здесь, что наличные переданы.	 ; une deuxième personne confirme ici que l'argent a été remis.	; una segunda persona confirma aquí que el efectivo se entregó.	؛ ويؤكد شخص ثانٍ هنا أن النقد سُلّم.	；由第二人在此确认现金已交接。
+In the vault	В хранилище	Dans le coffre	En la bóveda	في الخزنة	金库中
+In open drawers	В открытых кассах	Dans les caisses ouvertes	En cajas abiertas	في الأدراج المفتوحة	已开钱箱中
+Branch total	Всего в отделении	Total de l'agence	Total de la sucursal	إجمالي الفرع	分行合计
+Last change	Последнее изменение	Dernier changement	Último cambio	آخر تغيير	最近变动
+Waiting for a second person ({0})	Ожидают второго сотрудника ({0})	En attente d'une deuxième personne ({0})	Esperando a una segunda persona ({0})	بانتظار شخص ثانٍ ({0})	等待第二人（{0}）
+{0} · asked by {1} · {2}	{0} · запросил {1} · {2}	{0} · demandé par {1} · {2}	{0} · pedido por {1} · {2}	{0} · طلبه {1} · {2}	{0} · 申请人 {1} · {2}
+Another person must confirm this.	Это должен подтвердить другой сотрудник.	Une autre personne doit confirmer.	Otra persona debe confirmarlo.	يجب أن يؤكد ذلك شخص آخر.	必须由另一人确认。
+Nothing is waiting.	Ничего не ожидает.	Rien n'attend.	No hay nada pendiente.	لا شيء بالانتظار.	没有待处理事项。
+Cash handed over - confirm	Наличные переданы — подтвердить	Argent remis — confirmer	Efectivo entregado: confirmar	تم تسليم النقد — تأكيد	现金已交接——确认
+Cash van (head office)	Инкассация (головной офис)	Transport de fonds (siège)	Furgón de efectivo (oficina central)	سيارة نقل الأموال (المكتب الرئيسي)	运钞车（总行）
+Record cash that arrived from or was sent to the head office. Another vault keeper confirms it.	Запишите наличные, полученные из головного офиса или отправленные туда. Другой хранитель подтвердит.	Enregistrez l'argent reçu du siège ou envoyé au siège. Un autre gardien du coffre le confirme.	Registre el efectivo recibido de la oficina central o enviado a ella. Otro custodio de la bóveda lo confirma.	سجّل النقد الوارد من المكتب الرئيسي أو المرسل إليه. يؤكده أمين خزنة آخر.	记录从总行调入或调往总行的现金，由另一名金库管理员确认。
+Seal or slip number	Номер пломбы или квитанции	Numéro du scellé ou du bordereau	Número de precinto o recibo	رقم الختم أو الإيصال	封签号或单据号
+Cash came in	Наличные поступили	Argent reçu	Entró efectivo	وصل النقد	现金调入
+Cash went out	Наличные отправлены	Argent envoyé	Salió efectivo	خرج النقد	现金调出
+Last moves	Последние движения	Derniers mouvements	Últimos movimientos	آخر الحركات	最近调拨
+Move	Движение	Mouvement	Movimiento	الحركة	调拨
+Signatures	Подписи	Signatures	Firmas	التوقيعات	签名
+No move yet.	Движений пока нет.	Aucun mouvement pour l'instant.	Ningún movimiento todavía.	لا حركة بعد.	暂无调拨。
+Opening of a drawer	Открытие кассы	Ouverture d'une caisse	Apertura de una caja	فتح درج	开钱箱
+Top-up of a drawer	Пополнение кассы	Approvisionnement d'une caisse	Reposición de una caja	تزويد درج بالنقد	钱箱补款
+Cash back from a drawer	Возврат наличных из кассы	Retour d'argent d'une caisse	Devolución de efectivo de una caja	إعادة نقد من درج	钱箱退款
+Closing of a drawer	Закрытие кассы	Fermeture d'une caisse	Cierre de una caja	إغلاق درج	关钱箱
+Cash from head office	Наличные из головного офиса	Argent du siège	Efectivo de la oficina central	نقد من المكتب الرئيسي	总行调入现金
+Cash to head office	Наличные в головной офис	Argent vers le siège	Efectivo a la oficina central	نقد إلى المكتب الرئيسي	调往总行现金
+Waiting	Ожидает	En attente	En espera	بالانتظار	等待中
+Done	Выполнено	Fait	Hecho	تم	已完成
+Rejected	Отклонено	Refusé	Rechazado	مرفوض	已拒绝
+The opening cash is taken from the branch vault.	Начальная сумма берётся из хранилища отделения.	L'argent d'ouverture est pris dans le coffre de l'agence.	El efectivo inicial se toma de la bóveda de la sucursal.	يُؤخذ نقد الافتتاح من خزنة الفرع.	开箱现金从分行金库领取。
+Count note by note (PyBank adds it up), or write only the total.	Посчитайте по купюрам (PyBank сложит сам) или напишите только итог.	Comptez billet par billet (PyBank fait le total) ou écrivez seulement le total.	Cuente billete por billete (PyBank suma) o escriba solo el total.	عُدّ ورقة ورقة (PyBank يجمعها) أو اكتب الإجمالي فقط.	按面额逐张清点（PyBank 自动合计），或只填写总额。
+Cash counted (total)	Пересчитано наличных (итог)	Argent compté (total)	Efectivo contado (total)	النقد المعدود (الإجمالي)	清点现金（合计）
+Ask the vault for cash / send cash back	Запросить наличные из хранилища / вернуть наличные	Demander de l'argent au coffre / rendre de l'argent	Pedir efectivo a la bóveda / devolver efectivo	اطلب نقداً من الخزنة / أعد النقد	向金库申请现金 / 退回现金
+Ask for more cash	Запросить ещё наличных	Demander plus d'argent	Pedir más efectivo	اطلب مزيداً من النقد	申请补款
+Send cash back	Вернуть наличные	Rendre de l'argent	Devolver efectivo	أعد النقد	退回现金
+A vault keeper confirms it in Branch vault; your drawer changes then.	Хранитель подтверждает это в разделе «Хранилище отделения»; после этого касса изменится.	Un gardien du coffre le confirme dans Coffre de l'agence ; votre caisse change alors.	Un custodio lo confirma en Bóveda de la sucursal; entonces cambia su caja.	يؤكد أمين الخزنة ذلك في خزنة الفرع؛ ثم يتغير درجك.	金库管理员在“分行金库”确认后，您的钱箱才会变化。
+Cheques	Чеки	Chèques	Cheques	الشيكات	支票
+Cheque	Чек	Chèque	Cheque	الشيك	支票
+Cheques deposited at the counter wait for clearing and are paid on the next working day. In this sandbox a cheque number ending in 000 bounces. You can also clear or return a cheque by hand; a returned cheque costs the customer the return charge.	Чеки, принятые у кассы, ждут клиринга и зачисляются на следующий рабочий день. В песочнице чек с номером на 000 возвращается. Можно также провести или вернуть чек вручную; за возвращённый чек клиент платит комиссию.	Les chèques déposés au guichet attendent la compensation et sont payés le jour ouvré suivant. Dans ce bac à sable, un chèque dont le numéro finit par 000 est rejeté. Vous pouvez aussi encaisser ou rejeter un chèque à la main ; un chèque rejeté coûte au client les frais de rejet.	Los cheques depositados en ventanilla esperan la compensación y se pagan el siguiente día hábil. En este entorno de prueba, un cheque cuyo número termina en 000 se devuelve. También puede compensar o devolver un cheque a mano; un cheque devuelto le cuesta al cliente la comisión de devolución.	الشيكات المودعة في الشباك تنتظر المقاصة وتُدفع في يوم العمل التالي. في بيئة التجربة يُرفض الشيك الذي ينتهي رقمه بـ 000. يمكنك أيضاً تحصيل الشيك أو إرجاعه يدوياً؛ والشيك المرتجع يكلّف العميل رسوم الإرجاع.	柜台存入的支票等待清算，下一个工作日入账。在沙盒中，号码以 000 结尾的支票会被退票。您也可以手动清算或退回支票；退票会向客户收取退票费。
+Run today's clearing	Провести клиринг за сегодня	Lancer la compensation du jour	Ejecutar la compensación de hoy	تشغيل مقاصة اليوم	执行今日清算
+In clearing	В клиринге	En compensation	En compensación	قيد المقاصة	清算中
+Cleared	Зачислен	Encaissé	Compensado	تم التحصيل	已入账
+Returned	Возвращён	Rejeté	Devuelto	مرتجع	已退票
+Drawer & bank	Чекодатель и банк	Tireur et banque	Librador y banco	الساحب والبنك	出票人与银行
+Clears on	Зачисление	Payé le	Se paga el	يُحصّل في	入账日
+{0} · dated {1}	{0} · от {1}	{0} · daté du {1}	{0} · con fecha {1}	{0} · بتاريخ {1}	{0} · 日期 {1}
+Clear	Зачислить	Encaisser	Compensar	تحصيل	清算
+Return	Вернуть	Rejeter	Devolver	إرجاع	退回
+Return reason	Причина возврата	Motif de rejet	Motivo de devolución	سبب الإرجاع	退票原因
+No cheque.	Чеков нет.	Aucun chèque.	Ningún cheque.	لا يوجد شيك.	没有支票。
+No cheque yet.	Чеков пока нет.	Aucun chèque pour l'instant.	Ningún cheque todavía.	لا يوجد شيك بعد.	暂无支票。
+Funds insufficient	Недостаточно средств	Provision insuffisante	Fondos insuficientes	رصيد غير كافٍ	存款不足
+Signature differs	Подпись не совпадает	Signature non conforme	La firma no coincide	التوقيع مختلف	签名不符
+Cheque out of date	Срок чека истёк	Chèque périmé	Cheque vencido	الشيك منتهي الصلاحية	支票过期
+Amount in words and figures differ	Сумма прописью и цифрами не совпадает	Montant en lettres et en chiffres différents	El importe en letras y en cifras no coincide	المبلغ بالحروف والأرقام مختلف	大小写金额不符
+Payment stopped by the drawer	Платёж остановлен чекодателем	Paiement arrêté par le tireur	Pago detenido por el librador	أوقف الساحب الدفع	出票人止付
+Account closed	Счёт закрыт	Compte clôturé	Cuenta cerrada	الحساب مغلق	账户已关闭
+📝 Cheque deposit	📝 Зачисление чека	📝 Dépôt de chèque	📝 Depósito de cheque	📝 إيداع شيك	📝 支票存入
+Cheque deposit	Зачисление чека	Dépôt de chèque	Depósito de cheque	إيداع شيك	支票存入
+Cheque number (6 digits)	Номер чека (6 цифр)	Numéro du chèque (6 chiffres)	Número de cheque (6 dígitos)	رقم الشيك (6 أرقام)	支票号码（6 位）
+Drawn on bank	Банк чекодателя	Banque tirée	Banco librado	البنك المسحوب عليه	付款银行
+Written by	Выписал	Émis par	Emitido por	حرّره	出票人
+Date on the cheque	Дата на чеке	Date du chèque	Fecha del cheque	التاريخ على الشيك	支票日期
+The money is credited after clearing, on the next working day.	Деньги зачисляются после клиринга, на следующий рабочий день.	L'argent est crédité après compensation, le jour ouvré suivant.	El dinero se abona tras la compensación, el siguiente día hábil.	يُضاف المبلغ بعد المقاصة، في يوم العمل التالي.	清算后于下一个工作日入账。
+Send for clearing	Отправить на клиринг	Envoyer en compensation	Enviar a compensación	إرسال للمقاصة	提交清算
+Credit cards	Кредитные карты	Cartes de crédit	Tarjetas de crédito	بطاقات الائتمان	信用卡
+Credit Card	Кредитная карта	Carte de crédit	Tarjeta de crédito	بطاقة الائتمان	信用卡
+Credit card	Кредитная карта	Carte de crédit	Tarjeta de crédito	بطاقة الائتمان	信用卡
+Applications from Net Banking with the suggested limit (from the customer's income and credit score), and the cards in use. Limits are between {0} and {1}.	Заявки из интернет-банка с предлагаемым лимитом (по доходу и кредитному рейтингу клиента) и действующие карты. Лимиты от {0} до {1}.	Les demandes faites en banque en ligne avec le plafond proposé (selon le revenu et le score de crédit du client), et les cartes en service. Les plafonds vont de {0} à {1}.	Solicitudes de la banca en línea con el límite sugerido (según los ingresos y la puntuación crediticia del cliente) y las tarjetas en uso. Los límites van de {0} a {1}.	الطلبات من الخدمات المصرفية عبر الإنترنت مع الحد المقترح (حسب دخل العميل وتصنيفه الائتماني)، والبطاقات المستخدمة. الحدود بين {0} و{1}.	来自网上银行的申请及建议额度（依据客户收入和信用评分），以及在用的卡。额度在 {0} 至 {1} 之间。
+{0} · income {1} / month · asked {2} · suggested	{0} · доход {1} / мес. · запрошено {2} · предлагается	{0} · revenu {1} / mois · demandé {2} · proposé	{0} · ingresos {1} / mes · pedido {2} · sugerido	{0} · الدخل {1} / شهرياً · المطلوب {2} · المقترح	{0} · 月收入 {1} · 申请 {2} · 建议
+Card XX{0} · limit {1} · used {2}	Карта XX{0} · лимит {1} · использовано {2}	Carte XX{0} · plafond {1} · utilisé {2}	Tarjeta XX{0} · límite {1} · usado {2}	البطاقة XX{0} · الحد {1} · المستخدم {2}	卡 XX{0} · 额度 {1} · 已用 {2}
+no amount	сумма не указана	pas de montant	sin importe	دون مبلغ	未填金额
+Limit	Лимит	Plafond	Límite	الحد	额度
+New limit	Новый лимит	Nouveau plafond	Nuevo límite	الحد الجديد	新额度
+Change limit	Изменить лимит	Changer le plafond	Cambiar límite	تغيير الحد	调整额度
+Reason (for a rejection)	Причина (при отказе)	Motif (en cas de refus)	Motivo (si se rechaza)	السبب (عند الرفض)	原因（拒绝时）
+Approve	Одобрить	Approuver	Aprobar	موافقة	批准
+Applied	Подана	Demandée	Solicitada	مقدَّم	已申请
+Nothing here.	Здесь ничего нет.	Rien ici.	Nada aquí.	لا شيء هنا.	这里没有内容。
+Held payments	Задержанные платежи	Paiements bloqués	Pagos retenidos	المدفوعات المحجوزة	被拦截的付款
+Held	Задержан	Bloqué	Retenido	محجوز	已拦截
+Released	Отпущен	Libéré	Liberado	مُفرج عنه	已放行
+Stopped	Остановлен	Arrêté	Detenido	موقوف	已止付
+Payments to other banks whose receiver looks like a name on the sanctions list are stopped before they leave. Check them: release the payment if it is a different person, or stop it - the money then goes back to the customer.	Платежи в другие банки, получатель которых похож на имя из санкционного списка, останавливаются до отправки. Проверьте их: отпустите платёж, если это другой человек, или остановите его — тогда деньги вернутся клиенту.	Les paiements vers d'autres banques dont le bénéficiaire ressemble à un nom de la liste des sanctions sont arrêtés avant de partir. Vérifiez-les : libérez le paiement s'il s'agit d'une autre personne, ou arrêtez-le — l'argent revient alors au client.	Los pagos a otros bancos cuyo beneficiario se parece a un nombre de la lista de sanciones se detienen antes de salir. Revíselos: libere el pago si es otra persona, o deténgalo; el dinero vuelve entonces al cliente.	المدفوعات إلى بنوك أخرى التي يشبه مستفيدها اسماً في قائمة العقوبات تُوقف قبل خروجها. افحصها: أفرج عن الدفعة إن كان شخصاً مختلفاً، أو أوقفها — فيعود المال إلى العميل.	收款人与制裁名单上的名字相似的跨行付款会在发出前被拦截。请核查：若是不同的人则放行，否则止付——资金会退回客户。
+Looks like list entry	Похоже на запись списка	Ressemble à l'entrée	Se parece a la entrada	يشبه البند	疑似名单条目
+({0}) · match {1}%	({0}) · совпадение {1}%	({0}) · correspondance {1} %	({0}) · coincidencia {1}%	({0}) · تطابق {1}%	（{0}）· 匹配度 {1}%
+What you checked	Что вы проверили	Ce que vous avez vérifié	Qué comprobó	ما الذي تحققت منه	您核查的内容
+Different person - release	Другой человек — отпустить	Autre personne — libérer	Otra persona: liberar	شخص مختلف — إفراج	不是同一人——放行
+Stop and refund	Остановить и вернуть деньги	Arrêter et rembourser	Detener y reembolsar	إيقاف واسترداد	止付并退款
+No payment here.	Платежей нет.	Aucun paiement ici.	Ningún pago aquí.	لا توجد دفعة هنا.	这里没有付款。
+Load a list from a CSV file	Загрузить список из CSV-файла	Charger une liste depuis un fichier CSV	Cargar una lista desde un archivo CSV	تحميل قائمة من ملف CSV	从 CSV 文件导入名单
+replace the whole list	заменить весь список	remplacer toute la liste	reemplazar toda la lista	استبدال القائمة كاملة	替换整个名单
+Example file	Пример файла	Fichier d'exemple	Archivo de ejemplo	ملف مثال	示例文件
+Payments to other banks are checked against this list too; a match is held in	Платежи в другие банки тоже проверяются по этому списку; совпадение задерживается в разделе	Les paiements vers d'autres banques sont aussi vérifiés avec cette liste ; une correspondance est bloquée dans	Los pagos a otros bancos también se comparan con esta lista; una coincidencia queda retenida en	تُفحص المدفوعات إلى البنوك الأخرى بهذه القائمة أيضاً؛ والتطابق يُحجز في	跨行付款也会与此名单比对；命中的付款会拦截在
+Data · {0}	Данные · {0}	Données · {0}	Datos · {0}	البيانات · {0}	数据 · {0}
+Data · {0} · {1}	Данные · {0} · {1}	Données · {0} · {1}	Datos · {0} · {1}	البيانات · {0} · {1}	数据 · {0} · {1}
+Every other table (read and download)	Все остальные таблицы (просмотр и выгрузка)	Toutes les autres tables (lecture et téléchargement)	Todas las demás tablas (leer y descargar)	كل الجداول الأخرى (قراءة وتنزيل)	其他所有数据表（查看与下载）
+These tables are changed by the bank's own pages (money, history, logs). Here you can read, sort, search and download them as CSV. Passwords, PINs and secret keys are never shown.	Эти таблицы меняются собственными страницами банка (деньги, история, журналы). Здесь их можно читать, сортировать, искать и скачивать в CSV. Пароли, PIN-коды и секретные ключи не показываются никогда.	Ces tables sont modifiées par les pages de la banque elle-même (argent, historique, journaux). Ici vous pouvez les lire, les trier, y chercher et les télécharger en CSV. Les mots de passe, codes PIN et clés secrètes ne sont jamais affichés.	Estas tablas las cambian las propias páginas del banco (dinero, historial, registros). Aquí puede leerlas, ordenarlas, buscar y descargarlas en CSV. Nunca se muestran contraseñas, PIN ni claves secretas.	تُغيَّر هذه الجداول عبر صفحات البنك نفسها (المال، السجل، اليوميات). يمكنك هنا قراءتها وفرزها والبحث فيها وتنزيلها بصيغة CSV. لا تُعرض كلمات المرور ولا الأرقام السرية ولا المفاتيح السرية أبداً.	这些表由银行自身的页面修改（资金、历史、日志）。在这里可以查看、排序、搜索并下载为 CSV。密码、PIN 和密钥永远不会显示。
+Read only	Только чтение	Lecture seule	Solo lectura	للقراءة فقط	只读
+Read only: this table is changed by the bank's own pages.	Только чтение: эта таблица меняется собственными страницами банка.	Lecture seule : cette table est modifiée par les pages de la banque.	Solo lectura: esta tabla la cambian las propias páginas del banco.	للقراءة فقط: يُغيَّر هذا الجدول عبر صفحات البنك نفسها.	只读：此表由银行自身页面修改。
+Download CSV	Скачать CSV	Télécharger le CSV	Descargar CSV	تنزيل CSV	下载 CSV
+{0} record(s) · page {1} of {2}. Click a column name to sort, a record to change it.	Записей: {0} · страница {1} из {2}. Нажмите на название столбца для сортировки, на запись — чтобы изменить её.	{0} enregistrement(s) · page {1} sur {2}. Cliquez sur un nom de colonne pour trier, sur un enregistrement pour le modifier.	{0} registro(s) · página {1} de {2}. Pulse el nombre de una columna para ordenar y un registro para cambiarlo.	{0} سجل · الصفحة {1} من {2}. انقر اسم العمود للفرز، والسجل لتغييره.	{0} 条记录 · 第 {1}/{2} 页。点击列名排序，点击记录修改。
+← Previous	← Назад	← Précédent	← Anterior	→ السابق	← 上一页
+Next →	Вперёд →	Suivant →	Siguiente →	التالي ←	下一页 →
+Delete ticked	Удалить отмеченные	Supprimer la sélection	Eliminar marcados	حذف المحدد	删除所选
+Change many records from a CSV file	Изменить много записей из CSV-файла	Modifier plusieurs enregistrements depuis un fichier CSV	Cambiar muchos registros desde un archivo CSV	تغيير سجلات كثيرة من ملف CSV	从 CSV 文件批量修改记录
+Download the CSV, change it in a spreadsheet and send it back. A line whose	Скачайте CSV, измените его в таблице и загрузите обратно. Строка, у которой	Téléchargez le CSV, modifiez-le dans un tableur et renvoyez-le. Une ligne dont	Descargue el CSV, cámbielo en una hoja de cálculo y súbalo de nuevo. Una línea cuyo	نزّل ملف CSV وعدّله في جدول بيانات ثم أرسله مجدداً. السطر الذي يوجد	下载 CSV，在电子表格中修改后再上传。某行的
+CSV file	CSV-файл	Fichier CSV	Archivo CSV	ملف CSV	CSV 文件
+Import	Загрузить	Importer	Importar	استيراد	导入
+Website texts	Тексты сайта	Textes du site	Textos del sitio	نصوص الموقع	网站文字
+Every short text of the website (titles, phone numbers, addresses).	Все короткие тексты сайта (заголовки, телефоны, адреса).	Tous les textes courts du site (titres, numéros de téléphone, adresses).	Todos los textos cortos del sitio (títulos, teléfonos, direcciones).	كل النصوص القصيرة في الموقع (العناوين، الهواتف، العناوين البريدية).	网站的所有短文字（标题、电话、地址）。
+Website pages	Страницы сайта	Pages du site	Páginas del sitio	صفحات الموقع	网站页面
+Products on the home page	Продукты на главной странице	Produits de la page d'accueil	Productos de la página de inicio	المنتجات في الصفحة الرئيسية	首页产品
+Banners	Баннеры	Bannières	Banners	اللافتات	横幅
+Abilities of a role are ticked in Job roles & abilities.	Полномочия роли отмечаются в разделе «Должности и полномочия».	Les habilitations d'un rôle se cochent dans Fonctions et habilitations.	Los permisos de un rol se marcan en Puestos y permisos.	تُحدّد صلاحيات الدور في الأدوار الوظيفية والصلاحيات.	岗位权限在“岗位与权限”中勾选。
+Created and deleted in Abilities; here only the texts.	Создаются и удаляются в разделе «Полномочия»; здесь — только тексты.	Créées et supprimées dans Habilitations ; ici seulement les textes.	Se crean y eliminan en Permisos; aquí solo los textos.	تُنشأ وتُحذف في الصلاحيات؛ هنا النصوص فقط.	在“权限”中创建和删除；这里只改文字。
+Nominees	Наследники	Bénéficiaires désignés	Beneficiarios designados	المستفيدون المعيّنون	受益人
+Shares are changed by the customer (they must add up to 100 %).	Доли меняет клиент (в сумме должно быть 100 %).	Les parts sont modifiées par le client (elles doivent totaliser 100 %).	Las partes las cambia el cliente (deben sumar 100 %).	يغيّر العميل الحصص (يجب أن يكون مجموعها 100٪).	份额由客户修改（合计须为 100%）。
+Assistant answers	Ответы помощника	Réponses de l'assistant	Respuestas del asistente	إجابات المساعد	助手答案
+Train the assistant	Обучение помощника	Former l'assistant	Entrenar al asistente	تدريب المساعد	训练助手
+Teach “Ask PyBank” your own answers. When a customer's question matches a question or keyword below, this answer is given first. Questions it did not understand, and answers people marked 👎, are listed so you can add a better answer.	Научите «Спросить PyBank» своим ответам. Если вопрос клиента совпадает с вопросом или ключевым словом ниже, сначала даётся этот ответ. Вопросы, которые помощник не понял, и ответы с оценкой 👎 перечислены, чтобы вы могли добавить ответ лучше.	Apprenez vos propres réponses à « Demander à PyBank ». Quand la question d'un client correspond à une question ou à un mot-clé ci-dessous, cette réponse est donnée en premier. Les questions non comprises et les réponses marquées 👎 sont listées pour que vous ajoutiez une meilleure réponse.	Enseñe a «Pregunte a PyBank» sus propias respuestas. Cuando la pregunta de un cliente coincide con una pregunta o palabra clave de abajo, se da primero esta respuesta. Las preguntas no entendidas y las respuestas marcadas con 👎 aparecen aquí para que añada una mejor.	علّم «اسأل PyBank» إجاباتك. عندما يطابق سؤال العميل سؤالاً أو كلمة مفتاحية أدناه تُعطى هذه الإجابة أولاً. الأسئلة التي لم يفهمها والإجابات التي قُيّمت بـ 👎 مدرجة لتضيف إجابة أفضل.	教“问 PyBank”使用您自己的答案。客户的问题与下面的问题或关键词匹配时，优先给出该答案。未理解的问题和被标记 👎 的回答会列出来，方便您补充更好的答案。
+questions asked	задано вопросов	questions posées	preguntas hechas	سؤال طُرح	提问数
+today	сегодня	aujourd'hui	hoy	اليوم	今天
+things done in the chat	действий в чате	actions faites dans le chat	acciones hechas en el chat	إجراء نُفّذ في المحادثة	在聊天中完成的操作
+not understood	не понято	non comprises	no entendidas	لم تُفهم	未理解
+New answer	Новый ответ	Nouvelle réponse	Nueva respuesta	إجابة جديدة	新答案
+Question	Вопрос	Question	Pregunta	السؤال	问题
+Answer	Ответ	Réponse	Respuesta	الإجابة	答案
+Other words people use (commas)	Другие слова, которые используют люди (через запятую)	Autres mots utilisés (séparés par des virgules)	Otras palabras que usa la gente (con comas)	كلمات أخرى يستخدمها الناس (بفواصل)	人们使用的其他词（用逗号分隔）
+locker, safe deposit box	ячейка, сейф	coffre, coffre-fort	caja de seguridad, casillero	خزانة، صندوق ودائع	保险箱, 保管箱
+Link on this site (optional)	Ссылка на этом сайте (необязательно)	Lien sur ce site (facultatif)	Enlace en este sitio (opcional)	رابط في هذا الموقع (اختياري)	本站链接（可选）
+Save answer	Сохранить ответ	Enregistrer la réponse	Guardar respuesta	حفظ الإجابة	保存答案
+Not understood or 👎 ({0})	Не понято или 👎 ({0})	Non comprises ou 👎 ({0})	No entendidas o 👎 ({0})	لم تُفهم أو 👎 ({0})	未理解或 👎（{0}）
+Teach	Научить	Apprendre	Enseñar	علِّم	教它
+Nothing - the assistant understood everything.	Ничего — помощник всё понял.	Rien — l'assistant a tout compris.	Nada: el asistente lo entendió todo.	لا شيء — المساعد فهم كل شيء.	没有——助手全都理解了。
+Your answers ({0})	Ваши ответы ({0})	Vos réponses ({0})	Sus respuestas ({0})	إجاباتك ({0})	您的答案（{0}）
+used {0} time(s){1}	использован {0} раз{1}	utilisée {0} fois{1}	usada {0} vez/veces{1}	استُخدمت {0} مرة{1}	已使用 {0} 次{1}
+Other words	Другие слова	Autres mots	Otras palabras	كلمات أخرى	其他词
+Link	Ссылка	Lien	Enlace	الرابط	链接
+In use	Используется	En service	En uso	قيد الاستخدام	启用
+No own answer yet.	Своих ответов пока нет.	Aucune réponse propre pour l'instant.	Ninguna respuesta propia todavía.	لا إجابة خاصة بعد.	暂无自定义答案。
+Do you have lockers?	У вас есть сейфовые ячейки?	Avez-vous des coffres ?	¿Tienen cajas de seguridad?	هل لديكم خزائن؟	你们有保险箱吗？
+What time does the branch open?	Во сколько открывается отделение?	À quelle heure ouvre l'agence ?	¿A qué hora abre la sucursal?	متى يفتح الفرع؟	分行几点开门？

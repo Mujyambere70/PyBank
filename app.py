@@ -32,6 +32,7 @@ import otp
 import roles
 import v4_views
 import v5_views
+import v6_views
 import world
 from admin import NOTICE_LEVELS, REQUEST_STATUSES, InternationalOffice
 from bank import (ACCOUNT_TYPES, BRANCH, FD_TENURES, LOAN_PRODUCTS, LOAN_TENURES, REQUEST_TYPES, Bank, BankError,
@@ -59,6 +60,9 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
     bank = Bank(target, notifier=notifier, driver=driver, fx_fetch=fx_fetch)
     office = v4_views.Office(bank)
     office.ensure_roles()                       # v5: job roles live in the database
+    office.add_v6_role_abilities()              # v6: the starting roles get the new abilities once
+    office.load_abilities()                     # v6: the administrator's own abilities and page rules
+    office.ensure_vault()                       # v6: the branch vault
     # the key that signs login cookies must stay the same after a restart and for every worker
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or bank.secret_key()
     if seed:
@@ -182,6 +186,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
             session["staff_active"] = time.time()
         # v4: every back-office page needs one ability of the staff member's role (roles.py)
         if request.path.startswith("/admin") and "staff_id" in session:
+            office.refresh_abilities()                # v6: another worker may have changed the abilities
             me = office.get_staff(session["staff_id"])
             need = roles.ability_for(request.path, request.method)
             if me and me["active"] and not roles.can(me, need):
@@ -1529,6 +1534,7 @@ def create_app(db_path=None, seed=True, notifier=None, driver=None, housekeeping
                "staff_required": staff_required, "office_page": office_page, "client_ip": client_ip}
     v4_views.register(app, bank, office, helpers)
     v5_views.register(app, bank, office, helpers)
+    v6_views.register(app, bank, office, helpers)
     api.register(app, bank)
 
     return app

@@ -13,6 +13,7 @@
             <div><label for="profile-phone">Phone</label><input id="profile-phone" name="phone" value="{{ me.phone }}"></div>
             <div><label for="profile-designation">Designation</label><input id="profile-designation" name="designation" value="{{ me.designation }}"></div>
             <div><label for="profile-dob">Date of birth</label><input id="profile-dob" type="date" name="dob" value="{{ me.dob or '' }}"></div>
+            {% if me.role == 'admin' %}<div><label for="profile-branch">Branch</label><input id="profile-branch" name="branch" value="{{ me.branch or '' }}"></div>{% endif %}
             <div><label for="profile-emergency">Emergency contact</label><input id="profile-emergency" name="emergency_contact" value="{{ me.emergency_contact or '' }}" placeholder="Name and phone"></div>
         </div>
         <label for="profile-address">Home address</label><textarea id="profile-address" name="address" rows="2">{{ me.address or '' }}</textarea>
@@ -38,6 +39,7 @@
     </form>
     <section class="panel">
         <h2>What I may do</h2>
+        <p class="small"><a href="{{ url_for('office_profile_activity') }}">My activity and abilities &rarr;</a></p>
         <p class="small muted">Your abilities come from your job role{% if me.max_amount %} and your own limit of {{ me.max_amount|money('INR') }} per counter operation{% endif %}. Only an administrator can change them.</p>
         {% for group, items in ABILITY_GROUPS %}{% set mine = items|selectattr('0', 'in', me._abilities or [])|list %}{% if mine %}
         <p class="small"><strong>{{ group }}:</strong> {% for code, text in mine %}{{ text }}{{ '; ' if not loop.last }}{% endfor %}</p>{% endif %}{% endfor %}

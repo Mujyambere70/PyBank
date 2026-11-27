@@ -1,0 +1,17 @@
+{% extends "admin/layout.html" %}
+{% block title %}Cheques{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Cheques</h1><p class="muted small">Cheques deposited at the counter wait for clearing and are paid on the next working day. In this sandbox a cheque number ending in 000 bounces. You can also clear or return a cheque by hand; a returned cheque costs the customer the return charge.</p></div>
+<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline btn-sm" name="action" value="run">Run today's clearing</button></form></div>
+<nav class="tabs small">{% for s in ['In clearing', 'Cleared', 'Returned', 'all'] %}<a class="chip{{ ' active' if status == s }}" href="{{ url_for('office_cheques', status=s) }}">{{ s|capitalize if s == 'all' else s }}</a> {% endfor %}</nav>
+<section class="panel"><div class="table-wrap"><table class="data compact">
+    <thead><tr><th>Cheque</th><th>Customer</th><th>Drawer &amp; bank</th><th class="num">Amount</th><th>Clears on</th><th>Status</th><th></th></tr></thead><tbody>
+    {% for q in rows %}<tr><td><strong>{{ q.cheque_no }}</strong><br><span class="small muted">{{ q.ref }} &middot; dated {{ q.cheque_date }}</span></td>
+        <td><a href="{{ url_for('office_customer', cid=q.customer_id) }}">{{ q.full_name }}</a><br><span class="small muted">{{ q.account_number }}</span></td>
+        <td>{{ q.drawer_name }}<br><span class="small muted">{{ q.drawee_bank }}</span></td><td class="num">{{ q.amount|money(q.currency) }}</td><td>{{ q.clear_on }}</td>
+        <td><span class="badge {{ 'ok' if q.status == 'Cleared' else 'bad' if q.status == 'Returned' else 'warn' }}">{{ q.status }}</span>{% if q.reason %}<br><span class="small">{{ q.reason }}</span>{% endif %}</td>
+        <td>{% if q.status == 'In clearing' %}<form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ q.id }}">
+            <button class="btn btn-primary btn-sm" name="action" value="clear">Clear</button>
+            <select name="reason" aria-label="Return reason">{% for r in RETURN_REASONS %}<option>{{ r }}</option>{% endfor %}</select><button class="btn btn-outline btn-sm" name="action" value="return">Return</button></form>{% endif %}</td></tr>
+    {% else %}<tr><td colspan="7" class="muted">No cheque.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

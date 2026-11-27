@@ -25,11 +25,12 @@ import world
 from assistant import Assistant
 from bank import FD_TENURES, BankError, parse_amount
 from compliance import checker_amount
-from datamanager import DATA_TABLES_EDIT, DataManager
+from datamanager import PER_PAGE, DataManager
 from deposits import RD_TENURES
 from openbanking import SCOPES
 from screening import HIT_STATUSES
 from teller import ID_DOCUMENTS, OPS
+from vault import count_notes
 from world import format_money
 
 PHOTO_MAX = 2 * 1024 * 1024
@@ -235,6 +236,9 @@ def register(app, bank, office, h):
     # =====================================================================
     # Public: search, assistant, open banking
     # =====================================================================
+
+    h.setdefault("docs", {}).update(public_docs=public_docs, netbanking_docs=netbanking_docs, office_docs=office_docs,
+                                    tr_answer=tr_answer)                       # used by the v6 chat assistant
 
     @app.route("/search")
     def site_search():
@@ -548,8 +552,13 @@ def register(app, bank, office, h):
                     t = next((x for x in office.my_tills(me) if str(x["id"]) == f.get("id")), None)
                     if t is None:
                         raise BankError("Cash drawer not found.")
-                    diff = office.close_till(me, t["id"], parse_amount(f.get("counted", "0") or "0", t["currency"])
-                                             if (f.get("counted") or "0") not in ("0", "") else 0, f.get("note", ""))
+                    notes, by_notes = count_notes(t["currency"], f)           # v6: counted note by note
+                    if notes:
+                        counted = by_notes
+                    else:
+                        counted = (parse_amount(f.get("counted", "0") or "0", t["currency"])
+                                   if (f.get("counted") or "0") not in ("0", "") else 0)
+                    diff = office.close_till(me, t["id"], counted, f.get("note", ""), notes or None)
                     flash("Cash drawer closed - the cash matches." if diff == 0 else
                           f"Cash drawer closed with a difference of {format_money(diff, t['currency'])}. "
                           f"A supervisor must accept it.", "success" if diff == 0 else "info")
@@ -627,8 +636,12 @@ def register(app, bank, office, h):
             return redirect(url_for("office_staff_access", sid=sid))
         r = office.job_roles()
         base = r.get(target.get("job_role") or "officer", {"abilities": set()})["abilities"]
+        grants = office.grants(sid)                                            # v6
         return office_page("staff_access.html", s=target, base=base, extra=roles.split_codes(target.get("extra_abilities")),
-                           denied=roles.split_codes(target.get("denied_abilities")), job_roles=r)
+                           denied=roles.split_codes(target.get("denied_abilities")), job_roles=r, grants=grants,
+                           grant_codes={g["ability"] for g in grants if not g["expired"]},
+                           colleagues=[p for p in office.staff_list() if p["staff_id"] != sid and p.get("role") != "admin"
+                                       and p.get("active")], history=office.ability_history(sid, 30))
 
     @app.route("/admin/staff-photo/<sid>.jpg")
     @staff_required()
@@ -736,14 +749,17 @@ def register(app, bank, office, h):
     @app.route("/admin/data")
     @staff_required()
     def office_data():
-        return office_page("data.html", tables=data_manager.tables())
+        return office_page("data.html", tables=data_manager.tables(), others=data_manager.read_only_tables())
 
     @app.route("/admin/data/<table>", methods=["GET", "POST"])
     @staff_required()
     def office_data_table(table):
-        if table not in DATA_TABLES_EDIT:
+        info = data_manager.info(table)
+        if info is None:
             abort(404)
         if request.method == "POST":
+            if info["readonly"]:
+                abort(405)
             try:
                 key = data_manager.add(request.staff, table, request.form)
                 flash("Record added.", "success")
@@ -751,15 +767,23 @@ def register(app, bank, office, h):
             except BankError as e:
                 flash(str(e), "error")
         q = request.args.get("q", "")[:80]
-        return office_page("data_table.html", t=table, info=DATA_TABLES_EDIT[table], q=q,
-                           rows=data_manager.rows(table, q), cols=data_manager.columns(table))
+        sort, desc = request.args.get("sort", ""), request.args.get("desc") == "1"
+        page = max(1, int(request.args.get("page") or 1)) if (request.args.get("page") or "1").isdigit() else 1
+        rows, total = data_manager.page(table, q, sort, desc, page)
+        cols = data_manager.columns(table)
+        return office_page("data_table.html", t=table, info=info, q=q, rows=rows, cols=cols, total=total, page=page,
+                           pages=max(1, -(-total // PER_PAGE)), sort=sort if sort in cols else "", desc=desc,
+                           keycol=data_manager._key_col(table))
 
     @app.route("/admin/data/<table>/<path:key>", methods=["GET", "POST"])
     @staff_required()
     def office_data_row(table, key):
-        if table not in DATA_TABLES_EDIT:
+        info = data_manager.info(table)
+        if info is None:
             abort(404)
         if request.method == "POST":
+            if info["readonly"]:
+                abort(405)
             try:
                 if request.form.get("action") == "delete":
                     data_manager.delete(request.staff, table, key)
@@ -774,5 +798,5 @@ def register(app, bank, office, h):
             row = data_manager.row(table, key)
         except BankError:
             abort(404)
-        return office_page("data_row.html", t=table, info=DATA_TABLES_EDIT[table], key=key, row=row,
+        return office_page("data_row.html", t=table, info=info, key=key, row=row,
                            cols=data_manager.columns(table))

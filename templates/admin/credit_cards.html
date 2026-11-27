@@ -1,0 +1,23 @@
+{% extends "admin/layout.html" %}
+{% block title %}Credit cards{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>Credit cards</h1><p class="muted small">Applications from Net Banking with the suggested limit (from the customer's income and credit score), and the cards in use. Limits are between {{ LIMIT_MIN|money('INR') }} and {{ LIMIT_MAX|money('INR') }}.</p></div></div>
+<nav class="tabs small">{% for s in ['Applied', 'Active', 'Blocked', 'Rejected', 'all'] %}<a class="chip{{ ' active' if status == s }}" href="{{ url_for('office_credit_cards', status=s) }}">{{ s|capitalize if s == 'all' else s }}</a> {% endfor %}</nav>
+<section class="panel">
+{% for k in rows %}
+<div class="staff-card"><div class="mini-row"><div><strong><a href="{{ url_for('office_customer', cid=k.customer_id) }}">{{ k.full_name }}</a></strong>
+    <small>{{ k.customer_id }} &middot; income {{ k.income|money('INR') }} / month &middot; asked {{ k.requested|money('INR') if k.requested else 'no amount' }} &middot; suggested <strong>{{ k.suggested|money('INR') }}</strong>{% if k.score %} &middot; score {{ k.score }}{% endif %}</small>
+    {% if k.status != 'Applied' %}<small>Card XX{{ k.last4 }} &middot; limit {{ k.limit_amount|money('INR') }} &middot; used {{ k.outstanding|money('INR') }}</small>{% endif %}
+    {% if k.reason %}<small>{{ k.reason }}</small>{% endif %}</div><span class="badge {{ 'ok' if k.status == 'Active' else 'warn' if k.status == 'Applied' else 'bad' }}">{{ k.status }}</span></div>
+    <form method="post" class="inline-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="id" value="{{ k.id }}">
+    {% if k.status == 'Applied' %}
+        <label for="lim-{{ k.id }}">Limit</label><input id="lim-{{ k.id }}" name="limit" value="{{ (k.suggested / 100)|int }}" inputmode="decimal">
+        <input name="reason" placeholder="Reason (for a rejection)" aria-label="Reason">
+        <button class="btn btn-primary btn-sm" name="action" value="approve">Approve</button><button class="btn btn-outline btn-sm" name="action" value="reject">Reject</button>
+    {% elif k.status in ('Active', 'Blocked') %}
+        <label for="nl-{{ k.id }}">New limit</label><input id="nl-{{ k.id }}" name="limit" value="{{ (k.limit_amount / 100)|int }}" inputmode="decimal"><button class="btn btn-outline btn-sm" name="action" value="limit">Change limit</button>
+    {% endif %}</form>
+</div>
+{% else %}<p class="muted">Nothing here.</p>{% endfor %}
+</section>
+{% endblock %}

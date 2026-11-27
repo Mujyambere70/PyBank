@@ -1,0 +1,188 @@
+# version 6 texts (c) - chat, Net Banking pages, messages
+Chat	Чат	Chat	Chat	المحادثة	聊天
+New chat	Новый чат	Nouvelle conversation	Nuevo chat	محادثة جديدة	新对话
+Your message	Ваше сообщение	Votre message	Su mensaje	رسالتك	您的消息
+Type a message	Напишите сообщение	Écrivez un message	Escriba un mensaje	اكتب رسالة	输入消息
+Send	Отправить	Envoyer	Enviar	إرسال	发送
+Hello {0}. What do you need?	Здравствуйте, {0}. Что вам нужно?	Bonjour {0}. De quoi avez-vous besoin ?	Hola, {0}. ¿Qué necesita?	مرحباً {0}. ماذا تحتاج؟	您好，{0}。需要什么帮助？
+Hello {0}! What would you like to know or do?	Здравствуйте, {0}! Что вы хотите узнать или сделать?	Bonjour {0} ! Que voulez-vous savoir ou faire ?	¡Hola, {0}! ¿Qué quiere saber o hacer?	مرحباً {0}! ماذا تريد أن تعرف أو تفعل؟	您好，{0}！想了解或办理什么？
+Hello! I can answer questions about accounts, rates, charges and branches{0}. What do you need?	Здравствуйте! Я отвечаю на вопросы о счетах, ставках, тарифах и отделениях{0}. Чем помочь?	Bonjour ! Je réponds aux questions sur les comptes, les taux, les frais et les agences{0}. De quoi avez-vous besoin ?	¡Hola! Respondo preguntas sobre cuentas, tipos, comisiones y sucursales{0}. ¿Qué necesita?	مرحباً! أجيب عن أسئلة الحسابات والأسعار والرسوم والفروع{0}. ماذا تحتاج؟	您好！我可以回答关于账户、利率、收费和网点的问题{0}。需要什么帮助？
+, and do things for you: send money, block your card, open a deposit	, а также могу сделать для вас: перевести деньги, заблокировать карту, открыть вклад	, et agir pour vous : envoyer de l'argent, bloquer votre carte, ouvrir un dépôt	, y hacer cosas por usted: enviar dinero, bloquear su tarjeta, abrir un depósito	، وأنفّذ لك: إرسال المال، إيقاف بطاقتك، فتح وديعة	，还能帮您办理：转账、冻结银行卡、开立存款
+Chat in your own words. It answers from your own account (“how much did I spend on food last month?”, “and the month before?”) and it can also do things for you - send money to a payee, block your card, open a fixed deposit, pay the credit card, order a cheque book. Nothing happens until you press Confirm, and money moves only with your PIN.	Пишите своими словами. Помощник отвечает по вашему счёту («сколько я потратил на еду в прошлом месяце?», «а в позапрошлом?») и может сделать что-то за вас — перевести деньги получателю, заблокировать карту, открыть вклад, оплатить кредитную карту, заказать чековую книжку. Ничего не происходит, пока вы не нажмёте «Подтвердить», а деньги переводятся только с вашим PIN-кодом.	Écrivez avec vos mots. Il répond à partir de votre compte (« combien ai-je dépensé en alimentation le mois dernier ? », « et le mois d'avant ? ») et peut aussi agir pour vous — envoyer de l'argent à un bénéficiaire, bloquer votre carte, ouvrir un dépôt à terme, payer la carte de crédit, commander un chéquier. Rien ne se passe avant que vous cliquiez sur Confirmer, et l'argent ne bouge qu'avec votre code PIN.	Escriba con sus palabras. Responde desde su cuenta («¿cuánto gasté en comida el mes pasado?», «¿y el anterior?») y también puede hacer cosas por usted: enviar dinero a un beneficiario, bloquear su tarjeta, abrir un depósito a plazo, pagar la tarjeta de crédito, pedir una chequera. No pasa nada hasta que pulse Confirmar, y el dinero solo se mueve con su PIN.	تحدّث بكلماتك. يجيب من حسابك («كم أنفقت على الطعام الشهر الماضي؟»، «والشهر الذي قبله؟») ويمكنه أيضاً تنفيذ أشياء لك — إرسال المال إلى مستفيد، إيقاف بطاقتك، فتح وديعة لأجل، سداد بطاقة الائتمان، طلب دفتر شيكات. لا يحدث شيء حتى تضغط تأكيد، ولا يتحرك المال إلا برقمك السري.	用自己的话聊天。它会根据您的账户回答（“上个月我在吃饭上花了多少？”“再前一个月呢？”），还能替您办事——给收款人转账、冻结银行卡、开立定期存款、还信用卡、申领支票簿。在您点击“确认”之前什么都不会发生，资金只有输入 PIN 才会转出。
+Chat in plain words: “approvals waiting”, “customer PB…”, “EMI for 5 lakh at 9% for 5 years”, “USD rate”. It can also do work that your abilities allow - “open my INR drawer with 50000”, “freeze PB…”, “activate PB…” - always after you press Confirm.	Пишите простыми словами: «ожидающие одобрения», «клиент PB…», «EMI на 5 лакхов под 9% на 5 лет», «курс USD». Помощник может выполнять работу, разрешённую вашими полномочиями, — «открой мою кассу INR с 50000», «заморозь PB…», «активируй PB…» — всегда после нажатия «Подтвердить».	Écrivez simplement : « approbations en attente », « client PB… », « EMI pour 5 lakh à 9 % sur 5 ans », « taux USD ». Il peut aussi faire le travail permis par vos habilitations — « ouvre ma caisse INR avec 50000 », « gèle PB… », « active PB… » — toujours après votre clic sur Confirmer.	Escriba con palabras sencillas: «aprobaciones pendientes», «cliente PB…», «EMI de 5 lakh al 9% a 5 años», «tipo USD». También puede hacer el trabajo que permiten sus permisos — «abre mi caja INR con 50000», «congela PB…», «activa PB…» — siempre después de pulsar Confirmar.	اكتب بكلمات بسيطة: «موافقات بالانتظار»، «العميل PB…»، «قسط 5 لاك بفائدة 9٪ لمدة 5 سنوات»، «سعر الدولار». ويمكنه أيضاً تنفيذ ما تسمح به صلاحياتك — «افتح درجي بالروبية بـ 50000»، «جمّد PB…»، «فعّل PB…» — دائماً بعد ضغطك تأكيد.	用简单的话聊天：“待审批”“客户 PB…”“50 万卢比 9% 5 年月供”“美元汇率”。它还能在您的权限范围内办事——“用 50000 开我的 INR 钱箱”“冻结 PB…”“激活 PB…”——均需您点击“确认”后执行。
+my balance	мой баланс	mon solde	mi saldo	رصيدي	我的余额
+spent on food this month	траты на еду в этом месяце	dépenses alimentation ce mois-ci	gastado en comida este mes	المصروف على الطعام هذا الشهر	本月餐饮支出
+send 500 to Priya	переведи 500 Прие	envoie 500 à Priya	envía 500 a Priya	أرسل 500 إلى بريا	给 Priya 转 500
+block my card	заблокировать мою карту	bloquer ma carte	bloquear mi tarjeta	أوقف بطاقتي	冻结我的卡
+open FD of 10000 for 12 months	открыть вклад 10000 на 12 месяцев	ouvrir un dépôt de 10000 sur 12 mois	abrir depósito de 10000 a 12 meses	افتح وديعة 10000 لمدة 12 شهراً	开 10000 的 12 个月定期
+order a cheque book	заказать чековую книжку	commander un chéquier	pedir una chequera	اطلب دفتر شيكات	申领支票簿
+my credit card bill	счёт по кредитной карте	ma facture de carte de crédit	mi factura de tarjeta de crédito	فاتورة بطاقتي الائتمانية	我的信用卡账单
+what can you do?	что ты умеешь?	que sais-tu faire ?	¿qué sabes hacer?	ماذا تستطيع أن تفعل؟	你能做什么？
+open my INR drawer with 50000	открой мою кассу INR с 50000	ouvre ma caisse INR avec 50000	abre mi caja INR con 50000	افتح درجي بالروبية بـ 50000	用 50000 开我的 INR 钱箱
+Confirm	Подтвердить	Confirmer	Confirmar	تأكيد	确认
+Good answer	Хороший ответ	Bonne réponse	Buena respuesta	إجابة جيدة	回答很好
+Bad answer	Плохой ответ	Mauvaise réponse	Mala respuesta	إجابة سيئة	回答不好
+Buy now and pay later. Every month on the 5th you get a bill; pay it within 20 days. Pay the full amount and there is no interest; pay less and interest of {0}% a month is added on what is left.	Покупайте сейчас — платите потом. Каждый месяц 5-го числа приходит счёт; оплатите его в течение 20 дней. Если оплатить всю сумму, процентов нет; если меньше — на остаток начисляется {0}% в месяц.	Achetez maintenant, payez plus tard. Chaque mois, le 5, vous recevez une facture ; payez-la sous 20 jours. Payez le montant total et il n'y a pas d'intérêts ; payez moins et des intérêts de {0} % par mois s'ajoutent au reste.	Compre ahora y pague después. Cada mes, el día 5, recibe una factura; páguela en 20 días. Si paga el total no hay intereses; si paga menos, se añade un interés del {0}% al mes sobre lo que queda.	اشترِ الآن وادفع لاحقاً. في الخامس من كل شهر تصلك فاتورة؛ ادفعها خلال 20 يوماً. إن دفعت المبلغ كاملاً فلا فائدة؛ وإن دفعت أقل تُضاف فائدة {0}٪ شهرياً على المتبقي.	先消费，后还款。每月 5 日出账单，20 天内还款。全额还款免息；少还则对剩余部分按每月 {0}% 计息。
+Apply for a credit card	Оформить кредитную карту	Demander une carte de crédit	Solicitar una tarjeta de crédito	قدّم طلب بطاقة ائتمان	申请信用卡
+The limit depends on your income and your credit score: between {0} and {1}. You need a monthly income of at least ₹15,000.	Лимит зависит от вашего дохода и кредитного рейтинга: от {0} до {1}. Нужен ежемесячный доход не менее ₹15 000.	Le plafond dépend de votre revenu et de votre score de crédit : entre {0} et {1}. Il faut un revenu mensuel d'au moins 15 000 ₹.	El límite depende de sus ingresos y su puntuación crediticia: entre {0} y {1}. Necesita ingresos mensuales de al menos ₹15.000.	يعتمد الحد على دخلك وتصنيفك الائتماني: بين {0} و{1}. تحتاج دخلاً شهرياً لا يقل عن 15,000 روبية.	额度取决于您的收入和信用评分：{0} 至 {1}。月收入需至少 ₹15,000。
+Monthly income (INR)	Ежемесячный доход (INR)	Revenu mensuel (INR)	Ingresos mensuales (INR)	الدخل الشهري (روبية)	月收入（INR）
+Limit you would like (optional)	Желаемый лимит (необязательно)	Plafond souhaité (facultatif)	Límite que desea (opcional)	الحد الذي تريده (اختياري)	期望额度（可选）
+Apply	Подать заявку	Demander	Solicitar	تقديم الطلب	申请
+Your application is being checked	Ваша заявка проверяется	Votre demande est en cours d'examen	Su solicitud se está revisando	طلبك قيد المراجعة	您的申请正在审核
+Sent on {0}. We will tell you in Alerts as soon as the bank decides.	Отправлена {0}. Мы сообщим в уведомлениях, как только банк примет решение.	Envoyée le {0}. Nous vous préviendrons dans Alertes dès que la banque aura décidé.	Enviada el {0}. Le avisaremos en Alertas en cuanto el banco decida.	أُرسل في {0}. سنخبرك في التنبيهات فور قرار البنك.	提交于 {0}。银行作出决定后会在“提醒”中通知您。
+{0} · valid to {1}	{0} · действует до {1}	{0} · valable jusqu'au {1}	{0} · válida hasta {1}	{0} · صالحة حتى {1}	{0} · 有效期至 {1}
+Used	Использовано	Utilisé	Usado	المستخدم	已用
+Block the card	Заблокировать карту	Bloquer la carte	Bloquear la tarjeta	إيقاف البطاقة	冻结卡片
+Unblock	Разблокировать	Débloquer	Desbloquear	إلغاء الإيقاف	解冻
+Pay the card	Оплатить карту	Payer la carte	Pagar la tarjeta	سداد البطاقة	还款
+Last bill {0}:	Последний счёт {0}:	Dernière facture {0} :	Última factura {0}:	آخر فاتورة {0}:	最近账单 {0}：
+· minimum {0} · due {1} · paid {2}	· минимум {0} · срок {1} · оплачено {2}	· minimum {0} · échéance {1} · payé {2}	· mínimo {0} · vence {1} · pagado {2}	· الحد الأدنى {0} · الاستحقاق {1} · المدفوع {2}	· 最低还款 {0} · 到期 {1} · 已还 {2}
+How much	Сколько	Combien	Cuánto	كم	金额
+All I owe ({0})	Весь долг ({0})	Tout ce que je dois ({0})	Todo lo que debo ({0})	كل ما عليّ ({0})	全部欠款（{0}）
+The minimum of the bill	Минимальный платёж	Le minimum de la facture	El mínimo de la factura	الحد الأدنى للفاتورة	账单最低还款
+Another amount	Другая сумма	Un autre montant	Otro importe	مبلغ آخر	其他金额
+Other amount	Другая сумма	Autre montant	Otro importe	مبلغ آخر	其他金额
+Bills	Счета	Factures	Facturas	الفواتير	账单
+Bill	Счёт	Facture	Factura	الفاتورة	账单
+Minimum	Минимум	Minimum	Mínimo	الحد الأدنى	最低还款
+Due	Срок	Échéance	Vence	الاستحقاق	到期日
+Minimum paid	Минимум оплачен	Minimum payé	Mínimo pagado	سُدّد الحد الأدنى	已还最低
+Overdue	Просрочен	En retard	Vencida	متأخرة	逾期
+No bill yet - the first comes on the 5th.	Счетов пока нет — первый придёт 5-го числа.	Pas encore de facture — la première arrive le 5.	Aún no hay factura: la primera llega el día 5.	لا فاتورة بعد — تصل الأولى في الخامس من الشهر.	暂无账单——首张账单在 5 日出具。
+Card transactions	Операции по карте	Opérations de la carte	Movimientos de la tarjeta	عمليات البطاقة	卡片交易
+No transaction yet.	Операций пока нет.	Aucune opération pour l'instant.	Ningún movimiento todavía.	لا عمليات بعد.	暂无交易。
+Purchase	Покупка	Achat	Compra	شراء	消费
+Late fee	Штраф за просрочку	Frais de retard	Recargo por demora	رسوم التأخير	滞纳金
+Interest	Проценты	Intérêts	Intereses	الفائدة	利息
+Sandbox: try a purchase	Песочница: попробовать покупку	Bac à sable : essayer un achat	Entorno de prueba: probar una compra	بيئة التجربة: جرّب عملية شراء	沙盒：试一笔消费
+Buy	Купить	Acheter	Comprar	شراء	购买
+Shop	Магазин	Magasin	Tienda	المتجر	商户
+The people who receive the money of your accounts if something happens to you. Name up to {0} people and the share of each; the shares must add up to 100%. Leave a row empty to remove it.	Люди, которые получат деньги с ваших счетов, если с вами что-то случится. Укажите до {0} человек и долю каждого; в сумме доли должны составлять 100%. Оставьте строку пустой, чтобы удалить её.	Les personnes qui reçoivent l'argent de vos comptes s'il vous arrive quelque chose. Indiquez jusqu'à {0} personnes et la part de chacune ; les parts doivent totaliser 100 %. Laissez une ligne vide pour la supprimer.	Las personas que reciben el dinero de sus cuentas si a usted le pasa algo. Indique hasta {0} personas y la parte de cada una; las partes deben sumar 100%. Deje una fila vacía para quitarla.	الأشخاص الذين يتسلمون أموال حساباتك إن حدث لك مكروه. سمِّ حتى {0} أشخاص وحصة كل منهم؛ ويجب أن يكون مجموع الحصص 100٪. اترك السطر فارغاً لحذفه.	如您发生意外，接收您账户资金的人。最多可指定 {0} 人及各自份额；份额合计须为 100%。留空某行即可删除。
+Nominee {0}	Наследник {0}	Bénéficiaire {0}	Beneficiario {0}	المستفيد {0}	受益人 {0}
+Relation	Родство	Lien	Parentesco	صلة القرابة	关系
+Share %	Доля, %	Part %	Parte %	الحصة ٪	份额 %
+Total:	Итого:	Total :	Total:	المجموع:	合计：
+Save nominees	Сохранить наследников	Enregistrer les bénéficiaires	Guardar beneficiarios	حفظ المستفيدين	保存受益人
+Spouse	Супруг(а)	Conjoint(e)	Cónyuge	الزوج/الزوجة	配偶
+Son	Сын	Fils	Hijo	الابن	儿子
+Daughter	Дочь	Fille	Hija	الابنة	女儿
+Father	Отец	Père	Padre	الأب	父亲
+Mother	Мать	Mère	Madre	الأم	母亲
+Brother	Брат	Frère	Hermano	الأخ	兄弟
+Sister	Сестра	Sœur	Hermana	الأخت	姐妹
+Other relative	Другой родственник	Autre parent	Otro familiar	قريب آخر	其他亲属
+Friend	Друг	Ami(e)	Amigo/a	صديق	朋友
+No nominee. The customer adds them in Net Banking.	Наследников нет. Клиент добавляет их в интернет-банке.	Aucun bénéficiaire. Le client les ajoute en banque en ligne.	Ningún beneficiario. El cliente los añade en la banca en línea.	لا مستفيد. يضيفهم العميل في الخدمات المصرفية عبر الإنترنت.	没有受益人。客户可在网上银行添加。
+No credit card.	Кредитной карты нет.	Pas de carte de crédit.	Sin tarjeta de crédito.	لا توجد بطاقة ائتمان.	没有信用卡。
+Credit cards →	Кредитные карты →	Cartes de crédit →	Tarjetas de crédito →	بطاقات الائتمان ←	信用卡 →
+{0} · born {1} · {2}	{0} · род. {1} · {2}	{0} · né(e) le {1} · {2}	{0} · nacido/a el {1} · {2}	{0} · مواليد {1} · {2}	{0} · 出生于 {1} · {2}
+limit {0} · used {1}	лимит {0} · использовано {1}	plafond {0} · utilisé {1}	límite {0} · usado {1}	الحد {0} · المستخدم {1}	额度 {0} · 已用 {1}
+{0} · {1} · clears {2} · {3}	{0} · {1} · зачисление {2} · {3}	{0} · {1} · payé le {2} · {3}	{0} · {1} · se paga el {2} · {3}	{0} · {1} · يُحصّل في {2} · {3}	{0} · {1} · 入账 {2} · {3}
+{0} · looks like {1}	{0} · похоже на {1}	{0} · ressemble à {1}	{0} · se parece a {1}	{0} · يشبه {1}	{0} · 疑似 {1}
+Cheques you deposited at the branch. A cheque is paid after clearing, on the next working day; until then the money is not in your balance. Need a new cheque book? Ask in	Чеки, которые вы сдали в отделении. Чек зачисляется после клиринга, на следующий рабочий день; до этого деньги не входят в баланс. Нужна новая чековая книжка? Запросите в разделе	Les chèques que vous avez déposés à l'agence. Un chèque est payé après compensation, le jour ouvré suivant ; d'ici là l'argent n'est pas dans votre solde. Besoin d'un nouveau chéquier ? Demandez dans	Los cheques que depositó en la sucursal. Un cheque se paga tras la compensación, el siguiente día hábil; hasta entonces el dinero no está en su saldo. ¿Necesita una chequera nueva? Pídala en	الشيكات التي أودعتها في الفرع. يُدفع الشيك بعد المقاصة في يوم العمل التالي؛ وحتى ذلك الحين لا يدخل المبلغ رصيدك. تحتاج دفتر شيكات جديداً؟ اطلبه في	您在网点存入的支票。支票清算后于下一个工作日入账；在此之前资金不计入余额。需要新的支票簿？请在
+or in the chat.	или в чате.	ou dans le chat.	o en el chat.	أو في المحادثة.	或在聊天中申请。
+From	От	De	De	من	来自
+Paid on	Зачисление	Payé le	Pagado el	يُدفع في	入账日
+Count and close	Пересчитать и закрыть	Compter et fermer	Contar y cerrar	العدّ والإغلاق	清点并关箱
+Note (needed if it does not match)	Примечание (нужно, если не сходится)	Note (obligatoire si cela ne correspond pas)	Nota (necesaria si no cuadra)	ملاحظة (مطلوبة إن لم يتطابق)	备注（不符时必填）
+Close drawer	Закрыть кассу	Fermer la caisse	Cerrar la caja	إغلاق الدرج	关钱箱
+Note	Примечание	Note	Nota	ملاحظة	备注
+Seal 77	Пломба 77	Scellé 77	Precinto 77	الختم 77	封签 77
+Pension day - many withdrawals	День пенсий — много снятий	Jour des pensions — beaucoup de retraits	Día de pensiones: muchos retiros	يوم المعاشات — سحوبات كثيرة	养老金发放日——取款多
+Answer deleted.	Ответ удалён.	Réponse supprimée.	Respuesta eliminada.	حُذفت الإجابة.	答案已删除。
+Answer saved. The assistant uses it from the next question.	Ответ сохранён. Помощник использует его со следующего вопроса.	Réponse enregistrée. L'assistant l'utilise dès la prochaine question.	Respuesta guardada. El asistente la usa desde la próxima pregunta.	حُفظت الإجابة. يستخدمها المساعد من السؤال التالي.	答案已保存，助手从下一个问题起使用。
+Ability saved.	Полномочие сохранено.	Habilitation enregistrée.	Permiso guardado.	حُفظت الصلاحية.	权限已保存。
+Ability deleted - it was taken away from every role and person.	Полномочие удалено — оно снято со всех ролей и сотрудников.	Habilitation supprimée — elle a été retirée de chaque rôle et de chaque personne.	Permiso eliminado: se retiró de cada rol y persona.	حُذفت الصلاحية — وسُحبت من كل دور وشخص.	权限已删除——已从所有角色和人员中移除。
+Page rule saved. It works from the next click.	Правило страницы сохранено. Оно действует со следующего нажатия.	Règle de page enregistrée. Elle s'applique dès le prochain clic.	Regla de página guardada. Funciona desde el próximo clic.	حُفظت قاعدة الصفحة. تعمل من النقرة التالية.	页面规则已保存，下一次点击即生效。
+Page rule removed: the page uses the bank's own ability again.	Правило удалено: страница снова использует полномочие банка.	Règle supprimée : la page reprend l'habilitation de la banque.	Regla eliminada: la página vuelve a usar el permiso del banco.	أزيلت القاعدة: تعود الصفحة إلى صلاحية البنك الأصلية.	规则已删除：页面恢复使用银行原有权限。
+Temporary ability given. It stops by itself after the last day.	Временное полномочие выдано. Оно закончится само после последнего дня.	Habilitation temporaire donnée. Elle s'arrête d'elle-même après le dernier jour.	Permiso temporal dado. Termina solo después del último día.	مُنحت صلاحية مؤقتة. تنتهي تلقائياً بعد اليوم الأخير.	已授予临时权限，最后一天过后自动停止。
+Temporary ability ended.	Временное полномочие завершено.	Habilitation temporaire arrêtée.	Permiso temporal terminado.	انتهت الصلاحية المؤقتة.	临时权限已结束。
+Abilities copied.	Полномочия скопированы.	Habilitations copiées.	Permisos copiados.	نُسخت الصلاحيات.	权限已复制。
+Abilities are now exactly those of the job role.	Теперь полномочия точно как у должности.	Les habilitations sont maintenant exactement celles de la fonction.	Los permisos son ahora exactamente los del puesto.	الصلاحيات الآن مطابقة تماماً للدور الوظيفي.	权限现与岗位完全一致。
+Abilities saved. They work from the next click of this person.	Полномочия сохранены. Они действуют со следующего нажатия этого сотрудника.	Habilitations enregistrées. Elles s'appliquent dès le prochain clic de cette personne.	Permisos guardados. Funcionan desde el próximo clic de esta persona.	حُفظت الصلاحيات. تعمل من النقرة التالية لهذا الشخص.	权限已保存，此人下一次点击即生效。
+Vault move confirmed.	Движение по хранилищу подтверждено.	Mouvement du coffre confirmé.	Movimiento de bóveda confirmado.	تم تأكيد حركة الخزنة.	金库调拨已确认。
+Vault move rejected.	Движение по хранилищу отклонено.	Mouvement du coffre refusé.	Movimiento de bóveda rechazado.	رُفضت حركة الخزنة.	金库调拨已拒绝。
+Recorded. A second vault keeper must confirm it.	Записано. Второй хранитель должен подтвердить.	Enregistré. Un deuxième gardien du coffre doit le confirmer.	Registrado. Un segundo custodio debe confirmarlo.	سُجّل. يجب أن يؤكده أمين خزنة ثانٍ.	已记录，需由第二名金库管理员确认。
+Asked. The cash moves when a vault keeper confirms it.	Запрос отправлен. Наличные будут переданы после подтверждения хранителем.	Demandé. L'argent bouge quand un gardien du coffre confirme.	Pedido. El efectivo se mueve cuando un custodio lo confirma.	تم الطلب. يتحرك النقد عندما يؤكده أمين الخزنة.	已申请。金库管理员确认后现金才会调拨。
+Credit limit changed.	Кредитный лимит изменён.	Plafond de crédit modifié.	Límite de crédito cambiado.	تم تغيير الحد الائتماني.	信用额度已调整。
+Decision saved; the customer was told.	Решение сохранено; клиент уведомлён.	Décision enregistrée ; le client a été prévenu.	Decisión guardada; se avisó al cliente.	حُفظ القرار؛ وأُبلغ العميل.	决定已保存，已通知客户。
+Please choose a CSV file.	Выберите CSV-файл.	Veuillez choisir un fichier CSV.	Elija un archivo CSV.	اختر ملف CSV.	请选择 CSV 文件。
+The file is too big (2 MB at most).	Файл слишком большой (не более 2 МБ).	Le fichier est trop volumineux (2 Mo au maximum).	El archivo es demasiado grande (2 MB como máximo).	الملف كبير جداً (2 ميغابايت كحد أقصى).	文件太大（最多 2 MB）。
+Tick the records to delete first.	Сначала отметьте записи для удаления.	Cochez d'abord les enregistrements à supprimer.	Marque primero los registros que quiere eliminar.	حدّد السجلات المراد حذفها أولاً.	请先勾选要删除的记录。
+Application sent. The bank decides within two working days.	Заявка отправлена. Банк примет решение в течение двух рабочих дней.	Demande envoyée. La banque décide sous deux jours ouvrés.	Solicitud enviada. El banco decide en dos días hábiles.	أُرسل الطلب. يقرر البنك خلال يومي عمل.	申请已提交，银行将在两个工作日内决定。
+Credit card blocked.	Кредитная карта заблокирована.	Carte de crédit bloquée.	Tarjeta de crédito bloqueada.	تم إيقاف بطاقة الائتمان.	信用卡已冻结。
+Credit card works again.	Кредитная карта снова работает.	La carte de crédit fonctionne à nouveau.	La tarjeta de crédito vuelve a funcionar.	بطاقة الائتمان تعمل مجدداً.	信用卡已恢复使用。
+You have no credit card.	У вас нет кредитной карты.	Vous n'avez pas de carte de crédit.	No tiene tarjeta de crédito.	ليست لديك بطاقة ائتمان.	您没有信用卡。
+This table is read only.	Эта таблица только для чтения.	Cette table est en lecture seule.	Esta tabla es de solo lectura.	هذا الجدول للقراءة فقط.	此表只读。
+The file is empty.	Файл пустой.	Le fichier est vide.	El archivo está vacío.	الملف فارغ.	文件为空。
+This question is not yours or no longer exists.	Этот вопрос не ваш или больше не существует.	Cette question n'est pas la vôtre ou n'existe plus.	Esta pregunta no es suya o ya no existe.	هذا السؤال ليس لك أو لم يعد موجوداً.	此问题不属于您或已不存在。
+This was already done or cancelled.	Это уже выполнено или отменено.	C'est déjà fait ou annulé.	Esto ya se hizo o se canceló.	تم ذلك أو أُلغي مسبقاً.	此操作已完成或已取消。
+Your abilities do not include a cash drawer.	Ваши полномочия не включают кассу.	Vos habilitations n'incluent pas de caisse.	Sus permisos no incluyen una caja.	صلاحياتك لا تشمل درج نقد.	您的权限不包括钱箱。
+Your abilities do not include freezing or activating accounts.	Ваши полномочия не включают заморозку и активацию счетов.	Vos habilitations n'incluent pas le gel ou l'activation des comptes.	Sus permisos no incluyen congelar o activar cuentas.	صلاحياتك لا تشمل تجميد الحسابات أو تفعيلها.	您的权限不包括冻结或激活账户。
+Please write the reason.	Укажите причину.	Veuillez écrire le motif.	Escriba el motivo.	يرجى كتابة السبب.	请填写原因。
+Please sign in first.	Сначала войдите.	Veuillez d'abord vous connecter.	Inicie sesión primero.	يرجى تسجيل الدخول أولاً.	请先登录。
+Please sign in to Net Banking first.	Сначала войдите в интернет-банк.	Veuillez d'abord vous connecter à la banque en ligne.	Inicie sesión primero en la banca en línea.	يرجى تسجيل الدخول إلى الخدمات المصرفية عبر الإنترنت أولاً.	请先登录网上银行。
+Please write the question and the answer.	Напишите вопрос и ответ.	Veuillez écrire la question et la réponse.	Escriba la pregunta y la respuesta.	يرجى كتابة السؤال والإجابة.	请填写问题和答案。
+The link must be an address on this site, starting with /.	Ссылка должна быть адресом на этом сайте и начинаться с /.	Le lien doit être une adresse de ce site commençant par /.	El enlace debe ser una dirección de este sitio que empiece por /.	يجب أن يكون الرابط عنواناً في هذا الموقع يبدأ بـ /.	链接必须是本站地址，以 / 开头。
+The cheque number has 6 digits (bottom left of the cheque).	Номер чека состоит из 6 цифр (внизу слева на чеке).	Le numéro du chèque a 6 chiffres (en bas à gauche du chèque).	El número de cheque tiene 6 dígitos (abajo a la izquierda del cheque).	رقم الشيك من 6 أرقام (أسفل يسار الشيك).	支票号码为 6 位数字（支票左下角）。
+Please write the bank the cheque is drawn on.	Укажите банк, на который выписан чек.	Veuillez écrire la banque sur laquelle le chèque est tiré.	Escriba el banco contra el que se libró el cheque.	يرجى كتابة البنك المسحوب عليه الشيك.	请填写付款银行。
+Please write the full name of the person who wrote the cheque.	Укажите полное имя человека, выписавшего чек.	Veuillez écrire le nom complet de la personne qui a émis le chèque.	Escriba el nombre completo de quien emitió el cheque.	يرجى كتابة الاسم الكامل لمن حرّر الشيك.	请填写出票人全名。
+Please enter the amount of the cheque.	Введите сумму чека.	Veuillez saisir le montant du chèque.	Introduzca el importe del cheque.	يرجى إدخال مبلغ الشيك.	请输入支票金额。
+Please write the date on the cheque (YYYY-MM-DD).	Укажите дату на чеке (ГГГГ-ММ-ДД).	Veuillez écrire la date du chèque (AAAA-MM-JJ).	Escriba la fecha del cheque (AAAA-MM-DD).	يرجى كتابة التاريخ على الشيك (YYYY-MM-DD).	请填写支票日期（YYYY-MM-DD）。
+This cheque is out of date (older than 3 months).	Срок чека истёк (старше 3 месяцев).	Ce chèque est périmé (plus de 3 mois).	Este cheque está vencido (más de 3 meses).	هذا الشيك منتهي الصلاحية (أقدم من 3 أشهر).	该支票已过期（超过 3 个月）。
+This cheque was already deposited.	Этот чек уже был сдан.	Ce chèque a déjà été déposé.	Este cheque ya se depositó.	هذا الشيك أُودع مسبقاً.	该支票已存入。
+This cheque is not in clearing.	Этот чек не в клиринге.	Ce chèque n'est pas en compensation.	Este cheque no está en compensación.	هذا الشيك ليس قيد المقاصة.	该支票不在清算中。
+Please write the nominee's full name.	Укажите полное имя наследника.	Veuillez écrire le nom complet du bénéficiaire.	Escriba el nombre completo del beneficiario.	يرجى كتابة الاسم الكامل للمستفيد.	请填写受益人全名。
+Please choose how the nominee is related to you.	Выберите степень родства наследника.	Veuillez choisir le lien du bénéficiaire avec vous.	Elija el parentesco del beneficiario.	يرجى اختيار صلة المستفيد بك.	请选择受益人与您的关系。
+Please give the nominee's date of birth (YYYY-MM-DD).	Укажите дату рождения наследника (ГГГГ-ММ-ДД).	Veuillez indiquer la date de naissance du bénéficiaire (AAAA-MM-JJ).	Indique la fecha de nacimiento del beneficiario (AAAA-MM-DD).	يرجى ذكر تاريخ ميلاد المستفيد (YYYY-MM-DD).	请填写受益人出生日期（YYYY-MM-DD）。
+The share must be a whole number of per cent.	Доля должна быть целым числом процентов.	La part doit être un nombre entier de pour cent.	La parte debe ser un número entero de por ciento.	يجب أن تكون الحصة عدداً صحيحاً من النسبة المئوية.	份额必须是整数百分比。
+Each share is between 1 and 100 %.	Каждая доля — от 1 до 100 %.	Chaque part est comprise entre 1 et 100 %.	Cada parte está entre 1 y 100 %.	كل حصة بين 1 و100٪.	每份在 1% 至 100% 之间。
+The shares of the nominees must add up to 100 %.	Доли наследников в сумме должны составлять 100 %.	Les parts des bénéficiaires doivent totaliser 100 %.	Las partes de los beneficiarios deben sumar 100 %.	يجب أن يكون مجموع حصص المستفيدين 100٪.	受益人份额合计须为 100%。
+You already have a credit card or an application.	У вас уже есть кредитная карта или заявка.	Vous avez déjà une carte de crédit ou une demande.	Ya tiene una tarjeta de crédito o una solicitud.	لديك بالفعل بطاقة ائتمان أو طلب.	您已有信用卡或申请。
+A credit card needs a monthly income of at least ₹15,000.	Для кредитной карты нужен ежемесячный доход не менее ₹15 000.	Une carte de crédit exige un revenu mensuel d'au moins 15 000 ₹.	Una tarjeta de crédito requiere ingresos mensuales de al menos ₹15.000.	تتطلب بطاقة الائتمان دخلاً شهرياً لا يقل عن 15,000 روبية.	信用卡要求月收入至少 ₹15,000。
+Credit cards are issued for rupee accounts.	Кредитные карты выпускаются для рупиевых счетов.	Les cartes de crédit sont émises pour les comptes en roupies.	Las tarjetas de crédito se emiten para cuentas en rupias.	تُصدر بطاقات الائتمان لحسابات الروبية.	信用卡仅为卢比账户发行。
+This application is not waiting.	Эта заявка не ожидает решения.	Cette demande n'est pas en attente.	Esta solicitud no está pendiente.	هذا الطلب ليس بالانتظار.	该申请不在待处理状态。
+The limit must be between ₹10,000 and ₹10,00,000.	Лимит должен быть от ₹10 000 до ₹10 00 000.	Le plafond doit être compris entre 10 000 ₹ et 10 00 000 ₹.	El límite debe estar entre ₹10.000 y ₹10,00,000.	يجب أن يكون الحد بين 10,000 و10,00,000 روبية.	额度须在 ₹10,000 至 ₹10,00,000 之间。
+Please write the reason for the customer.	Укажите причину для клиента.	Veuillez écrire le motif pour le client.	Escriba el motivo para el cliente.	يرجى كتابة السبب للعميل.	请填写给客户的原因。
+The new limit is lower than what the customer already owes.	Новый лимит меньше текущего долга клиента.	Le nouveau plafond est inférieur à ce que le client doit déjà.	El nuevo límite es menor que lo que el cliente ya debe.	الحد الجديد أقل مما يدين به العميل بالفعل.	新额度低于客户当前欠款。
+You have no active credit card.	У вас нет активной кредитной карты.	Vous n'avez pas de carte de crédit active.	No tiene una tarjeta de crédito activa.	ليست لديك بطاقة ائتمان نشطة.	您没有有效的信用卡。
+There is nothing to pay.	Платить нечего.	Il n'y a rien à payer.	No hay nada que pagar.	لا يوجد ما يُدفع.	没有需要还的款项。
+Pay the credit card from a rupee account.	Оплачивайте кредитную карту с рупиевого счёта.	Payez la carte de crédit depuis un compte en roupies.	Pague la tarjeta de crédito desde una cuenta en rupias.	سدّد بطاقة الائتمان من حساب بالروبية.	请用卢比账户还信用卡。
+Please give the ability a name (at least 3 letters).	Дайте полномочию название (не менее 3 букв).	Veuillez donner un nom à l'habilitation (au moins 3 lettres).	Dé un nombre al permiso (al menos 3 letras).	يرجى تسمية الصلاحية (3 أحرف على الأقل).	请为权限命名（至少 3 个字符）。
+An ability with this name already exists.	Полномочие с таким названием уже есть.	Une habilitation portant ce nom existe déjà.	Ya existe un permiso con este nombre.	توجد صلاحية بهذا الاسم بالفعل.	已存在同名权限。
+Only the abilities you created can be changed here.	Здесь можно менять только созданные вами полномочия.	Seules les habilitations que vous avez créées peuvent être modifiées ici.	Aquí solo se pueden cambiar los permisos que usted creó.	يمكن هنا تغيير الصلاحيات التي أنشأتها فقط.	这里只能修改您创建的权限。
+The bank's own abilities cannot be deleted.	Встроенные полномочия банка удалить нельзя.	Les habilitations propres à la banque ne peuvent pas être supprimées.	Los permisos propios del banco no se pueden eliminar.	لا يمكن حذف صلاحيات البنك الأصلية.	银行内置权限不能删除。
+Ability not found.	Полномочие не найдено.	Habilitation introuvable.	Permiso no encontrado.	الصلاحية غير موجودة.	未找到权限。
+Write a back-office address, for example /admin/loans or /admin/customers/*/freeze.	Укажите адрес бэк-офиса, например /admin/loans или /admin/customers/*/freeze.	Écrivez une adresse du back-office, par exemple /admin/loans ou /admin/customers/*/freeze.	Escriba una dirección del back office, por ejemplo /admin/loans o /admin/customers/*/freeze.	اكتب عنواناً في المكتب الخلفي، مثل /admin/loans أو /admin/customers/*/freeze.	请填写后台地址，例如 /admin/loans 或 /admin/customers/*/freeze。
+This page keeps its own ability, so that nobody locks the staff tools away.	Эта страница сохраняет своё полномочие, чтобы никто не закрыл доступ к инструментам персонала.	Cette page garde sa propre habilitation pour que personne ne bloque les outils du personnel.	Esta página conserva su propio permiso para que nadie bloquee las herramientas del personal.	تحتفظ هذه الصفحة بصلاحيتها حتى لا يغلق أحد أدوات الموظفين.	此页面保留自身权限，以免员工工具被锁住。
+Please choose an ability for this page.	Выберите полномочие для этой страницы.	Veuillez choisir une habilitation pour cette page.	Elija un permiso para esta página.	يرجى اختيار صلاحية لهذه الصفحة.	请为此页面选择权限。
+Rule not found.	Правило не найдено.	Règle introuvable.	Regla no encontrada.	القاعدة غير موجودة.	未找到规则。
+An administrator has every ability; choose a staff member to copy from.	У администратора есть все полномочия; выберите для копирования обычного сотрудника.	Un administrateur a toutes les habilitations ; choisissez un membre du personnel à copier.	Un administrador tiene todos los permisos; elija a un miembro del personal para copiar.	المسؤول يملك كل الصلاحيات؛ اختر موظفاً للنسخ منه.	管理员拥有全部权限，请选择一名员工进行复制。
+An administrator already has every ability.	У администратора уже есть все полномочия.	Un administrateur a déjà toutes les habilitations.	Un administrador ya tiene todos los permisos.	المسؤول يملك كل الصلاحيات بالفعل.	管理员已拥有全部权限。
+Please choose an ability.	Выберите полномочие.	Veuillez choisir une habilitation.	Elija un permiso.	يرجى اختيار صلاحية.	请选择权限。
+Please choose the last day (YYYY-MM-DD).	Выберите последний день (ГГГГ-ММ-ДД).	Veuillez choisir le dernier jour (AAAA-MM-JJ).	Elija el último día (AAAA-MM-DD).	يرجى اختيار اليوم الأخير (YYYY-MM-DD).	请选择最后一天（YYYY-MM-DD）。
+The last day must be today or later.	Последний день — сегодня или позже.	Le dernier jour doit être aujourd'hui ou plus tard.	El último día debe ser hoy o después.	يجب أن يكون اليوم الأخير اليوم أو بعده.	最后一天须为今天或之后。
+A temporary ability can last at most one year.	Временное полномочие может длиться не больше года.	Une habilitation temporaire peut durer au plus un an.	Un permiso temporal puede durar como máximo un año.	يمكن أن تستمر الصلاحية المؤقتة سنة واحدة كحد أقصى.	临时权限最长一年。
+Please write why (for example: cover for Ravi on leave).	Напишите причину (например: замена Рави на время отпуска).	Veuillez écrire pourquoi (par exemple : remplacement de Ravi en congé).	Escriba por qué (por ejemplo: sustituir a Ravi de vacaciones).	يرجى كتابة السبب (مثلاً: تغطية رافي في إجازته).	请填写原因（例如：代替休假的 Ravi）。
+You cannot change your own abilities. Ask another administrator.	Нельзя менять свои полномочия. Обратитесь к другому администратору.	Vous ne pouvez pas modifier vos propres habilitations. Demandez à un autre administrateur.	No puede cambiar sus propios permisos. Pídaselo a otro administrador.	لا يمكنك تغيير صلاحياتك. اطلب ذلك من مسؤول آخر.	您不能更改自己的权限，请联系另一位管理员。
+Not found.	Не найдено.	Introuvable.	No encontrado.	غير موجود.	未找到。
+This payment is not held.	Этот платёж не задержан.	Ce paiement n'est pas bloqué.	Este pago no está retenido.	هذه الدفعة ليست محجوزة.	该付款未被拦截。
+No names were found in the file.	В файле не найдено имён.	Aucun nom n'a été trouvé dans le fichier.	No se encontraron nombres en el archivo.	لم يُعثر على أسماء في الملف.	文件中未找到姓名。
+The file is too big (at most 20,000 names).	Файл слишком большой (не более 20 000 имён).	Le fichier est trop volumineux (20 000 noms au maximum).	El archivo es demasiado grande (20.000 nombres como máximo).	الملف كبير جداً (20,000 اسم كحد أقصى).	文件太大（最多 20,000 个姓名）。
+Please write how many notes or coins of each kind (whole numbers).	Укажите количество купюр или монет каждого вида (целыми числами).	Veuillez écrire le nombre de billets ou de pièces de chaque sorte (nombres entiers).	Escriba cuántos billetes o monedas de cada tipo (números enteros).	يرجى كتابة عدد الأوراق أو العملات من كل نوع (أعداد صحيحة).	请填写每种面额的张数或枚数（整数）。
+Please write the seal or slip number of the cash van.	Укажите номер пломбы или квитанции инкассации.	Veuillez écrire le numéro du scellé ou du bordereau du transport de fonds.	Escriba el número de precinto o recibo del furgón.	يرجى كتابة رقم الختم أو الإيصال لسيارة نقل الأموال.	请填写运钞车的封签号或单据号。
+The vault does not have this much cash.	В хранилище нет столько наличных.	Le coffre n'a pas autant d'argent.	La bóveda no tiene tanto efectivo.	لا تحتوي الخزنة على هذا القدر من النقد.	金库现金不足。
+This vault move is not waiting.	Это движение по хранилищу не ожидает решения.	Ce mouvement du coffre n'est pas en attente.	Este movimiento de bóveda no está pendiente.	حركة الخزنة هذه ليست بالانتظار.	该金库调拨不在待处理状态。
+A second person must confirm a vault move (two signatures).	Движение по хранилищу должен подтвердить второй сотрудник (две подписи).	Une deuxième personne doit confirmer un mouvement du coffre (deux signatures).	Una segunda persona debe confirmar un movimiento de bóveda (dos firmas).	يجب أن يؤكد شخص ثانٍ حركة الخزنة (توقيعان).	金库调拨须由第二人确认（双签）。
+The drawer does not have this much cash any more.	В кассе больше нет столько наличных.	La caisse n'a plus autant d'argent.	La caja ya no tiene tanto efectivo.	لم يعد في الدرج هذا القدر من النقد.	钱箱中已没有这么多现金。
+Please enter an amount.	Введите сумму.	Veuillez saisir un montant.	Introduzca un importe.	يرجى إدخال مبلغ.	请输入金额。
+Cheque book	Чековая книжка	Chéquier	Chequera	دفتر شيكات	支票簿
+Vault top-up asked	Запрошено пополнение из хранилища	Approvisionnement demandé au coffre	Reposición pedida a la bóveda	طُلب تزويد من الخزنة	已申请金库补款
+Cash back to the vault asked	Запрошен возврат наличных в хранилище	Retour d'argent au coffre demandé	Devolución de efectivo a la bóveda pedida	طُلبت إعادة النقد إلى الخزنة	已申请退回金库
+Vault move confirmed	Движение по хранилищу подтверждено	Mouvement du coffre confirmé	Movimiento de bóveda confirmado	تم تأكيد حركة الخزنة	金库调拨已确认
+Vault move rejected	Движение по хранилищу отклонено	Mouvement du coffre refusé	Movimiento de bóveda rechazado	رُفضت حركة الخزنة	金库调拨已拒绝
+Head-office cash recorded	Записаны наличные головного офиса	Argent du siège enregistré	Efectivo de la oficina central registrado	سُجّل نقد المكتب الرئيسي	已记录总行现金
+Assistant answer saved	Ответ помощника сохранён	Réponse de l'assistant enregistrée	Respuesta del asistente guardada	حُفظت إجابة المساعد	助手答案已保存
+Assistant answer deleted	Ответ помощника удалён	Réponse de l'assistant supprimée	Respuesta del asistente eliminada	حُذفت إجابة المساعد	助手答案已删除
+Credit card approved	Кредитная карта одобрена	Carte de crédit approuvée	Tarjeta de crédito aprobada	تمت الموافقة على بطاقة الائتمان	信用卡已批准
+Data exported	Данные выгружены	Données exportées	Datos exportados	صُدّرت البيانات	数据已导出

@@ -11,4 +11,9 @@
 </a>
 {% endfor %}
 </div>
+<section class="panel">
+    <h2>Every other table (read and download)</h2>
+    <p class="small muted">These tables are changed by the bank's own pages (money, history, logs). Here you can read, sort, search and download them as CSV. Passwords, PINs and secret keys are never shown.</p>
+    <div class="chip-list">{% for t in others %}<a class="chip" href="{{ url_for('office_data_table', table=t.name) }}">{{ t.label }} <span class="muted">{{ t.count }}</span></a> {% endfor %}</div>
+</section>
 {% endblock %}

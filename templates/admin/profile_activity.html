@@ -1,0 +1,20 @@
+{% extends "admin/layout.html" %}
+{% block title %}My activity{% endblock %}
+{% block office_content %}
+<div class="nb-title"><div><h1>My activity</h1><p class="muted small">Everything you did in the back office, what others changed about you, and the abilities you have now.</p></div><a class="btn btn-outline btn-sm" href="{{ url_for('office_profile') }}">My profile</a></div>
+<div class="dash-grid">
+<section class="panel"><h2>My abilities ({{ 'all' if me.role == 'admin' else mine|length }})</h2>
+    {% if me.role == 'admin' %}<p class="small">You are an administrator: you may do everything.</p>{% else %}
+    <ul class="plain-list small">{% for c in mine %}<li>{{ ABILITIES.get(c, c) }}</li>{% endfor %}</ul>{% endif %}
+    {% if grants %}<h3>Temporary</h3><ul class="plain-list small">{% for g in grants %}<li>{{ g.label }} &middot; {{ g.until }}</li>{% endfor %}</ul>{% endif %}
+</section>
+<section class="panel"><h2>Changes about me</h2>
+    <ul class="plain-list small">{% for r in about_me %}<li>{{ r.at|nicedate }} &middot; {{ r.action }} by {{ r.staff_id }}<br><span class="muted">{{ r.details }}</span></li>{% else %}<li class="muted">Nothing.</li>{% endfor %}</ul>
+</section>
+</div>
+<section class="panel"><h2>What I did (last {{ rows|length }})</h2>
+    <div class="table-wrap"><table class="data compact"><thead><tr><th>When</th><th>Action</th><th>On</th><th>Details</th></tr></thead><tbody>
+    {% for r in rows %}<tr><td class="small">{{ r.at|nicedate }}</td><td>{{ r.action }}</td><td class="small">{{ r.target }}</td><td class="small">{{ r.details }}</td></tr>{% else %}<tr><td colspan="4" class="muted">Nothing yet.</td></tr>{% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

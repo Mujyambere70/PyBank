@@ -107,6 +107,19 @@
     <button class="btn btn-primary btn-block">Open RD (first instalment now)</button>
 </form>
 {% endif %}
+{% if can('counter.cheque') %}
+<form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='cheque') }}" class="panel op" id="op-cheque">
+    {{ csrf }}<h2>&#128221; Cheque deposit</h2>
+    {{ acc_select('cq-acc') }}
+    <div class="form-grid"><div><label for="cq-amount">Amount</label><input id="cq-amount" type="number" name="amount" min="0.01" step="0.01" required></div>
+        <div><label for="cq-no">Cheque number (6 digits)</label><input id="cq-no" name="cheque_no" pattern="[0-9]{6}" inputmode="numeric" required></div>
+        <div><label for="cq-bank">Drawn on bank</label><input id="cq-bank" name="drawee_bank" required></div>
+        <div><label for="cq-drawer">Written by</label><input id="cq-drawer" name="drawer_name" required></div>
+        <div><label for="cq-date">Date on the cheque</label><input id="cq-date" type="date" name="cheque_date" max="{{ today.isoformat() }}" required></div></div>
+    <p class="small muted">The money is credited after clearing, on the next working day.</p>
+    <button class="btn btn-primary btn-block">Send for clearing</button>
+</form>
+{% endif %}
 {% if can('counter.loans') and loans %}
 <form method="post" action="{{ url_for('office_counter_op', cid=c.customer_id, op='emi') }}" class="panel op" id="op-emi">
     {{ csrf }}<h2>&#127974; Loan EMI</h2>

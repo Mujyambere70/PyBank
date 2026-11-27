@@ -3,7 +3,22 @@
 A complete **international** online banking web application built with **Python, Flask, HTML and CSS**
 (BCA project, Mujyambere Jean Michel, MMDU Mullana).
 
-**Version 5 (November 2026):** a **real branch counter** - staff take cash deposits, pay out withdrawals (after
+**Version 6 (November 2026):** the administrator now **manages every ability himself**: one tick box per
+ability for each person (no more "change the job role and hope"), **his own new abilities**, **any back-office
+page put behind any ability**, an **ability matrix** (all people × all abilities on one screen), **temporary
+abilities** that end by themselves, **copy abilities from a colleague** and **back to the role**, with the history
+of every change; **"Ask PyBank" is now a real chat assistant** that remembers the conversation, understands
+follow-ups ("and last month?"), suggests next questions, and **does things after you confirm** - send money,
+block or unblock a card, open an FD, put money in a goal, pay the credit card, order a cheque book; for staff open
+a cash drawer, freeze or activate a customer - always within the person's abilities; staff **teach it new answers**
+and see what it did not understand. Also new: the **branch vault** with two signatures and **note-by-note
+counting** of cash drawers, **cheque deposits with clearing** (and return charge), **nominees**, a **credit card**
+(application, limit from income and credit score, monthly bill, minimum due, interest, late fee), **payments to
+other banks held by the sanctions check**, **sanctions list import from CSV**, the **data manager v2** (every
+table of the database, sort, pages, CSV download and upload, delete many), and the administrator edits all of
+his own details (also his branch) and sees **his own activity**.
+
+**Version 5:** a **real branch counter** - staff take cash deposits, pay out withdrawals (after
 checking the identity document and the signature), make transfers, pay other banks, exchange money, open FDs and
 RDs and take EMIs **for the customer standing at the counter**, with a printed **counter receipt**, a **cash drawer**
 per teller (opened in the morning, counted in the evening, differences accepted by a supervisor) and the four-eyes
@@ -83,7 +98,7 @@ To start again with fresh demo data, delete `bank.db` and run `python app.py` ag
 
 ### Tests / Тесты
 ```bash
-python -m unittest discover -s tests -v      # 202 tests, SQLite
+python -m unittest discover -s tests -v      # 249 tests, SQLite
 # the same tests on PostgreSQL (the database is emptied - use a test database only!)
 TEST_DATABASE_URL=postgresql://user:pass@localhost/pybank_test python -m unittest discover -s tests
 python tools/release_check.py               # opens every page as 11 kinds of users and in 6 languages
@@ -172,6 +187,51 @@ every new customer against a list (similar spellings found; a confirmed match fr
 nightly **risk rating** (country, PEP, cash use, large transfers) that compliance can set by hand; **open
 banking** - partner apps registered by the bank, the customer agrees in Net Banking, OAuth 2.0 authorization
 code with PKCE (S256), read-only `/openbanking/v1/accounts`, 90-day consent, withdrawn in *Connected apps*.
+
+## Version 6 / Версия 6
+
+**Abilities - the administrator decides everything / Права - всё решает администратор.**
+- **Staff & abilities** shows for every person how many abilities he has, how many were given or taken away
+  and the temporary ones, with a button **Abilities & details**.
+- **Abilities & details** of a person: one **tick box per ability** (ticked = he has it), grouped, with a
+  search box and *Tick all / Untick all / Only the role*. The job role only gives the starting ticks; what you
+  tick is saved as "given" or "taken away" for this person. Also: **temporary ability** until a date (at most a
+  year, with a reason; it stops by itself), **copy the abilities of a colleague**, **back to the job role only**
+  and the **history** of every change.
+- **Abilities** (`abilities.manage`): the 42 built-in abilities and your own ones, with who has them (click the number) and which role has
+  them; **own abilities** (name, group, description) - deleting one removes it from every role and person;
+  **pages & abilities** - put any back-office page (or only its *save* button) behind any ability, `*` for any
+  number in the address. The pages of staff, roles and abilities keep their own ability, so nobody can lock the
+  administrator out.
+- **Ability matrix**: all active people × the abilities of one group, tick and save in one go.
+- Nobody changes his own abilities; with several web workers the change is seen at the next click
+  (`abilities_version`).
+
+**"Ask PyBank" chat assistant / Чат-помощник.** The chat keeps the conversation (history after a reload, *New
+chat* to clear it), answers small talk, follow-up questions and taught answers, suggests next questions and
+takes 👍 / 👎. It **does things only after Confirm**: a customer sends money to a payee or a 12-digit account,
+blocks or unblocks his card, blocks the credit card, opens an FD, adds to a goal, pays the credit card, asks for
+a cheque book (money moves only with the PIN); staff open their cash drawer, freeze or activate a customer
+(with a reason) and get a customer summary - only what their abilities allow. **Train the assistant**
+(`assistant.train`): own answers with keywords and links, the questions it did not understand, statistics.
+
+**Real bank work / Настоящая работа банка.**
+- **Branch vault**: opening a drawer takes cash from the vault, closing puts the counted cash back; top-ups and
+  returns of a teller and the cash van (with the seal number) need a **second person**; cash is counted **note by
+  note** (2000 × 10, 500 × 40 ...) and the breakdown is kept with the drawer.
+- **Cheques**: deposit at the counter (6-digit number, bank, drawer, date - no post-dated or older than 3 months,
+  no double deposit), clearing the next working day (not on Sunday), a cheque ending in 000 bounces in the
+  sandbox, return reasons and the return charge; the customer sees his cheques in Net Banking.
+- **Nominees**: up to 3 people with shares that add up to 100 %, saved with the PIN.
+- **Credit card**: application (income ≥ ₹15,000), limit suggested from income and credit score, approval by a
+  loan officer, sandbox purchases, a bill on the 5th, minimum 5 % (at least ₹200), interest on what is left,
+  late fee, pay full / minimum / other amount, block / unblock.
+- **Held payments**: a payment to another bank whose receiver looks like a sanctions-list name is held; compliance
+  releases it or stops it (the money comes back). The list can be **loaded from a CSV file**.
+- **Data manager v2**: website texts, pages, products, banners, job-role names, own abilities, nominees and the
+  assistant's answers can be changed; **every other table** can be read (secrets never shown); sort by any
+  column, pages of 50, **CSV download**, **CSV upload** that changes or adds records, **delete many**.
+- **My activity** for every staff member; the administrator also edits his own branch.
 
 ## Version 4 / Версия 4
 
@@ -344,6 +404,13 @@ banking_system/
 ├── datamanager.py    the data manager of the back office (v5)
 ├── v5_views.py       the web pages of version 5
 ├── demo_v5.py        version 5 demo: cash drawers, counter work, RD and goals, partner app, a sanctions match
+├── abilities.py      own abilities, page rules, tick boxes per person, matrix, temporary abilities (v6)
+├── vault.py          the branch vault, two signatures, note-by-note counting (v6)
+├── cheques.py        cheque deposits with clearing, nominees (v6)
+├── creditcard.py     credit card: application, limit, purchases, bills, payments (v6)
+├── chatbot.py        the chat assistant: memory, follow-ups, actions after confirmation, training (v6)
+├── v6_views.py       the web pages of version 6
+├── demo_v6.py        version 6 demo: vault, cheques, nominees, credit card, a held payment, chat, own ability
 ├── requirements.txt
 ├── Dockerfile, fly.toml, .github/workflows/fly-deploy.yml   Fly.io deployment
 ├── templates/
@@ -354,16 +421,19 @@ banking_system/
 │   │                         transfer, transfer_confirm, receipt, statement, profile, security,
 │   │                         payees, fixed_deposits, requests, loans, loan, alerts,
 │   │                         accounts, card, bills, insights (v4); savings, search, assistant,
-│   │                         connected_apps, consent (v5)
+│   │                         connected_apps, consent (v5); credit_card, nominees, cheques (v6)
 │   └── admin/                back office: layout, login, dashboard, customers, customer, customer_new,
 │                             transactions, approvals, loans, requests, notices, staff, settings,
 │                             backups, database, audit, profile; v4: content*, media, billers, iso,
 │                             compliance, flag, dormant, checker, health, fx_history; v5: counter,
 │                             counter_customer, counter_receipt, till, tills, roles, staff_access,
-│                             screening, openbanking, data*, search, assistant
+│                             screening, openbanking, data*, search, assistant; v6: abilities,
+│                             abilities_matrix, vault, cheques, credit_cards, payment_holds,
+│                             assistant_train, profile_activity
 ├── static/
 │   ├── style.css
-│   ├── v5.js         search suggestions, name of the account holder, the assistant chat (v5)
+│   ├── v5.js         search suggestions, name of the account holder (v5)
+│   ├── v6.js         the chat (history, confirm cards, suggestions, 👍/👎), ability tick boxes, note counting (v6)
 │   └── images/       all PNG / JPG (logo, hero, products, card, branch, security)
 └── tests/
     ├── test_bank.py  unit tests (classes, rules, limits, lockout, demo data)
@@ -376,6 +446,8 @@ banking_system/
     │                 budgets, compliance, four-eyes, devices & limits, API, privacy, health (42 tests)
     ├── test_v5.py    every address needs an ability, roles and per-person abilities, counter work and cash
     │                 drawers, name enquiry, smart search, assistant, RD and goals, screening, OAuth, data (59 tests)
+    ├── test_v6.py    own abilities and page rules, tick boxes, matrix, temporary abilities, vault, cheques,
+    │                 nominees, credit card, held payments, chat actions, data manager v2 (47 tests)
     ├── support.py    test helpers (SQLite or TEST_DATABASE_URL)
     └── pgmini.py     tiny PostgreSQL client used only by the tests when psycopg is not installed
 ```

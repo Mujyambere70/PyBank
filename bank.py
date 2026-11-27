@@ -60,6 +60,13 @@ from openbanking import OB_SCHEMA, OpenBankingMixin
 from screening import CUSTOMER_COLUMNS, SCREEN_SCHEMA, ScreeningMixin
 from staffperm import ROLE_SCHEMA, STAFF_COLUMNS
 from teller import TELLER_SCHEMA
+# version 6
+from abilities import ABILITY_SCHEMA
+from chatbot import CHAT_SCHEMA
+from cheques import CHEQUE_SCHEMA, ChequesMixin
+from creditcard import CREDIT_SCHEMA, CreditCardMixin
+from screening import HOLD_SCHEMA
+from vault import TILL_COLUMNS, VAULT_SCHEMA
 
 # ---------- bank settings ----------
 
@@ -573,9 +580,11 @@ MIGRATIONS = {
 }
 MIGRATIONS["staff"] = MIGRATIONS["staff"] + STAFF_COLUMNS                                                     # v5
 MIGRATIONS["customers"] = MIGRATIONS["customers"] + CUSTOMER_COLUMNS                                         # v5
+MIGRATIONS["tills"] = TILL_COLUMNS                                                                            # v6
 V4_SCHEMA = (CONTENT_SCHEMA + WALLET_SCHEMA + CARD_SCHEMA + ISO_SCHEMA + MRZ_SCHEMA + AUTOPAY_SCHEMA +
              INSIGHT_SCHEMA + COMPLIANCE_SCHEMA + DEVICE_SCHEMA + API_SCHEMA)
 V5_SCHEMA = ROLE_SCHEMA + TELLER_SCHEMA + DEPOSIT_SCHEMA + SCREEN_SCHEMA + OB_SCHEMA
+V6_SCHEMA = ABILITY_SCHEMA + VAULT_SCHEMA + CHEQUE_SCHEMA + CREDIT_SCHEMA + HOLD_SCHEMA + CHAT_SCHEMA
 
 # tables in the order they can be filled (parents before children) - used by backups
 DATA_TABLES = ["customers", "accounts", "transactions", "login_history", "beneficiaries", "fixed_deposits",
@@ -588,7 +597,10 @@ DATA_TABLES = ["customers", "accounts", "transactions", "login_history", "benefi
                "api_tokens",
                # version 5
                "job_roles", "tills", "counter_ops", "recurring_deposits", "goals", "sanctions_list", "screening_hits",
-               "ob_apps", "ob_consents"]
+               "ob_apps", "ob_consents",
+               # version 6
+               "custom_abilities", "ability_rules", "ability_grants", "vault", "vault_moves", "cheques", "nominees",
+               "credit_cards", "cc_transactions", "cc_statements", "payment_holds", "chat_messages", "bot_answers"]
 
 # Bank-wide settings the admin can change (stored in the settings table)
 DEFAULT_SETTINGS = {
@@ -608,6 +620,11 @@ DEFAULT_SETTINGS = {
     "high_risk_countries": "IR,KP,MM",   # customers from these countries get a higher risk rating
     "assistant_llm": "0",                # 1 = questions the assistant does not understand go to a language model
     "name_enquiry": "1",                 # show the receiver's name while a transfer is typed
+    # version 6
+    "cheque_return_fee": "200",          # charge when a deposited cheque bounces (rupees)
+    "cc_rate": "3.5",                    # credit card interest on an unpaid bill, % a month
+    "cc_late_fee": "500",                # credit card late fee when the minimum is not paid (rupees)
+    "assistant_name": "Ask PyBank",      # name of the chat assistant
 }
 SENIOR_AGE = 60
 FD_TENURES = (6, 12, 24, 36)                 # months
@@ -621,7 +638,7 @@ REQUEST_TYPES = ["Cheque book", "Debit card block", "New debit card", "Account s
                  "Update nominee", "Address proof letter", "Account closure", "Complaint", "Other"]
 
 
-class Bank(NameEnquiryMixin, DepositsMixin, ScreeningMixin, OpenBankingMixin, SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, AutopayMixin, InsightsMixin,
+class Bank(ChequesMixin, CreditCardMixin, NameEnquiryMixin, DepositsMixin, ScreeningMixin, OpenBankingMixin, SiteContentMixin, WalletsMixin, CardsMixin, IsoMixin, MrzMixin, AutopayMixin, InsightsMixin,
            ComplianceMixin, DevicesMixin, PrivacyMixin, ApiTokensMixin,
            OnboardingMixin, PaymentsMixin, StatementsMixin, PushMixin):
     """Keeps all customers, accounts and transactions in a database (SQLite file or PostgreSQL)."""
@@ -632,7 +649,7 @@ class Bank(NameEnquiryMixin, DepositsMixin, ScreeningMixin, OpenBankingMixin, Si
         self.notifier = notifier or Notifier()
         self.fx_fetch = fx_fetch                 # function that downloads exchange rates (None = internet)
         self.alerts_on = True
-        self.db.init_schema(SCHEMA + V4_SCHEMA + V5_SCHEMA)
+        self.db.init_schema(SCHEMA + V4_SCHEMA + V5_SCHEMA + V6_SCHEMA)
         with self._connect() as conn:
             for table, cols in MIGRATIONS.items():
                 have = conn.columns(table)
@@ -1934,6 +1951,8 @@ class Bank(NameEnquiryMixin, DepositsMixin, ScreeningMixin, OpenBankingMixin, Si
                           ("rd", lambda: self.collect_rd_instalments(today)),          # v5
                           ("screening", self.screen_all),                              # v5
                           ("risk", lambda: len(self.update_all_risks())),              # v5
+                          ("cheques", lambda: self.clear_cheques(today)),               # v6
+                          ("credit_cards", lambda: self.make_cc_statements(today)),     # v6
                           ("rate_hits", self.clean_rate_hits)):                         # v4
             try:
                 done[name] = job()

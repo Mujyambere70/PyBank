@@ -1,0 +1,115 @@
+# version 6 texts (a) - abilities, staff, activity
+Own abilities	Свои полномочия	Habilitations propres	Permisos propios	صلاحيات خاصة	自定义权限
+Find an ability	Найти полномочие	Chercher une habilitation	Buscar un permiso	ابحث عن صلاحية	查找权限
+e.g. Approve staff loans	напр. Одобрять кредиты сотрудникам	ex. Approuver les prêts du personnel	p. ej. Aprobar préstamos del personal	مثلاً: الموافقة على قروض الموظفين	例如：审批员工贷款
+Find a page	Найти страницу	Chercher une page	Buscar una página	ابحث عن صفحة	查找页面
+Abilities	Полномочия	Habilitations	Permisos	الصلاحيات	权限
+Every ability of the bank, who has it, and which back-office page needs which ability. You can make your own abilities, put any page behind any ability, and then tick abilities for each person or role.	Все полномочия банка: у кого они есть и какая страница бэк-офиса какого полномочия требует. Вы можете создавать свои полномочия, закрывать любую страницу любым полномочием и отмечать полномочия для каждого сотрудника или роли.	Toutes les habilitations de la banque, qui les possède et quelle page du back-office exige quelle habilitation. Vous pouvez créer vos propres habilitations, placer n'importe quelle page derrière n'importe quelle habilitation, puis cocher les habilitations de chaque personne ou rôle.	Todos los permisos del banco, quién los tiene y qué página del back office necesita cada permiso. Puede crear sus propios permisos, poner cualquier página detrás de cualquier permiso y marcar los permisos de cada persona o rol.	كل صلاحيات البنك، ومن يملكها، وأي صفحة في المكتب الخلفي تحتاج أي صلاحية. يمكنك إنشاء صلاحيات خاصة بك، وربط أي صفحة بأي صلاحية، ثم تحديد الصلاحيات لكل شخص أو دور.	银行的全部权限、拥有者以及每个后台页面所需的权限。您可以创建自己的权限，把任何页面置于任何权限之后，然后为每个人或角色勾选权限。
+Ability matrix	Матрица полномочий	Matrice des habilitations	Matriz de permisos	مصفوفة الصلاحيات	权限矩阵
+All abilities	Все полномочия	Toutes les habilitations	Todos los permisos	كل الصلاحيات	全部权限
+New ability	Новое полномочие	Nouvelle habilitation	Nuevo permiso	صلاحية جديدة	新建权限
+Pages & abilities	Страницы и полномочия	Pages et habilitations	Páginas y permisos	الصفحات والصلاحيات	页面与权限
+Who has “{0}”	У кого есть «{0}»	Qui a « {0} »	Quién tiene «{0}»	من يملك «{0}»	谁拥有“{0}”
+Nobody.	Ни у кого.	Personne.	Nadie.	لا أحد.	没有人。
+All abilities ({0})	Все полномочия ({0})	Toutes les habilitations ({0})	Todos los permisos ({0})	كل الصلاحيات ({0})	全部权限（{0}）
+Code	Код	Code	Código	الرمز	代码
+People	Сотрудники	Personnes	Personas	الأشخاص	人员
+own	своё	propre	propio	خاصة	自定义
+Own abilities ({0})	Свои полномочия ({0})	Habilitations propres ({0})	Permisos propios ({0})	صلاحيات خاصة ({0})	自定义权限（{0}）
+Abilities you made. Change the name, or delete one: it is then taken away from every role and person.	Полномочия, созданные вами. Измените название или удалите полномочие — тогда оно будет снято со всех ролей и сотрудников.	Les habilitations que vous avez créées. Changez le nom ou supprimez-en une : elle est alors retirée de chaque rôle et de chaque personne.	Permisos que usted creó. Cambie el nombre o elimine uno: entonces se retira de cada rol y de cada persona.	الصلاحيات التي أنشأتها. غيّر الاسم أو احذف صلاحية: عندها تُسحب من كل دور وكل شخص.	您创建的权限。可以改名或删除；删除后会从所有角色和人员中移除。
+{0} · {1} people · {2} page(s)	{0} · сотрудников: {1} · страниц: {2}	{0} · {1} personne(s) · {2} page(s)	{0} · {1} persona(s) · {2} página(s)	{0} · {1} شخص · {2} صفحة	{0} · {1} 人 · {2} 个页面
+Group	Группа	Groupe	Grupo	المجموعة	分组
+What it allows	Что разрешает	Ce qu'elle permet	Qué permite	ما الذي تسمح به	允许的操作
+Pages:	Страницы:	Pages :	Páginas:	الصفحات:	页面：
+None yet.	Пока нет.	Aucune pour l'instant.	Ninguno todavía.	لا شيء بعد.	暂无。
+Pages that need it (one per line, optional)	Страницы, которым оно нужно (по одной в строке, необязательно)	Pages qui l'exigent (une par ligne, facultatif)	Páginas que lo necesitan (una por línea, opcional)	الصفحات التي تحتاجها (واحدة في كل سطر، اختياري)	需要该权限的页面（每行一个，可选）
+Give it at once to these job roles	Сразу дать этим должностям	La donner tout de suite à ces fonctions	Darlo enseguida a estos puestos	امنحها فوراً لهذه الأدوار الوظيفية	立即授予这些岗位
+Create ability	Создать полномочие	Créer l'habilitation	Crear permiso	إنشاء الصلاحية	创建权限
+Which ability opens which back-office page. Choose another ability for a page to change it; “*” stands for any number or code in the address. Pages of staff, roles and abilities keep their own ability so that nobody locks these tools away.	Какое полномочие открывает какую страницу бэк-офиса. Выберите для страницы другое полномочие, чтобы изменить его; «*» означает любой номер или код в адресе. Страницы сотрудников, ролей и полномочий сохраняют своё полномочие, чтобы никто не закрыл к ним доступ.	Quelle habilitation ouvre quelle page du back-office. Choisissez une autre habilitation pour une page afin de la changer ; « * » remplace n'importe quel numéro ou code dans l'adresse. Les pages du personnel, des rôles et des habilitations gardent leur propre habilitation pour que personne ne bloque ces outils.	Qué permiso abre qué página del back office. Elija otro permiso para una página para cambiarlo; «*» representa cualquier número o código en la dirección. Las páginas de personal, roles y permisos conservan su propio permiso para que nadie bloquee estas herramientas.	أي صلاحية تفتح أي صفحة في المكتب الخلفي. اختر صلاحية أخرى لصفحة لتغييرها؛ «*» تعني أي رقم أو رمز في العنوان. صفحات الموظفين والأدوار والصلاحيات تحتفظ بصلاحيتها حتى لا يغلقها أحد.	哪个权限打开哪个后台页面。为页面选择另一个权限即可更改；“*”代表地址中的任意编号或代码。员工、角色和权限页面保留各自的权限，以免有人把这些工具锁住。
+Clicks	Действия	Clics	Clics	النقرات	操作
+opening and saving	открытие и сохранение	ouverture et enregistrement	abrir y guardar	الفتح والحفظ	打开和保存
+saving only	только сохранение	enregistrement seulement	solo guardar	الحفظ فقط	仅保存
+Needs	Требует	Exige	Necesita	تحتاج	需要
+Save rule	Сохранить правило	Enregistrer la règle	Guardar regla	حفظ القاعدة	保存规则
+Your page rules	Ваши правила страниц	Vos règles de pages	Sus reglas de páginas	قواعد صفحاتك	您的页面规则
+Every back-office page ({0})	Все страницы бэк-офиса ({0})	Toutes les pages du back-office ({0})	Todas las páginas del back office ({0})	كل صفحات المكتب الخلفي ({0})	全部后台页面（{0}）
+Click	Действие	Clic	Clic	النقرة	操作
+open	открыть	ouvrir	abrir	فتح	打开
+save	сохранить	enregistrer	guardar	حفظ	保存
+all	все	tous	todos	الكل	全部
+everyone signed in	любой вошедший сотрудник	toute personne connectée	cualquier persona conectada	كل من سجّل الدخول	所有已登录人员
+temporary	временно	temporaire	temporal	مؤقتة	临时
+Temporary	Временные	Temporaires	Temporales	مؤقتة	临时
+All active people and the abilities of one group. Tick or untick and press Save: only the people whose ticks changed are saved. Administrators have every ability and cannot be changed here; nor can you change yourself.	Все активные сотрудники и полномочия одной группы. Поставьте или снимите галочки и нажмите «Сохранить»: сохраняются только те, у кого галочки изменились. У администраторов есть все полномочия, здесь их изменить нельзя; себя изменить тоже нельзя.	Toutes les personnes actives et les habilitations d'un groupe. Cochez ou décochez puis cliquez sur Enregistrer : seules les personnes dont les coches ont changé sont enregistrées. Les administrateurs ont toutes les habilitations et ne peuvent pas être modifiés ici ; vous ne pouvez pas non plus vous modifier vous-même.	Todas las personas activas y los permisos de un grupo. Marque o desmarque y pulse Guardar: solo se guardan las personas cuyas marcas cambiaron. Los administradores tienen todos los permisos y no se pueden cambiar aquí; tampoco puede cambiarse a sí mismo.	كل الأشخاص النشطين وصلاحيات مجموعة واحدة. ضع العلامة أو أزلها ثم اضغط حفظ: يُحفظ فقط من تغيّرت علاماتهم. المسؤولون لديهم كل الصلاحيات ولا يمكن تغييرهم هنا؛ ولا يمكنك تغيير نفسك.	一个分组的权限与所有在职人员。勾选或取消后点击保存：只保存勾选有变化的人员。管理员拥有全部权限，不能在此更改；您也不能更改自己。
+Person	Сотрудник	Personne	Persona	الشخص	人员
+An administrator can do everything. Every other person starts with the abilities of his job role, and you can then tick or untick any ability for that one person, give one for a few days only, or copy the abilities of a colleague.	Администратор может всё. Остальные сотрудники получают полномочия своей должности, а затем вы можете поставить или снять любое полномочие только для этого человека, дать полномочие на несколько дней или скопировать полномочия коллеги.	Un administrateur peut tout faire. Toute autre personne commence avec les habilitations de sa fonction ; vous pouvez ensuite cocher ou décocher n'importe quelle habilitation pour cette seule personne, en donner une pour quelques jours seulement ou copier celles d'un collègue.	Un administrador puede hacerlo todo. Cualquier otra persona empieza con los permisos de su puesto, y después puede marcar o desmarcar cualquier permiso solo para esa persona, dar uno durante unos días o copiar los permisos de un compañero.	المسؤول يستطيع فعل كل شيء. يبدأ كل شخص آخر بصلاحيات دوره الوظيفي، ثم يمكنك إضافة أو إزالة أي صلاحية لهذا الشخص وحده، أو منحه صلاحية لبضعة أيام فقط، أو نسخ صلاحيات زميل.	管理员可以做任何事。其他人员先获得其岗位的权限，之后您可以只为这个人勾选或取消任意权限、临时授予几天，或复制同事的权限。
+Every ability (administrator)	Все полномочия (администратор)	Toutes les habilitations (administrateur)	Todos los permisos (administrador)	كل الصلاحيات (مسؤول)	全部权限（管理员）
+{0} of {1} abilities	{0} из {1} полномочий	{0} habilitations sur {1}	{0} de {1} permisos	{0} من {1} صلاحية	{0}/{1} 项权限
++{0} given	+{0} добавлено	+{0} accordée(s)	+{0} dado(s)	+{0} ممنوحة	+{0} 项已授予
+−{0} taken away	−{0} снято	−{0} retirée(s)	−{0} retirado(s)	−{0} مسحوبة	−{0} 项已收回
+temporary: {0}	временных: {0}	temporaires : {0}	temporales: {0}	مؤقتة: {0}	临时：{0}
+Abilities & details	Полномочия и данные	Habilitations et données	Permisos y datos	الصلاحيات والبيانات	权限与资料
+Changing the role gives the role's abilities and keeps this person's own ticks. To add or remove single abilities use	Смена должности даёт полномочия этой должности и сохраняет личные галочки сотрудника. Чтобы добавить или убрать отдельные полномочия, откройте	Changer de fonction donne les habilitations de la fonction et garde les coches propres à cette personne. Pour ajouter ou retirer une habilitation, utilisez	Cambiar el puesto da los permisos del puesto y conserva las marcas propias de esta persona. Para añadir o quitar permisos sueltos use	تغيير الدور يمنح صلاحيات الدور ويحتفظ بعلامات هذا الشخص الخاصة. لإضافة صلاحيات منفردة أو إزالتها استخدم	更换岗位会授予该岗位的权限，并保留此人的个人勾选。要单独添加或移除权限，请使用
+e.g. loan, vault, cheque	напр. кредит, хранилище, чек	ex. prêt, coffre, chèque	p. ej. préstamo, bóveda, cheque	مثلاً: قرض، خزنة، شيك	例如：贷款、金库、支票
+Cover for a colleague on leave	Замена коллеги в отпуске	Remplacement d'un collègue en congé	Sustituir a un compañero de vacaciones	تغطية زميل في إجازة	代替休假的同事
+{0} · details & abilities	{0} · данные и полномочия	{0} · données et habilitations	{0} · datos y permisos	{0} · البيانات والصلاحيات	{0} · 资料与权限
+Personal and work details	Личные и рабочие данные	Données personnelles et professionnelles	Datos personales y laborales	البيانات الشخصية وبيانات العمل	个人与工作资料
+Below, every ability of the bank has a tick box.	Ниже у каждого полномочия банка есть галочка.	Ci-dessous, chaque habilitation de la banque a une case à cocher.	Abajo, cada permiso del banco tiene una casilla.	في الأسفل، لكل صلاحية في البنك مربع اختيار.	下面每项银行权限都有一个复选框。
+Ticked = this person has it.	Отмечено = у сотрудника есть это полномочие.	Coché = cette personne l'a.	Marcado = esta persona lo tiene.	عليه علامة = هذا الشخص يملكها.	已勾选 = 此人拥有。
+Tick or untick what you want and press Save - the job role only gives the starting ticks (the grey “role” mark). Changing the job role above the boxes sets new starting ticks and keeps your own changes.	Поставьте или снимите нужные галочки и нажмите «Сохранить» — должность даёт только начальные галочки (серая метка «роль»). Смена должности над списком задаёт новые начальные галочки и сохраняет ваши изменения.	Cochez ou décochez ce que vous voulez puis cliquez sur Enregistrer — la fonction ne donne que les coches de départ (la marque grise « rôle »). Changer la fonction au-dessus des cases donne de nouvelles coches de départ et garde vos modifications.	Marque o desmarque lo que quiera y pulse Guardar: el puesto solo da las marcas iniciales (la etiqueta gris «rol»). Cambiar el puesto encima de las casillas pone nuevas marcas iniciales y conserva sus cambios.	ضع العلامة أو أزلها كما تريد ثم اضغط حفظ — الدور الوظيفي يعطي فقط العلامات الأولى (علامة «الدور» الرمادية). تغيير الدور فوق المربعات يضع علامات أولى جديدة ويحتفظ بتغييراتك.	勾选或取消所需项目后点击保存——岗位只提供初始勾选（灰色“角色”标记）。在复选框上方更换岗位会设定新的初始勾选，并保留您的更改。
+Need it for a few days only (holiday cover)? Use	Нужно только на несколько дней (замена на время отпуска)? Используйте	Besoin pour quelques jours seulement (remplacement) ? Utilisez	¿Lo necesita solo unos días (sustitución)? Use	تحتاجها لبضعة أيام فقط (تغطية إجازة)؟ استخدم	只需要几天（休假代班）？请使用
+Temporary ability	Временное полномочие	Habilitation temporaire	Permiso temporal	صلاحية مؤقتة	临时权限
+: it stops by itself after the last day.	: оно само закончится после последнего дня.	 : elle s'arrête d'elle-même après le dernier jour.	: termina solo después del último día.	: تنتهي تلقائياً بعد اليوم الأخير.	：最后一天过后自动停止。
+The own limit stops this person from finishing large counter operations alone: above it the work waits for a second person.	Личный лимит не даёт сотруднику самому завершать крупные операции у кассы: выше лимита операция ждёт второго сотрудника.	La limite propre empêche cette personne de terminer seule les grosses opérations au guichet : au-delà, l'opération attend une deuxième personne.	El límite propio impide que esta persona termine sola operaciones grandes en ventanilla: por encima, la operación espera a una segunda persona.	الحد الخاص يمنع هذا الشخص من إتمام عمليات الشباك الكبيرة وحده: فوقه تنتظر العملية شخصاً ثانياً.	个人限额让此人不能独自完成大额柜台业务：超过限额的业务需等待第二人。
+This person is an administrator and may do everything; the ticks are kept for when the access goes back to staff.	Этот сотрудник — администратор и может всё; галочки сохраняются на случай, если доступ снова станет обычным.	Cette personne est administrateur et peut tout faire ; les coches sont gardées pour le jour où l'accès redevient « personnel ».	Esta persona es administrador y puede hacerlo todo; las marcas se guardan para cuando el acceso vuelva a ser de personal.	هذا الشخص مسؤول ويستطيع فعل كل شيء؛ العلامات محفوظة لحين عودة الوصول إلى موظف.	此人是管理员，可以做任何事；勾选会保留，以便访问级别改回员工时使用。
+You cannot change your own abilities - another administrator must do it.	Нельзя менять свои полномочия — это должен сделать другой администратор.	Vous ne pouvez pas modifier vos propres habilitations — un autre administrateur doit le faire.	No puede cambiar sus propios permisos: debe hacerlo otro administrador.	لا يمكنك تغيير صلاحياتك — يجب أن يفعل ذلك مسؤول آخر.	您不能更改自己的权限——必须由另一位管理员操作。
+Abilities ({0} of {1})	Полномочия ({0} из {1})	Habilitations ({0} sur {1})	Permisos ({0} de {1})	الصلاحيات ({0} من {1})	权限（{0}/{1}）
+Tick all	Отметить все	Tout cocher	Marcar todo	تحديد الكل	全选
+Untick all	Снять все	Tout décocher	Desmarcar todo	إلغاء تحديد الكل	全部取消
+Only the role	Только роль	Seulement le rôle	Solo el rol	الدور فقط	仅岗位权限
+Job role (starting ticks)	Должность (начальные галочки)	Fonction (coches de départ)	Puesto (marcas iniciales)	الدور الوظيفي (العلامات الأولى)	岗位（初始勾选）
+role	роль	rôle	rol	الدور	岗位
+given	добавлено	accordée	dado	ممنوحة	已授予
+taken away	снято	retirée	retirado	مسحوبة	已收回
+Give one ability until a date - for holiday cover or a short project. It ends by itself.	Дать одно полномочие до даты — на время отпуска коллеги или короткого проекта. Оно закончится само.	Donner une habilitation jusqu'à une date — pour un remplacement ou un court projet. Elle se termine d'elle-même.	Dar un permiso hasta una fecha, para una sustitución o un proyecto corto. Termina solo.	امنح صلاحية واحدة حتى تاريخ معيّن — لتغطية إجازة أو مشروع قصير. تنتهي تلقائياً.	授予一项权限直到某日——用于休假代班或短期项目，到期自动结束。
+Last day	Последний день	Dernier jour	Último día	اليوم الأخير	最后一天
+Give until that day	Дать до этого дня	Donner jusqu'à ce jour	Dar hasta ese día	امنح حتى ذلك اليوم	授予至该日
+until {0}	до {0}	jusqu'au {0}	hasta el {0}	حتى {0}	至 {0}
+End now	Завершить сейчас	Arrêter maintenant	Terminar ahora	إنهاء الآن	立即结束
+Quick changes	Быстрые изменения	Changements rapides	Cambios rápidos	تغييرات سريعة	快速更改
+Copy the abilities of	Скопировать полномочия	Copier les habilitations de	Copiar los permisos de	انسخ صلاحيات	复制此人的权限
+Copy	Скопировать	Copier	Copiar	نسخ	复制
+Back to the job role only	Только полномочия должности	Revenir à la fonction seule	Volver solo al puesto	العودة إلى صلاحيات الدور فقط	恢复为仅岗位权限
+No change yet.	Изменений пока нет.	Aucun changement pour l'instant.	Ningún cambio todavía.	لا تغيير بعد.	暂无更改。
+History	История	Historique	Historial	السجل	历史
+Staff & abilities	Сотрудники и полномочия	Personnel et habilitations	Personal y permisos	الموظفون والصلاحيات	员工与权限
+Job roles	Должности	Fonctions	Puestos	الأدوار الوظيفية	岗位
+My activity	Мои действия	Mon activité	Mi actividad	نشاطي	我的活动
+Everything you did in the back office, what others changed about you, and the abilities you have now.	Всё, что вы сделали в бэк-офисе, что другие изменили в ваших данных и какие полномочия у вас сейчас.	Tout ce que vous avez fait dans le back-office, ce que d'autres ont changé à votre sujet et les habilitations que vous avez maintenant.	Todo lo que hizo en el back office, lo que otros cambiaron sobre usted y los permisos que tiene ahora.	كل ما فعلته في المكتب الخلفي، وما غيّره الآخرون عنك، والصلاحيات التي لديك الآن.	您在后台做过的所有操作、他人对您资料的更改，以及您目前的权限。
+My abilities ({0})	Мои полномочия ({0})	Mes habilitations ({0})	Mis permisos ({0})	صلاحياتي ({0})	我的权限（{0}）
+You are an administrator: you may do everything.	Вы администратор: вам можно всё.	Vous êtes administrateur : vous pouvez tout faire.	Es administrador: puede hacerlo todo.	أنت مسؤول: يمكنك فعل كل شيء.	您是管理员：可以做任何事。
+Changes about me	Изменения обо мне	Changements me concernant	Cambios sobre mí	تغييرات تخصّني	与我有关的更改
+Nothing.	Ничего.	Rien.	Nada.	لا شيء.	无。
+What I did (last {0})	Что я сделал (последние {0})	Ce que j'ai fait (les {0} derniers)	Lo que hice (últimos {0})	ما فعلته (آخر {0})	我的操作（最近 {0} 条）
+My activity and abilities →	Мои действия и полномочия →	Mon activité et mes habilitations →	Mi actividad y permisos →	نشاطي وصلاحياتي ←	我的活动与权限 →
+Branch	Отделение	Agence	Sucursal	الفرع	分行
+Take cheques for deposit at the counter	Принимать чеки на зачисление у кассы	Recevoir des chèques au guichet	Recibir cheques para depósito en ventanilla	استلام الشيكات للإيداع في الشباك	在柜台受理支票存入
+Run the vault: give cash to drawers, take it back, approve vault moves	Вести хранилище: выдавать наличные в кассы, принимать их обратно, подтверждать движения	Gérer le coffre : donner l'argent aux caisses, le reprendre, approuver les mouvements	Llevar la bóveda: dar efectivo a las cajas, recibirlo y aprobar movimientos	إدارة الخزنة: إعطاء النقد للأدراج واستعادته واعتماد حركات الخزنة	管理金库：向钱箱配款、收回现金、审批金库调拨
+Clear or return deposited cheques	Проводить или возвращать чеки	Encaisser ou rejeter les chèques déposés	Compensar o devolver cheques depositados	تحصيل الشيكات المودعة أو إرجاعها	清算或退回已存支票
+Approve credit card applications and change credit limits	Одобрять заявки на кредитные карты и менять лимиты	Approuver les demandes de carte de crédit et changer les plafonds	Aprobar solicitudes de tarjeta de crédito y cambiar límites	الموافقة على طلبات بطاقات الائتمان وتغيير الحدود	审批信用卡申请并调整额度
+Teach the assistant: answers, unanswered questions, feedback	Обучать помощника: ответы, вопросы без ответа, оценки	Former l'assistant : réponses, questions sans réponse, avis	Enseñar al asistente: respuestas, preguntas sin respuesta, opiniones	تعليم المساعد: الإجابات والأسئلة غير المجابة والتقييمات	训练助手：答案、未答问题、反馈
+Create new abilities and decide which pages need which ability	Создавать новые полномочия и решать, каким страницам какие полномочия нужны	Créer des habilitations et décider quelle page exige quelle habilitation	Crear permisos nuevos y decidir qué páginas necesitan qué permiso	إنشاء صلاحيات جديدة وتحديد أي صفحة تحتاج أي صلاحية	创建新权限并决定各页面所需权限
+Money	Деньги	Argent	Dinero	المال	资金
+Temporary ability given	Выдано временное полномочие	Habilitation temporaire donnée	Permiso temporal dado	مُنحت صلاحية مؤقتة	已授予临时权限
+Temporary ability ended	Временное полномочие завершено	Habilitation temporaire arrêtée	Permiso temporal terminado	انتهت الصلاحية المؤقتة	临时权限已结束
+Page rule set	Правило страницы задано	Règle de page définie	Regla de página definida	تم تعيين قاعدة الصفحة	已设置页面规则
+Page rule removed	Правило страницы удалено	Règle de page supprimée	Regla de página eliminada	أزيلت قاعدة الصفحة	已删除页面规则
+Ability created	Полномочие создано	Habilitation créée	Permiso creado	أنشئت الصلاحية	已创建权限
+Ability changed	Полномочие изменено	Habilitation modifiée	Permiso cambiado	عُدّلت الصلاحية	已修改权限
+Ability deleted	Полномочие удалено	Habilitation supprimée	Permiso eliminado	حُذفت الصلاحية	已删除权限
+Abilities changed	Полномочия изменены	Habilitations modifiées	Permisos cambiados	عُدّلت الصلاحيات	权限已更改
+Abilities copied	Полномочия скопированы	Habilitations copiées	Permisos copiados	نُسخت الصلاحيات	权限已复制
+Abilities reset to the role	Полномочия сброшены к должности	Habilitations remises à la fonction	Permisos devueltos al puesto	أعيدت الصلاحيات إلى الدور	权限已恢复为岗位
+See held payments	Видеть задержанные платежи	Voir les paiements bloqués	Ver pagos retenidos	عرض المدفوعات المحجوزة	查看被拦截的付款
+Own details changed	Свои данные изменены	Données personnelles modifiées	Datos propios cambiados	تم تغيير البيانات الخاصة	已修改个人资料
+Payment to another bank for a customer	Платёж в другой банк для клиента	Paiement vers une autre banque pour un client	Pago a otro banco para un cliente	دفعة إلى بنك آخر لعميل	为客户向他行付款
